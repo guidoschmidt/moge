@@ -1,4 +1,4 @@
 moge
 ====
 
-'my own graphics engine'. Bachelor of science (computerisualistics) final project.
+'my own graphics engine'. Bachelor of science (computervisualistics) final project.
