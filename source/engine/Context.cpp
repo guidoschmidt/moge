@@ -55,8 +55,8 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 	HEIGHT = height;
 	TITLE = title;
 
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, openglVersionMajor);
-	glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, openglVersionMinor);
+	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, openglVersionMajor);
+	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, openglVersionMinor);
 
 	if(!glfwOpenWindow(WIDTH, HEIGHT, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)){
 		std::cout << "ERROR: could not open a GLFW window!" << std::endl;

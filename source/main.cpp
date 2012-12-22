@@ -2,6 +2,7 @@
  * @author Guido Schmidt
  * @date 06.12.12
  */
+
 #include "engine/Renderer.h"
 
 Renderer* renderer;

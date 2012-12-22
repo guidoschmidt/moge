@@ -123,45 +123,45 @@ void Scene::CreateBufferObjects(void){
  * @param filename
  */
 void Scene::LoadTexture(const std::string filename){
-//	ilutRenderer(ILUT_OPENGL);
-//	ilutRenderer(ILUT_OPENGL);
-//	ilInit();
-//	iluInit();
-//	ilutInit();
-//
-//	ILboolean loadSuccess = ilLoadImage(filename.c_str());
-//
-//	if(loadSuccess){
-//		glGenTextures(1, &Texture_ID);
-//		glBindTexture(GL_TEXTURE_2D, Texture_ID);
-//		//! Set texture's clamping
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-//		//! Set texture's filtering
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//		//! Load image into texture
-//		glTexImage2D(	GL_TEXTURE_2D,
-//						0,
-//						ilGetInteger(IL_IMAGE_BPP),
-//						ilGetInteger(IL_IMAGE_WIDTH),
-//						ilGetInteger(IL_IMAGE_HEIGHT),
-//						0,
-//						ilGetInteger(IL_IMAGE_FORMAT),
-//						GL_UNSIGNED_BYTE,
-//						ilGetData());
-//		//! Delete image
-//		ilDeleteImages(1, &Image_ID);
-//		std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
-//	}
-//	else if(!loadSuccess){
-//		ErrorCheckTexture = ilGetError();
-//		std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
-//	}
+	ilutRenderer(ILUT_OPENGL);
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+
+	ILboolean loadSuccess = ilLoadImage(filename.c_str());
+
+	if(loadSuccess){
+		glGenTextures(1, &Texture_ID);
+		glBindTexture(GL_TEXTURE_2D, Texture_ID);
+		//! Set texture's clamping
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		//! Set texture's filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//! Load image into texture
+		glTexImage2D(	GL_TEXTURE_2D,
+						0,
+						ilGetInteger(IL_IMAGE_BPP),
+						ilGetInteger(IL_IMAGE_WIDTH),
+						ilGetInteger(IL_IMAGE_HEIGHT),
+						0,
+						ilGetInteger(IL_IMAGE_FORMAT),
+						GL_UNSIGNED_BYTE,
+						ilGetData());
+		//! Delete image
+		ilDeleteImages(1, &Image_ID);
+		std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
+	}
+	else if(!loadSuccess){
+		ErrorCheckTexture = ilGetError();
+		std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
+	}
 
 	textures.push_back(Texture_ID);
 
-//	return Texture_ID;
+	//return Texture_ID;
 }
 
 //! Returns the texture
