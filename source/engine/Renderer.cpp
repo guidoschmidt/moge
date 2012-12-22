@@ -48,7 +48,7 @@ void Renderer::InitGLEW(void){
  * Loading the scene, creating shader programs, and calling the other initialize methods.
  */
 void Renderer::Initialize(int width, int height){
-	context->OpenWindow(width, height, "Render Window", 4, 2);
+	context->OpenWindow(width, height, "Render Window", 3, 3);
 	context->AddAntTweakBar();
 
 	WriteLog(CONSOLE);
@@ -65,8 +65,8 @@ void Renderer::Initialize(int width, int height){
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
-	scene->Import3DModel("./assets/models/blend/RainScene.blend");
-	scene->LoadTexture("./assets/textures/jpg/Road.jpg");
+	scene->Import3DModel("./assets/geometry/blend/RainScene.blend");
+	scene->LoadTexture("./assets/texture/jpg/Road.jpg");
 
 	/*! Init forward rendering
 	 **************************/
