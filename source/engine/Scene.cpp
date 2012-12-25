@@ -1,7 +1,6 @@
 /*!	Scene class
  *	@author Guido Schmidt
  *	@date 06.12.12
- *
  */
 
 #include "Scene.h"
@@ -21,7 +20,6 @@ Scene::Scene()
 	ErrorCheckTexture = 0;
 	Texture_ID = 0;
 
-	camera0 = new Camera();
 }
 
 //! Destructor
@@ -160,8 +158,6 @@ void Scene::LoadTexture(const std::string filename){
 	}
 
 	textures.push_back(Texture_ID);
-
-	//return Texture_ID;
 }
 
 //! Returns the texture

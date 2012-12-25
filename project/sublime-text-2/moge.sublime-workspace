@@ -43,14 +43,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
-			"settings":
-			{
-				"buffer_size": 232,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -96,6 +88,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
+		"/C/Windows/System32/drivers/etc/hosts",
+		"/D/Temp/CS6 Master Collection/KEYGEN-XFORCE [WIN OSX]/x-force.nfo",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/project/sublime-text",
 		"/C/Users/guidoschmidt/Websites/Uni Koblenz/css/style.css",
 		"/C/Users/guidoschmidt/Websites/Uni Koblenz/index.html",
@@ -142,38 +137,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
-					"settings":
-					{
-						"buffer_size": 232,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								230,
-								230
-							]
-						],
-						"settings":
-						{
-							"glsv_configured": true,
-							"glsv_enabled": 1,
-							"glsv_spec": 0,
-							"syntax": "Packages/C++/C++.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

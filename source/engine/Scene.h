@@ -21,15 +21,12 @@
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
-//! Local includes
-#include "Camera.h"
 
 class Scene
 {
 	private:
 		const aiScene* scene;
 		const aiMesh* mesh;
-		Camera* camera0;
 
 		std::vector<aiMesh> meshes;
 		Assimp::Importer importer;
@@ -63,8 +60,6 @@ class Scene
 		void LoadTexture(const std::string filename);
 		void Draw(void);
 
-		//! Getter
-		Camera GetCamera(int number);
 };
 
 #endif //! SCENE_H_
