@@ -10,6 +10,8 @@
 //! GLM includes
 #include <glm/glm.hpp>
 
+namespace scenegraph {
+
 class Camera
 {
 	private:
@@ -28,5 +30,7 @@ class Camera
 		void SetLookAt(glm::vec3 lookAt);
 		void SetUp(glm::vec3 up);
 };
+
+} //! namespace scenegraph
 
 #endif /* CAMERA_H_ */

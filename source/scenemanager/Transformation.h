@@ -12,6 +12,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
+namespace scenegraph {
+
 class Transformation
 {
 	private:
@@ -35,5 +37,7 @@ class Transformation
 
 		virtual void Draw(void);
 };
+
+} //! namespace scenegraph
 
 #endif //! Transformation_H_

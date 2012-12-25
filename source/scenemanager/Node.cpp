@@ -3,7 +3,6 @@
  *	@date 	24.12.12
  */
 
-
 #include "Node.h"
 
 namespace scenegraph {
