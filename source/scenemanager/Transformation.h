@@ -3,8 +3,8 @@
  *	@date 23.12.12
  */
 
-#ifndef SCENEOBJECT_H_
-#define SCENEOBJECT_H_
+#ifndef TRANSFORMATION_H_
+#define TRANSFORMATION_H_
 
 //! OpenGL includes
 #include <GL/gl.h>
@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-class SceneObject
+class Transformation
 {
 	private:
 		glm::vec3 position;
@@ -21,8 +21,8 @@ class SceneObject
 		glm::vec3 scale;
 
 	public:
-		SceneObject();
-		virtual ~SceneObject();
+		Transformation();
+		virtual ~Transformation();
 
 		//! Getter
 		glm::vec3 GetTranslation(void);
@@ -36,4 +36,4 @@ class SceneObject
 		virtual void Draw(void);
 };
 
-#endif /* SCENEOBJECT_H_ */
+#endif //! Transformation_H_
