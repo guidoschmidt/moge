@@ -10,23 +10,22 @@
 #include <vector>
 //! Local includes
 #include "Node.h"
+#include "Singleton.h"
 //! Assimp includes
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
 
 namespace scenegraph {
 
-class SceneManager {
+class SceneManager : public Singleton {
 	private:
+		SceneManager();
+		~SceneManager();
 		Node root;
 		aiScene scene;
 
 	public:
-		SceneManager();
-		virtual ~SceneManager();
-
 		bool LoadScene(std::string filename);
-
 };
 
 } //! namespace scenegraph

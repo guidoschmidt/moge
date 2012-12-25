@@ -10,13 +10,13 @@ namespace scenegraph {
 
 class Singleton {
 
-	public:
-		static Singleton* getInstance(void);
-
 	private:
 		static Singleton * instance;
 		Singleton();
 		virtual ~Singleton();
+
+	public:
+		static Singleton* GetInstance(void);
 };
 
 } //! namespace scenegraph

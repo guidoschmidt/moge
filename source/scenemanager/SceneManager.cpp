@@ -16,4 +16,16 @@ SceneManager::~SceneManager() {
 	//! TODO Auto-generated destructor stub
 }
 
+//! Get scenemanager singleton instance
+/*!
+ *
+ * @return
+ */
+static Singleton* SceneManager::GetInstance(){
+	if(instance == 0){
+		instance = new SceneManager();
+	}
+	return instance;
+}
+
 } //! namespace scenegraph
