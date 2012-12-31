@@ -8,24 +8,41 @@
 
 //! C++ includes
 #include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
 //! Local includes
 #include "Node.h"
-#include "Singleton.h"
+#include "MeshNode.h"
+//! OpenGL includes
+#include <GL/gl.h>
 //! Assimp includes
 #include <assimp/scene.h>
 #include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
 
 namespace scenegraph {
 
-class SceneManager : public Singleton {
+class SceneManager {
+
 	private:
-		SceneManager();
-		~SceneManager();
-		Node root;
-		aiScene scene;
+		//! TODO Make class a singleton
+		static SceneManager instance;
+		Node* root;
+		MeshNode* temp;
+		//! Assimp
+		Assimp::Importer aiImporter;
+		const aiScene *scene;
+
+	protected:
+		void ProcessScene(const aiScene* scene);
 
 	public:
+		SceneManager();
+		~SceneManager();
+		static SceneManager& Instance();
 		bool LoadScene(std::string filename);
+		void Draw();
 };
 
 } //! namespace scenegraph

@@ -26,6 +26,9 @@ Renderer::Renderer(int width, int height)
 	fsq = new FSQ();
 	Shininess = 5.0f;
 	Initialize(width, height);
+
+	//! TODO Scenemanager singleton
+	//sceneManager = SceneManager.GetInstance();
 }
 
 //! Destructor
@@ -64,6 +67,9 @@ void Renderer::Initialize(int width, int height){
 	TwAddVarRW(context->GetBar(), "deferredTextureChoice", texType, &currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
+
+	sm = new scenegraph::SceneManager();
+	sm->LoadScene("./assets/geometry/blend/Head.blend");
 
 	scene->Import3DModel("./assets/geometry/blend/Head.blend");
 	scene->LoadTexture("./assets/texture/jpg/Head.jpg");
@@ -222,21 +228,22 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
  */
 void Renderer::KeyboardFunction(void)
 {
+	double speed = 0.005;
 	if(glfwGetKey('W')){
-		CameraPosition[2] -= 0.001;
-		CameraTargetPosition[2] -= 0.001;
+		CameraPosition[2] -= speed;
+		CameraTargetPosition[2] -= speed;
 	}
 	else if(glfwGetKey('S')){
-		CameraPosition[2] += 0.001;
-		CameraTargetPosition[2] += 0.001;
+		CameraPosition[2] += speed;
+		CameraTargetPosition[2] += speed;
 	}
 	else if(glfwGetKey('A')){
-		CameraPosition[0] -= 0.001;
-		CameraTargetPosition[0] -= 0.001;
+		CameraPosition[0] -= speed;
+		CameraTargetPosition[0] -= speed;
 	}
 	else if(glfwGetKey('D')){
-		CameraPosition[0] += 0.001;
-		CameraTargetPosition[0] += 0.001;
+		CameraPosition[0] += speed;
+		CameraTargetPosition[0] += speed;
 	}
 }
 

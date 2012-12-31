@@ -14,15 +14,15 @@ class Node {
 	private:
 		bool childStatus;
 		Node* parent;
-		std::vector<Node*> childs;
+		std::vector<Node*> children;
 
 	public:
 		Node();
-		virtual ~Node();
+		~Node(){};
 
-		bool AddChild(Node n);
-		bool DeleteChild(Node n);
-		bool DeleteChild(int n);
+		void AddChild(Node* n);
+		void DeleteChild(Node* n);
+		void DeleteChild(int n);
 		Node* GetChild(int n);
 
 		bool IsChild(void);

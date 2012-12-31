@@ -29,10 +29,13 @@
 #include "ShaderProgram.h"
 #include "FSQ.h"
 #include "FrameBufferObject.h"
+#include "../scenemanager/SceneManager.h"
 
 class Renderer
 {
 	private:
+		scenegraph::SceneManager* sm;
+
 		const GLubyte* renderer;
 		const GLubyte* vendor;
 		const GLubyte* openglVersion;
