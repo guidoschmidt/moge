@@ -1,8 +1,7 @@
+//! Renderer.cpp
 /*
- * Renderer.cpp
- *
- *  Created on: 28.11.2012
- *      Author: guidoschmidt
+ * @date 	28.11.2012
+ * @author 	Guido Schmidt
  */
 
 #include "Renderer.h"

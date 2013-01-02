@@ -1,8 +1,7 @@
-/*
- * Mesh.h
- *
- *  Created on: 02.01.2013
- *      Author: guidoschmidt
+//! Mesh.h
+/*!
+ * @date 	02.01.2013
+ * @author	Guido Schmidt
  */
 
 #ifndef MESH_H_

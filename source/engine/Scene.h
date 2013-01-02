@@ -1,5 +1,9 @@
-//!
-/*! */
+//! Scene.h
+/*!
+ *	@date 	06.12.12
+ *	@author Guido Schmidt
+ */
+
 
 #ifndef SCENE_H_
 #define SCENE_H_

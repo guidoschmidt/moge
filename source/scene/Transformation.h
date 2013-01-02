@@ -1,8 +1,7 @@
-/*
- * Transformation.h
- *
- *  Created on: 02.01.2013
- *      Author: guidoschmidt
+//! Transformation.cpp
+/*!
+ * @date	02.01.2013
+ * @author	Guido Schmidt
  */
 
 #ifndef TRANSFORMATION_H_

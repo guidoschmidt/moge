@@ -1,6 +1,7 @@
-/**
- * @author: Guido Schmidt
- * @date: 30.11.12
+//! Context.h
+/*!
+ * @author	Guido Schmidt
+ * @date 	30.11.12
  */
 
 #ifndef CONTEXT_H_

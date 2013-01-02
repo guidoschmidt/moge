@@ -1,8 +1,7 @@
-/*
- * Mesh.cpp
- *
- *  Created on: 02.01.2013
- *      Author: guidoschmidt
+//! Mesh.cpp
+/*!
+ * @date 	02.01.2013
+ * @author	Guido Schmidt
  */
 
 #include "Mesh.h"

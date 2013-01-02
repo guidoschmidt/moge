@@ -1,8 +1,7 @@
-/*
- * SceneGraph.cpp
- *
- *  Created on: 02.01.2013
- *      Author: guidoschmidt
+//! Scenegraph.cpp
+/*!
+ * @date	02.01.2013
+ * @author	Guido Schmidt
  */
 
 #include "SceneGraph.h"

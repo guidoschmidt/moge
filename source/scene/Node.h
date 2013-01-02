@@ -1,6 +1,5 @@
 //! Node.h
 /*!
- *
  * @date	02.01.2013
  * @author 	Guido Schmidt
  */

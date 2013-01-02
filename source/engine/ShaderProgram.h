@@ -1,8 +1,7 @@
-/*
- * ShaderProgram.h
- *
- *  Created on: 30.11.2012
- *      Author: guidoschmidt
+//! ShaderProgram.h
+/*!
+ * @date	30.11.2012
+ * @author	Guido Schmidt
  */
 
 #ifndef SHADERPROGRAM_H_

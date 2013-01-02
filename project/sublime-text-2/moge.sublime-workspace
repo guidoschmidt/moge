@@ -43,6 +43,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
+			"settings":
+			{
+				"buffer_size": 2770,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -88,6 +96,25 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
 		"/C/Windows/System32/drivers/etc/hosts",
 		"/D/Temp/CS6 Master Collection/KEYGEN-XFORCE [WIN OSX]/x-force.nfo",
@@ -137,8 +164,39 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
+					"settings":
+					{
+						"buffer_size": 2770,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								86,
+								86
+							]
+						],
+						"settings":
+						{
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],

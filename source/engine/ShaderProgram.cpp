@@ -1,3 +1,10 @@
+//! ShaderProgram.cpp
+/*!
+ *	@date 	30.11.2012
+ *	@author	Guido Schmidt
+ */
+
+
 #include "ShaderProgram.h"
 
 //! Namespace for global GLSL functions

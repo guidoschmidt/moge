@@ -1,6 +1,7 @@
-/*!	Scene class
+//!	Scene.cpp
+/*!
+ *	@date 	06.12.12
  *	@author Guido Schmidt
- *	@date 06.12.12
  */
 
 #include "Scene.h"

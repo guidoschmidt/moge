@@ -1,8 +1,7 @@
-/*
- * FSQ.h
- *
- *  Created on: 01.12.2012
- *      Author: guidoschmidt
+//! FSQ.h
+/*!
+ * @date 	01.12.2012
+ * @author 	Guido Schmidt
  */
 
 #ifndef FSQ_H_

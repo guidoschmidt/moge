@@ -1,8 +1,7 @@
-/*
- * Renderer.h
- *
- *  Created on: 28.11.2012
- *      Author: guidoschmidt
+//! Renderer.h
+/*!
+ * @date 	28.11.2012
+ * @author  Guido Schmidt
  */
 
 #ifndef RENDERER_H_

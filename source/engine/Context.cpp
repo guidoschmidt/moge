@@ -1,8 +1,7 @@
-/*
- * Context.cpp
- *
- *  Created on: 30.11.2012
- *      Author: guidoschmidt
+//! Context.cpp
+/*!
+ * @date 	30.11.2012
+ * @author	Guido Schmidt
  */
 
 #include "Context.h"

@@ -1,8 +1,7 @@
-/*
- * FSQ.cpp
- *
- *  Created on: 01.12.2012
- *      Author: guidoschmidt
+//! FSQ.cpp
+/*! 
+ * @date	01.12.2012
+ * @auhtor 	Guido Schmidt
  */
 
 #include "FSQ.h"
