@@ -20,7 +20,7 @@ static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
 //! Constructor
 Renderer::Renderer(int width, int height)
 {
-	deferred = true;
+	deferred = false;
 	context = new Context();
 	scene = new Scene();
 	fsq = new FSQ();
@@ -68,11 +68,12 @@ void Renderer::Initialize(int width, int height){
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
-	sm = new scenegraph::SceneManager();
-	sm->LoadScene("./assets/geometry/blend/Head.blend");
+	scene->Import3DModel("./assets/geometry/blend/Head.blend");
 
+	/*!
 	scene->Import3DModel("./assets/geometry/blend/Head.blend");
 	scene->LoadTexture("./assets/texture/jpg/Head.jpg");
+	*/
 
 	/*! Init forward rendering
 	 **************************/

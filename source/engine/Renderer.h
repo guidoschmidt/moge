@@ -34,7 +34,7 @@
 class Renderer
 {
 	private:
-		scenegraph::SceneManager* sm;
+		scenegraph::SceneManager* sceneManager;
 
 		const GLubyte* renderer;
 		const GLubyte* vendor;

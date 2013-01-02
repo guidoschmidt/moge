@@ -6,16 +6,16 @@
 #ifndef MESHNODE_H_
 #define MESHNODE_H_
 
-//! Local includes
-#include "Node.h"
 //! C++ includes
 #include <vector>
+#include <iostream>
 //! OpenGL includes
+#include <GL/glew.h>
 #include <GL/gl.h>
 
 namespace scenegraph {
 
-	class MeshNode : public Node{
+	class MeshNode{
 		private:
 			//! Topology vectors
 			std::vector<GLfloat*> vertices;
@@ -35,6 +35,10 @@ namespace scenegraph {
 			void AddIndex(unsigned int*);
 			void AddNormal(float*);
 			void AddUVCoord(float*);
+			//! Buffer objects
+			void CreateBuffers(void);
+
+			void Draw(void);
 	};
 
 } //! namespace scenegraph

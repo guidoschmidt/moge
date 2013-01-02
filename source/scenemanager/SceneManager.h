@@ -23,27 +23,29 @@
 
 namespace scenegraph {
 
-class SceneManager {
+	class SceneManager {
 
-	private:
-		//! TODO Make class a singleton
-		static SceneManager instance;
-		Node* root;
-		MeshNode* temp;
-		//! Assimp
-		Assimp::Importer aiImporter;
-		const aiScene *scene;
+		private:
+			//! TODO Make class a singleton
+			static SceneManager instance;
 
-	protected:
-		void ProcessScene(const aiScene* scene);
+			Node root;
+			//! Assimp
+			Assimp::Importer aiImporter;
+			const aiScene *scene;
 
-	public:
-		SceneManager();
-		~SceneManager();
-		static SceneManager& Instance();
-		bool LoadScene(std::string filename);
-		void Draw();
-};
+			bool sceneLoaded;
+
+		protected:
+			void ProcessScene(const aiScene* scene);
+
+		public:
+			SceneManager();
+			~SceneManager();
+			static SceneManager& Instance();
+			bool LoadScene(std::string filename);
+			void Draw();
+	};
 
 } //! namespace scenegraph
 #endif //! SCENEMANAGER_H_
