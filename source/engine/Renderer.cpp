@@ -25,10 +25,8 @@ Renderer::Renderer(int width, int height)
 	scene = new Scene();
 	fsq = new FSQ();
 	Shininess = 5.0f;
-	Initialize(width, height);
 
-	//! TODO Scenemanager singleton
-	//sceneManager = SceneManager.GetInstance();
+	Initialize(width, height);
 }
 
 //! Destructor
@@ -68,7 +66,10 @@ void Renderer::Initialize(int width, int height){
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
-	scene->Import3DModel("./assets/geometry/blend/Head.blend");
+//	scene->Import3DModel("./assets/geometry/blend/Head.blend");
+
+	scenegraph = new scene::SceneGraph();
+	scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
 
 	/*!
 	scene->Import3DModel("./assets/geometry/blend/Head.blend");
@@ -292,7 +293,8 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass1->SetUniformSampler("colorTex", scene->GetTexture(0), 0);
 
 			//! drawing
-			scene->Draw();
+//			scene->Draw();
+			scenegraph->DrawNodes();
 
 
 
@@ -338,7 +340,8 @@ void Renderer::RenderLoop(void){
 			forwardProgram->SetUniform("Light.Specular", LightSpecular);
 			forwardProgram->SetUniformSampler("colorTex", scene->GetTexture(0), 0);
 
-			scene->Draw();
+//			scene->Draw();
+			scenegraph->DrawNodes();
 
 			forwardProgram->Unuse();
 		}
