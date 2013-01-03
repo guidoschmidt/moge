@@ -92,6 +92,7 @@ void Renderer::Initialize(int width, int height){
 		firstPassFBO = new FrameBufferObject(
 				context->GetWidth(), context->GetHeight()
 		);
+
 		//! Inits for 2nd pass
 		deferredProgram_Pass2 = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/deferred.vert.glsl",
@@ -264,10 +265,6 @@ void Renderer::RenderLoop(void){
 		//! Modelmatrix
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(angle, RotationAxis);
-		ModelMatrix = IdentityMatrix * RotationMatrix;
-		//! Accumulate matrices
-		ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
-		MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 
 		/************************************
@@ -284,7 +281,6 @@ void Renderer::RenderLoop(void){
 
 			//! Shader program setup & uniform bindings
 			deferredProgram_Pass1->Use();
-			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
 			deferredProgram_Pass1->SetUniform("Light.Position", LightPosition);
 			deferredProgram_Pass1->SetUniform("Light.Ambient", LightAmbient);
 			deferredProgram_Pass1->SetUniform("Light.Diffuse", LightDiffuse);
@@ -293,10 +289,14 @@ void Renderer::RenderLoop(void){
 
 			//! drawing
 //			scene->Draw();
-			scenegraph->DrawNodes();
+			ModelMatrix = scenegraph->DrawNodes();
 
+			ModelMatrix = IdentityMatrix * RotationMatrix * ModelMatrix;
+			//! Accumulate matrices
+			ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
+			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
-
+			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
 
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
@@ -332,12 +332,14 @@ void Renderer::RenderLoop(void){
 			forwardProgram->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			forwardProgram->SetUniform("mvp", MVPMatrix);
+			//! Uniform bindings
 			forwardProgram->SetUniform("Light.Position", LightPosition);
 			forwardProgram->SetUniform("Light.Ambient", LightAmbient);
 			forwardProgram->SetUniform("Light.Diffuse", LightDiffuse);
 			forwardProgram->SetUniform("Light.Specular", LightSpecular);
 			forwardProgram->SetUniformSampler("colorTex", scene->GetTexture(0), 0);
+
+			forwardProgram->SetUniform("mvp", MVPMatrix);
 
 //			scene->Draw();
 			scenegraph->DrawNodes();

@@ -20,6 +20,7 @@
 #include <IL/ilut.h>
 //! Local includes
 #include "Node.h"
+#include "Material.h"
 
 namespace scene {
 
@@ -37,10 +38,8 @@ namespace scene {
 			GLuint VAO_id;
 			GLuint VBO_id, IBO_id, NBO_id, UVBO_id;
 
-			//! Texture handlers
-			GLuint Texture_id;
-			ILenum ErrorCheckTexture;
-			ILuint Image_id;
+			//! Material
+			Material* material;
 
 		public:
 			Mesh(aiMesh* m);
@@ -48,6 +47,8 @@ namespace scene {
 
 			void Initialize(void);
 			void CreateBuffers(void);
+
+			void SetMaterial(Material* material);
 
 			void Draw(void);
 	};

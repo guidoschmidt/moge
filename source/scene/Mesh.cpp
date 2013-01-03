@@ -88,6 +88,7 @@ namespace scene {
 	//!
 	void Mesh::Draw(void)
 	{
+		AccumulateModelMatrix();
 		glBindVertexArray(VAO_id);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);

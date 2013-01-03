@@ -10,6 +10,9 @@
 //! GLM includes
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace scene {
 
@@ -29,11 +32,14 @@ namespace scene {
 			void Rotate(glm::quat r);
 			void Scale(glm::vec3 s);
 
+			//! ModelMatrix
+			void AccumulateModelMatrix(void);
+
 			//! Setter
 			void SetMatrix(glm::mat4);
 
 			//! Getter
-			glm::mat4 GetMatrix(void);
+			glm::mat4 GetModelMatrix(void);
 	};
 
 } //! namespace scene

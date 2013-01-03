@@ -109,15 +109,17 @@ namespace scene {
 	/*!
 	 *
 	 */
-	void SceneGraph::DrawNodes(void)
+	glm::mat4 SceneGraph::DrawNodes(void)
 	{
 		if(setupComplete)
 		{
 			for(unsigned int i = 0; i < root.ChildrenCount(); i++)
 			{
 				root.GetChild(i)->Draw();
+				return root.GetChild(i)->GetModelMatrix();
 			}
 		}
+		return glm::mat4(1.0f);
 	}
 
 } //! namespace scene

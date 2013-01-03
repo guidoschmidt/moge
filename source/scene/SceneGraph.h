@@ -11,6 +11,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <stack>
 //! Assimp includes
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -43,6 +44,9 @@ namespace scene {
 			bool writeLogFile;
 			std::ofstream logFile;
 
+			//! Matrix-stack
+			std::stack<glm::mat4> matrixStack;
+
 		public:
 			SceneGraph();
 			virtual ~SceneGraph();
@@ -54,7 +58,7 @@ namespace scene {
 
 			void Logging(bool logging);
 
-			void DrawNodes(void);
+			glm::mat4 DrawNodes(void);
 	};
 
 } //! namespace scene

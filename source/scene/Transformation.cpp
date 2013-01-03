@@ -4,7 +4,6 @@
  * @author	Guido Schmidt
  */
 
-
 #include "Transformation.h"
 
 namespace scene {
@@ -24,5 +23,19 @@ namespace scene {
 	void Transformation::Rotate(glm::quat r){ rotation = r; }
 	//!
 	void Transformation::Scale(glm::vec3 s){ scale = s; }
+
+	//!
+	void Transformation::AccumulateModelMatrix(void)
+	{
+		glm::mat4 TranslationMatrix = glm::translate(position);
+		// glm::mat4 ScaleMatrix = glm::scale(scale);
+		modelMatrix = glm::mat4(1.0f) * TranslationMatrix;
+	}
+
+	//!
+	glm::mat4 Transformation::GetModelMatrix(void)
+	{
+		return modelMatrix;
+	}
 
 } //! namespace scene
