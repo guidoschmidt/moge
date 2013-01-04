@@ -7,8 +7,9 @@
 
 Renderer* renderer;
 
-int main(int argc, char* argv[]){
-	renderer = new Renderer(1200, 800);
+int main(int argc, char* argv[])
+{
+	renderer = new Renderer(800, 600);
 
 	renderer->RenderLoop();
 

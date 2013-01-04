@@ -105,11 +105,23 @@ namespace scene {
 		writeLogFile = logging;
 	}
 
+	//! Returns the number of nodes
+	unsigned int SceneGraph::NodeCount(void)
+	{
+		return root.ChildrenCount();
+	}
+
+	//! Returns the node at position i
+	Node* SceneGraph::GetNode(int i)
+	{
+		return root.GetChild(i);
+	}
+
 	//! Draws all drawable nodes
 	/*!
 	 *
 	 */
-	glm::mat4 SceneGraph::DrawNodes(void)
+	glm::mat4 SceneGraph::DrawNodes()
 	{
 		if(setupComplete)
 		{
@@ -118,6 +130,17 @@ namespace scene {
 				root.GetChild(i)->Draw();
 				return root.GetChild(i)->GetModelMatrix();
 			}
+		}
+		return glm::mat4(1.0f);
+	}
+
+	//! Draws a given node of the scenegraph
+	glm::mat4 SceneGraph::DrawNode(unsigned int i)
+	{
+		if((i >= 0) && (i < root.ChildrenCount()))
+		{
+			root.GetChild(i)->Draw();
+			return root.GetChild(i)->GetModelMatrix();
 		}
 		return glm::mat4(1.0f);
 	}

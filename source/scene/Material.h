@@ -31,6 +31,7 @@ namespace scene {
 			virtual ~Material();
 
 			void LoadTexture(const std::string filename);
+			GLuint GetTexture(void);
 
 			void Use(void);
 	};

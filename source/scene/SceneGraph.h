@@ -23,6 +23,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 //! Local includes
+#include "../utilities/Singleton.h"
 #include "Node.h"
 #include "Mesh.h"
 
@@ -58,7 +59,13 @@ namespace scene {
 
 			void Logging(bool logging);
 
+			unsigned int NodeCount(void);
+
+			Node* GetNode(int i);
+
+			//! Drawing
 			glm::mat4 DrawNodes(void);
+			glm::mat4 DrawNode(unsigned int i);
 	};
 
 } //! namespace scene

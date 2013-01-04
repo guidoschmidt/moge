@@ -10,18 +10,32 @@
 //! ANTTWEAKBAR CALLBACKS BEGIN
 /*! Variables and button callbacks */
 bool deferred;
+bool loaded;
 bool rotation;
 static void TW_CALL SwitchDeffered(void* clientData){ deferred = !deferred;}
 static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
+static void TW_CALL SetSwitchScene(const void *value, void *clientData){}
+static void TW_CALL GetSwitchScene(void *value, void *clientData){}
 //! ANTTWEAKBAR CALLBACKS END
 
 
 //! Constructor
+/*!
+ *
+ * @param width
+ * @param height
+ */
 Renderer::Renderer(int width, int height)
 {
-	deferred = false;
+	deferred = true;
+	rotation = true;
+	rotSpeed = 0.05f;
+
+	currentScene = HEAD;
+	currentDeferredTex = TEX_COMPOSIT;
+	loaded = false;
+
 	context = new Context();
-	scene = new Scene();
 	fsq = new FSQ();
 	Shininess = 5.0f;
 
@@ -29,6 +43,9 @@ Renderer::Renderer(int width, int height)
 }
 
 //! Destructor
+/*!
+ *
+ */
 Renderer::~Renderer(void)
 {
 }
@@ -47,33 +64,34 @@ void Renderer::InitGLEW(void){
  * Initializes the renderer. Includes openning a context, adding of AntTweakBar variables,
  * Loading the scene, creating shader programs, and calling the other initialize methods.
  */
-void Renderer::Initialize(int width, int height){
+void Renderer::Initialize(int width, int height)
+{
 	context->OpenWindow(width, height, "Render Window", 4, 2);
 	context->AddAntTweakBar();
 
 	WriteLog(CONSOLE);
 	InitGLEW();
+	//! Initialize image loader utility
+	InitializeILUT();
 
 	glEnable(GL_DEPTH_TEST);
 
 	//! AntTweakBar
 	TwAddButton(context->GetBar(), "toggledeferred", SwitchDeffered, NULL, "key='space' label='Toggle Deferred Rendering' group='Rendering'");
 	TwAddButton(context->GetBar(), "togglerotation", SwitchRotation, NULL, "label='Toggle Rotation' group='Rotation'");
+	//! Deffered render targets choice
 	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_DEPTH, "Depthmap"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context->GetBar(), "deferredTextureChoice", texType, &currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
+	//! Scene choise
+	TwEnumVal sceneEV[NUM_SCENES] = { {HEAD, "Head"}, {GEOMETRY, "Geometry"}};
+	TwType sceneType = TwDefineEnum("SceneType", sceneEV, NUM_SCENES);
+	TwAddVarCB(context->GetBar(), "sceneChoice", sceneType, SetSwitchScene, GetSwitchScene, &currentScene, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
+
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
-//	scene->Import3DModel("./assets/geometry/blend/Head.blend");
-
-	scenegraph = new scene::SceneGraph();
-	scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
-
-	/*!
-	scene->Import3DModel("./assets/geometry/blend/Head.blend");
-	scene->LoadTexture("./assets/texture/jpg/Head.jpg");
-	*/
+	scenegraph = Singleton<scene::SceneGraph>::Instance();
 
 	/*! Init forward rendering
 	 **************************/
@@ -130,7 +148,8 @@ void Renderer::InitializeMatrices(void)
  * Creates a light setup, including light's position, ambient, diffuse & specular color.
  * Adds AntTweakBar variables, too.
  */
-void Renderer::InitializeLight(void){
+void Renderer::InitializeLight(void)
+{
 	LightPosition = glm::vec4(0.0f, 5.0f, 2.0f, 0.0f);
 	LightAmbient = glm::vec3(0.0f, 0.0f, 0.0f);
 	LightDiffuse = glm::vec3(0.65f, 0.65f, 0.65f);
@@ -141,12 +160,26 @@ void Renderer::InitializeLight(void){
 	TwAddVarRW(context->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light'");
 }
 
+//! Initializes the DevIL image loader utility
+/*!
+ *
+ */
+void Renderer::InitializeILUT(void)
+{
+	ilutRenderer(ILUT_OPENGL);
+	ilutRenderer(ILUT_OPENGL);
+	ilInit();
+	iluInit();
+	ilutInit();
+}
+
 //! Writes the log
 /*!
  * Wrtites a render log including the used OpenGL renderer (GPU) and it's vendor, OpenGL Version,
  * GLSL Version. The log can be written to console or to a log file
  */
-void Renderer::WriteLog(log logLocation){
+void Renderer::WriteLog(log logLocation)
+{
 	renderer = glGetString(GL_RENDERER);
 	vendor = glGetString(GL_VENDOR);
 	openglVersion = glGetString(GL_VERSION);
@@ -254,6 +287,23 @@ void Renderer::KeyboardFunction(void)
  * While variabke RUNNING is true, the renderer loops thorugh this function.
  */
 void Renderer::RenderLoop(void){
+	if(!loaded){
+		switch (currentScene) {
+			case 0:
+				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
+				loaded = true;
+				break;
+			case 1:
+				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
+				loaded = true;
+				break;
+			default:
+				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
+				loaded = true;
+				break;
+		}
+	}
+
 	glClearColor(0.75f, 0.75f, 0.75f, 1.0f);
 
 	while(RUNNING){
@@ -265,6 +315,7 @@ void Renderer::RenderLoop(void){
 		//! Modelmatrix
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(angle, RotationAxis);
+		ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
 
 
 		/************************************
@@ -281,19 +332,16 @@ void Renderer::RenderLoop(void){
 
 			//! Shader program setup & uniform bindings
 			deferredProgram_Pass1->Use();
-			deferredProgram_Pass1->SetUniform("Light.Position", LightPosition);
-			deferredProgram_Pass1->SetUniform("Light.Ambient", LightAmbient);
-			deferredProgram_Pass1->SetUniform("Light.Diffuse", LightDiffuse);
-			deferredProgram_Pass1->SetUniform("Light.Specular", LightSpecular);
-			deferredProgram_Pass1->SetUniformSampler("colorTex", scene->GetTexture(0), 0);
+			//! uniform camera binding
+			deferredProgram_Pass1->SetUniform("camera", CameraPosition);
 
-			//! drawing
-//			scene->Draw();
-			ModelMatrix = scenegraph->DrawNodes();
-
-			ModelMatrix = IdentityMatrix * RotationMatrix * ModelMatrix;
-			//! Accumulate matrices
-			ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
+			//! Drawing
+			for(unsigned int i = 0; i < scenegraph->NodeCount(); i++)
+			{
+				deferredProgram_Pass1->SetUniformSampler("colorTex", static_cast<scene::Mesh*>(scenegraph->GetNode(i))->GetTextureHandle(), 0);
+				ModelMatrix = scenegraph->DrawNode(i);
+			}
+			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
 			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 
 			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
@@ -316,6 +364,8 @@ void Renderer::RenderLoop(void){
 
 			deferredProgram_Pass2->SetUniform("textureID", currentDeferredTex);
 
+			deferredProgram_Pass1->SetUniform("camera", CameraPosition);
+
 			deferredProgram_Pass2->SetUniformSampler("deferredPositionTex", firstPassFBO->GetTexture(0), 1);
 			deferredProgram_Pass2->SetUniformSampler("deferredColorTex", firstPassFBO->GetTexture(1), 2);
 			deferredProgram_Pass2->SetUniformSampler("deferredNormalTex", firstPassFBO->GetTexture(2), 3);
@@ -337,12 +387,19 @@ void Renderer::RenderLoop(void){
 			forwardProgram->SetUniform("Light.Ambient", LightAmbient);
 			forwardProgram->SetUniform("Light.Diffuse", LightDiffuse);
 			forwardProgram->SetUniform("Light.Specular", LightSpecular);
-			forwardProgram->SetUniformSampler("colorTex", scene->GetTexture(0), 0);
 
 			forwardProgram->SetUniform("mvp", MVPMatrix);
 
-//			scene->Draw();
-			scenegraph->DrawNodes();
+			//! Drawing
+			for(unsigned int i=0; i < scenegraph->NodeCount(); i++)
+			{
+				forwardProgram->SetUniformSampler("colorTex", static_cast<scene::Mesh*>(scenegraph->GetNode(i))->GetTextureHandle(), 0);
+				ModelMatrix = scenegraph->DrawNode(i);
+			}
+			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+			forwardProgram->SetUniform("mvp", MVPMatrix);
 
 			forwardProgram->Unuse();
 		}
@@ -350,6 +407,7 @@ void Renderer::RenderLoop(void){
 		//! Draw AntTweakBar-GUI
 		TwDraw();
 		context->SwapBuffers();
+
 		//! Check for context exiting
 		if(context->IsExiting()){
 			RUNNING = false;

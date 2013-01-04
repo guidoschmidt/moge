@@ -43,7 +43,6 @@ class Renderer
 		typedef enum{FILE=0, CONSOLE=1} log;
 		GLboolean RUNNING;
 		Context* context;
-		Scene* scene;
 		FSQ* fsq;
 		ShaderProgram* forwardProgram, *deferredProgram_Pass1, *deferredProgram_Pass2;
 		FrameBufferObject* firstPassFBO;
@@ -54,6 +53,10 @@ class Renderer
 		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_DEPTH=3} DeferredTexture;
 		#define NUM_TEXS 5
 		DeferredTexture currentDeferredTex;
+
+		typedef enum {HEAD=0, GEOMETRY=1} Scenes;
+		#define NUM_SCENES 2
+		Scenes currentScene;
 
 		//! Matrices
 		glm::mat4 IdentityMatrix;
@@ -84,9 +87,10 @@ class Renderer
 		void Initialize(int width, int height);
 		void InitializeMatrices(void);
 		void InitializeLight(void);
+		void InitializeILUT(void);
 		void KeyboardFunction(void);
 		void RenderLoop(void);
 		void WriteLog(log logLocation);
 };
 
-#endif /* RENDERER_H_ */
+#endif //! RENDERER_H_

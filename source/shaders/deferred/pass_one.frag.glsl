@@ -3,6 +3,7 @@
 in vec3 vert_Position;
 in vec3 vert_Normal;
 in vec2 vert_UV;
+in vec3 vert_Camera;
 
 layout (location = 0) out vec3 Position;
 layout (location = 1) out vec3 Color;

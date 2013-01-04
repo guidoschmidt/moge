@@ -14,6 +14,7 @@ namespace scene {
 		mesh = m;
 		Initialize();
 		CreateBuffers();
+		Material material ();
 	}
 
 	Mesh::~Mesh()
@@ -24,6 +25,7 @@ namespace scene {
 	//! Initializes vertex-list, index-list, normal-list and uv-list
 	void Mesh::Initialize(void)
 	{
+		//! Topology initialization
 		for(unsigned int v=0; v < mesh->mNumVertices; v++){
 			//! Write vertices
 			vertices.push_back(mesh->mVertices[v].x);
@@ -44,6 +46,9 @@ namespace scene {
 				indices.push_back(mesh->mFaces[f].mIndices[i]);
 			}
 		}
+
+		//! Material initialization
+		material.LoadTexture("./assets/texture/jpg/Head.jpg");
 	}
 
 	//! Creates the buffers holding the gemoetry, the normals and the uv coordinates
@@ -92,6 +97,11 @@ namespace scene {
 		glBindVertexArray(VAO_id);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+	}
+
+	GLuint Mesh::GetTextureHandle(void)
+	{
+		return material.GetTexture();
 	}
 
 } //! namespace scene
