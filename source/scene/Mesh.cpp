@@ -96,9 +96,25 @@ namespace scene {
 		glBindVertexArray(0);
 	}
 
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
 	GLuint Mesh::GetTextureHandle(void)
 	{
-		return material.GetTexture();
+		return material->GetTexture();
+	}
+
+
+	//! Set the mesh's material
+	/*!
+	 *
+	 */
+	void Mesh::SetMaterial(Material* m)
+	{
+		material = m;
 	}
 
 } //! namespace scene

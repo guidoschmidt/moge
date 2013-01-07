@@ -28,6 +28,7 @@
 #include "ShaderProgram.h"
 #include "FSQ.h"
 #include "FrameBufferObject.h"
+#include "../utilities/Singleton.h"
 #include "../scene/SceneGraph.h"
 #include "../scene/MaterialManager.h"
 
@@ -36,7 +37,6 @@ class Renderer
 	private:
 		//! Singleton instances
 		scene::SceneGraph* scenegraph;
-		scene::MaterialManager* materialman;
 
 		const GLubyte* renderer;
 		const GLubyte* vendor;
@@ -58,7 +58,7 @@ class Renderer
 		#define NUM_TEXS 5
 		DeferredTexture currentDeferredTex;
 
-		typedef enum {HEAD=0, GEOMETRY=1} Scenes;
+		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2} Scenes;
 		#define NUM_SCENES 2
 		Scenes currentScene;
 

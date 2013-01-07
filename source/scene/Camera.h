@@ -35,6 +35,10 @@ namespace scene {
 			glm::mat4 GetProjectionMatrix(void);
 
 			glm::mat4 GetViewProjectionMatrix(void);
+
+			void TranslateX(float dx);
+			void TranslateY(float dy);
+			void TranslateZ(float dz);
 	};
 
 } //! namespace scene

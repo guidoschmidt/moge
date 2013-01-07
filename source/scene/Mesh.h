@@ -39,7 +39,7 @@ namespace scene {
 			GLuint VBO_id, IBO_id, NBO_id, UVBO_id;
 
 			//! Material
-			Material material;
+			Material* material;
 
 		public:
 			Mesh(aiMesh* m);

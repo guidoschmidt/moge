@@ -27,6 +27,8 @@
 #include "Node.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Material.h"
+#include "MaterialManager.h"
 
 namespace scene {
 
@@ -42,6 +44,9 @@ namespace scene {
 
 			//! Node hierachry
 			Node root;
+
+			//! Material manager
+			scene::MaterialManager* materialman;
 
 			//! Logfile
 			bool writeLogFile;

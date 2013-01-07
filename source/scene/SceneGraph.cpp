@@ -43,6 +43,8 @@ namespace scene {
 	 */
 	void SceneGraph::Initialize(void)
 	{
+		materialman = Singleton<scene::MaterialManager>::Instance();
+
 		Node root();
 
 		if(writeLogFile)
@@ -120,12 +122,25 @@ namespace scene {
 			}
 		}*/
 		//! Manually add a a camera
-		glm::vec3 position(0.0f, 5.0f, 8.0f);
+		glm::vec3 position(0.0f, 2.0f, 5.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		Camera* camera = new Camera(position, lookAt, up);
 		activeCamera = camera;
 		root.AddChild(camera);
+
+
+		//! Materials
+		//! Head
+		Material* material0 = new Material();
+		material0->SetReflectivity(0.0f);
+		materialman->AddMaterial(material0, "./assets/texture/jpg/Head.jpg");
+		material0->SetTexturePointer(materialman->GetTexture(0));
+//		//! Street
+		Material* material1 = new Material();
+		material1->SetReflectivity(1.0f);
+		materialman->AddMaterial(material1, "./assets/texture/jpg/Road.jpg");
+		material1->SetTexturePointer(materialman->GetTexture(1));
 
 
 		//! Meshes
@@ -137,6 +152,10 @@ namespace scene {
 				//! Get mesh and create new scenegraph node
 				unsigned int meshID = scene->mRootNode->mChildren[c]->mMeshes[m];
 				Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
+				if(m == 0)
+					mesh->SetMaterial(material0);
+//				else
+//					mesh->SetMaterial(material1);
 
 				//! Get aiNode's transformation
 				aiVector3D aiPosition, aiScale;
@@ -155,6 +174,7 @@ namespace scene {
 				root.AddChild(mesh);
 			}
 		}
+
 		setupComplete = true;
 	}
 

@@ -31,7 +31,7 @@ namespace scene {
 	class MaterialManager {
 		private:
 			std::vector<Material*> materials;
-			std::vector<GLuint*> textures;
+			std::vector<GLuint> textures;
 			int textureCounter;
 
 			//!
@@ -44,7 +44,9 @@ namespace scene {
 
 			void AddMaterial(Material* material, std::string texturefile);
 
-			GLuint* LoadTexture(std::string filename);
+			GLuint LoadTexture(std::string filename);
+
+			GLuint* GetTexture(int i);
 	};
 
 

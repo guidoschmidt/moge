@@ -75,4 +75,26 @@ namespace scene {
 		return glm::perspective(60.0f, 1.0f, 0.01f, 100.0f);
 	}
 
+
+	//! TODO Overload
+	void Camera::TranslateX(float dx)
+	{
+		position.x += dx;
+		lookAt.x += dx;
+	}
+
+	//!
+	void Camera::TranslateY(float dy)
+	{
+		position.y += dy;
+		lookAt.y += dy;
+	}
+
+	//!
+	void Camera::TranslateZ(float dz)
+	{
+		position.z += dz;
+		lookAt.z += dz;
+	}
+
 } //! namespace scene

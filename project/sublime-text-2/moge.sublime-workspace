@@ -50,6 +50,14 @@
 				"buffer_size": 596,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
+			"settings":
+			{
+				"buffer_size": 5698,
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -168,7 +176,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -197,6 +205,36 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
+					"settings":
+					{
+						"buffer_size": 5698,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1434,
+								1434
+							]
+						],
+						"settings":
+						{
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1711.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

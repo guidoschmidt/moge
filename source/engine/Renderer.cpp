@@ -29,15 +29,15 @@ Renderer::Renderer(int width, int height)
 	rotation = true;
 	rotSpeed = 0.05f;
 
-	currentScene = HEAD;
+	currentScene = CONFERENCE;
 	currentDeferredTex = TEX_COMPOSIT;
 	loaded = false;
 
 	context = new Context();
 	fsq = new FSQ();
-	Shininess = 5.0f;
+	Shininess = 12.0f;
 
-	BackgroundColor = glm::vec3(0.0f, 0.05f, 0.15f);
+	BackgroundColor = glm::vec3(0.15f, 0.25f, 0.35f);
 
 	Initialize(width, height);
 }
@@ -48,6 +48,7 @@ Renderer::Renderer(int width, int height)
  */
 Renderer::~Renderer(void)
 {
+
 }
 
 //! Initialize GLEW
@@ -91,12 +92,11 @@ void Renderer::Initialize(int width, int height)
 	//! Background color
 	TwAddVarRW(context->GetBar(), "background", TW_TYPE_COLOR3F, &BackgroundColor, "label='Background' group='Scene'");
 	//! Rotation
-	TwAddButton(context->GetBar(), "togglerotation", SwitchRotation, NULL, "label='Toggle Rotation' group='Rotation'");
+	TwAddButton(context->GetBar(), "togglerotation", SwitchRotation, NULL, "key='r' label='Toggle Rotation' group='Rotation'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
 	//! Initialize singleton instances
 	scenegraph = Singleton<scene::SceneGraph>::Instance();
-	materialman = Singleton<scene::MaterialManager>::Instance();
 
 	/*! Init forward rendering
 	 **************************/
@@ -157,8 +157,8 @@ void Renderer::InitializeLight(void)
 {
 	LightPosition = glm::vec4(0.0f, 5.0f, 2.0f, 0.0f);
 	LightAmbient = glm::vec3(0.0f, 0.0f, 0.0f);
-	LightDiffuse = glm::vec3(0.65f, 0.65f, 0.65f);
-	LightSpecular = glm::vec3(0.35f, 0.35f, 0.35f);
+	LightDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+	LightSpecular = glm::vec3(0.35f, 0.45f, 0.55f);
 
 	TwAddVarRW(context->GetBar(), "lightAmbient", TW_TYPE_COLOR3F, &LightAmbient, "label='Ambient' group='Light'");
 	TwAddVarRW(context->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light'");
@@ -271,23 +271,42 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
  */
 void Renderer::KeyboardFunction(void)
 {
+	//! Camera
 	double speed = 0.005;
-//	if(glfwGetKey('W')){
-//		CameraPosition[2] -= speed;
-//		CameraTargetPosition[2] -= speed;
-//	}
-//	else if(glfwGetKey('S')){
-//		CameraPosition[2] += speed;
-//		CameraTargetPosition[2] += speed;
-//	}
-//	else if(glfwGetKey('A')){
-//		CameraPosition[0] -= speed;
-//		CameraTargetPosition[0] -= speed;
-//	}
-//	else if(glfwGetKey('D')){
-//		CameraPosition[0] += speed;
-//		CameraTargetPosition[0] += speed;
-//	}
+	if(glfwGetKey('W'))
+	{
+		scenegraph->GetActiveCamera()->TranslateZ(-speed);
+	}
+	if(glfwGetKey('S'))
+	{
+		scenegraph->GetActiveCamera()->TranslateZ(speed);
+	}
+	if(glfwGetKey('A'))
+	{
+		scenegraph->GetActiveCamera()->TranslateX(-speed);
+	}
+	if(glfwGetKey('D'))
+	{
+		scenegraph->GetActiveCamera()->TranslateX(speed);
+	}
+
+	//! Light
+	if(glfwGetKey('I'))
+	{
+		LightPosition.z += speed;
+	}
+	if(glfwGetKey('K'))
+	{
+		LightPosition.z -= speed;
+	}
+	if(glfwGetKey('J'))
+	{
+		LightPosition.x += speed;
+	}
+	if(glfwGetKey('L'))
+	{
+		LightPosition.x -= speed;
+	}
 }
 
 
@@ -348,22 +367,25 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass1->SetUniform("camera", CameraPosition);
 
 			//! Drawing
-			for(unsigned int i = 0; i < scenegraph->NodeCount(); i++)
-			{
-				deferredProgram_Pass1->SetUniformSampler("colorTex", static_cast<scene::Mesh*>(scenegraph->GetNode(i))->GetTextureHandle(), 0);
-				ModelMatrix = scenegraph->DrawNode(i);
-			}
+			//! Head
+			deferredProgram_Pass1->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(0)), 5);
+			ModelMatrix = scenegraph->DrawNode(2);
 			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
 			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-
+			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
+			//! Street
+			deferredProgram_Pass1->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(1)), 5);
+			ModelMatrix = scenegraph->DrawNode(1);
+			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
 
+			firstPassFBO->Unuse();
+			deferredProgram_Pass1->Unuse();
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
 			 *		2ND RENDER PASS		   *
 			 * * * * * * * * * * * * * * * */
-			firstPassFBO->Unuse();
-			deferredProgram_Pass1->Unuse();
 
 			deferredProgram_Pass2->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -403,14 +425,17 @@ void Renderer::RenderLoop(void){
 			forwardProgram->SetUniform("mvp", MVPMatrix);
 
 			//! Drawing
-			for(unsigned int i=0; i < scenegraph->NodeCount(); i++)
-			{
-				forwardProgram->SetUniformSampler("colorTex", static_cast<scene::Mesh*>(scenegraph->GetNode(i))->GetTextureHandle(), 0);
-				ModelMatrix = scenegraph->DrawNode(i);
-			}
+			//! Head
+			forwardProgram->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(0)), 5);
+			ModelMatrix = scenegraph->DrawNode(2);
 			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
 			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-
+			forwardProgram->SetUniform("mvp", MVPMatrix);
+			//! Street
+			forwardProgram->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(1)), 5);
+			ModelMatrix = scenegraph->DrawNode(1);
+			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
 			forwardProgram->SetUniform("mvp", MVPMatrix);
 
 			forwardProgram->Unuse();

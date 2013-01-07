@@ -19,6 +19,9 @@ namespace scene {
 
 	//!
 	void Transformation::Translate(glm::vec3 t){ position = t; }
+	void Transformation::TranslateX(float dx){ position.x += dx; }
+	void Transformation::TranslateY(float dy){ position.y += dy; }
+	void Transformation::TranslateZ(float dz){ position.z += dz; }
 	//!
 	void Transformation::Rotate(glm::quat r){ rotation = r; }
 	//!

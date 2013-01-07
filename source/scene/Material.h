@@ -33,10 +33,10 @@ namespace scene {
 
 		public:
 			Material();
+			Material(GLuint* texture);
 			virtual ~Material();
 
 			//! Texture
-			void LoadTexture(const std::string filename);
 			GLuint GetTexture(void);
 
 			//! Material
@@ -48,6 +48,8 @@ namespace scene {
 			void SetDiffuseColor(glm::vec4 diffuse);
 			void SetSpecularColor(glm::vec4 specular);
 			void SetReflectivity(float reflection);
+
+			void SetTexturePointer(GLuint* texture);
 
 			void Use(void);
 	};

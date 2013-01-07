@@ -17,19 +17,19 @@ int WIDTH, HEIGHT;
  */
 void GLFWCALL KeyboardFunction(int key, int action)
 {
-	if(!TwEventKeyGLFW(key, action))
+	if(!(TwEventKeyGLFW(key, action)))
 	{
 		switch(key){
 			case 87: //! w
 				break;
 			case 83: //! s
 				break;
-			case 65: //!a
+			case 65: //! a
 				break;
 			case 68: //! d
 				break;
 			default:
-				std::cout << "key: " << key << ", action: " << action << std::endl;
+				//std::cout << "key: " << key << ", action: " << action << std::endl;
 				break;
 			}
 	}
@@ -216,13 +216,12 @@ void Context::AddAntTweakBar(void){
 
 	bar = TwNewBar("GUI");
 
-	TwDefine("GUI label='Engine Properties' contained='true' fontstyle='fixed' color='0 0 0' alpha='100' text='light' position='10 10' size='400 600'");
+	TwDefine("GUI label='Engine Properties' contained='true' fontstyle='fixed' color='0 0 0' alpha='100' text='light' position='0 0' size='250 600'");
 
 	//! Set GLFW event callbacks
 	//! Directly redirect GLFW mouse button events to AntTweakBar
 	glfwSetMouseButtonCallback((GLFWmousebuttonfun)TwEventMouseButtonGLFW);
 	//! Directly redirect GLFW mouse wheel events to AntTweakBar
 	glfwSetMouseWheelCallback((GLFWmousewheelfun)TwEventMouseWheelGLFW);
-	//! Directly redirect GLFW char events to AntTweakBar
-	//glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
+	glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
 }

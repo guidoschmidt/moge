@@ -29,6 +29,9 @@ namespace scene {
 			virtual ~Transformation();
 
 			void Translate(glm::vec3 t);
+			void TranslateX(float dx);
+			void TranslateY(float dy);
+			void TranslateZ(float dz);
 			void Rotate(glm::quat r);
 			void Scale(glm::vec3 s);
 
