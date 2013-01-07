@@ -9,22 +9,30 @@
 int initWIDTH, initHEIGHT;
 int WIDTH, HEIGHT;
 
-//! Constructor
-Context::Context(int height, int width)
+//! GLFW callback functions
+/*********************************************************************/
+//! GLFW keyboard function
+/*!
+ *
+ */
+void GLFWCALL KeyboardFunction(int key, int action)
 {
-	bar = 0;
-	WIDTH = width;
-	HEIGHT = height;
-	if(!glfwInit()){
-		std::cout << "ERROR: could not initialize GLFW!" << std::endl;
-		glfwTerminate();
+	if(!TwEventKeyGLFW(key, action))
+	{
+		switch(key){
+			case 87: //! w
+				break;
+			case 83: //! s
+				break;
+			case 65: //!a
+				break;
+			case 68: //! d
+				break;
+			default:
+				std::cout << "key: " << key << ", action: " << action << std::endl;
+				break;
+			}
 	}
-}
-
-//! Destructor
-Context::~Context()
-{
-	glfwTerminate();
 }
 
 //! GLFW resize function
@@ -38,6 +46,44 @@ void GLFWCALL ResizeFunction(int width, int height)
 	glViewport(0, 0, WIDTH, HEIGHT);
 	TwWindowSize(WIDTH, HEIGHT);
 }
+
+
+//! GLFW mouse function
+/*!
+ *
+ */
+void GLFWCALL MousePositionFunction(int mouseX, int mouseY)
+{
+	if(!TwEventMousePosGLFW(mouseX, mouseY))
+	{
+		//std::cout << "Mouse @ (" << x << ", " << y << ")" << std::endl;
+	}
+}
+/*********************************************************************/
+
+
+//! Constructor
+Context::Context(int height, int width)
+{
+	bar = 0;
+	WIDTH = width;
+	HEIGHT = height;
+	if(!glfwInit()){
+		std::cout << "ERROR: could not initialize GLFW!" << std::endl;
+		glfwTerminate();
+	}
+}
+
+
+//! Destructor
+/*!
+ *
+ */
+Context::~Context()
+{
+	glfwTerminate();
+}
+
 
 //! Open window function
 /*!
@@ -67,7 +113,10 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 	glfwSetWindowPos(0, 0 );
 	glfwSetWindowTitle(TITLE.c_str());
 	glfwSetWindowSizeCallback(ResizeFunction);
+	glfwSetKeyCallback(KeyboardFunction);
+	glfwSetMousePosCallback(MousePositionFunction);
 }
+
 
 //! Sets window title
 /*!
@@ -78,6 +127,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 void Context::setTitle(std::string title){
 	TITLE = title;
 }
+
 
 //! Sets the window size
 /*!
@@ -100,6 +150,7 @@ void Context::SwapBuffers(void){
 	glfwSwapBuffers();
 }
 
+
 //! Checks the context's existance
 /*!
  *
@@ -111,6 +162,7 @@ bool Context::IsExiting(void){
 	else
 		return false;
 }
+
 
 //! Returns the window title
 /*!
@@ -131,6 +183,7 @@ TwBar* Context::GetBar(){
 	return bar;
 }
 
+
 //! Returns the context's width
 /*!
  *
@@ -141,6 +194,7 @@ int Context::GetWidth()
 	return WIDTH;
 }
 
+
 //! Returns the context's height
 /*!
  *
@@ -150,6 +204,7 @@ int Context::GetHeight()
 {
 	return HEIGHT;
 }
+
 
 //! Adds a graphical user interface (GUI) to this context
 /*!
@@ -166,12 +221,8 @@ void Context::AddAntTweakBar(void){
 	//! Set GLFW event callbacks
 	//! Directly redirect GLFW mouse button events to AntTweakBar
 	glfwSetMouseButtonCallback((GLFWmousebuttonfun)TwEventMouseButtonGLFW);
-	//! Directly redirect GLFW mouse position events to AntTweakBar
-	glfwSetMousePosCallback((GLFWmouseposfun)TwEventMousePosGLFW);
 	//! Directly redirect GLFW mouse wheel events to AntTweakBar
 	glfwSetMouseWheelCallback((GLFWmousewheelfun)TwEventMouseWheelGLFW);
-	//! Directly redirect GLFW key events to AntTweakBar
-	glfwSetKeyCallback((GLFWkeyfun)TwEventKeyGLFW);
 	//! Directly redirect GLFW char events to AntTweakBar
-	glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
+	//glfwSetCharCallback((GLFWcharfun)TwEventCharGLFW);
 }

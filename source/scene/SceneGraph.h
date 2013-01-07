@@ -25,6 +25,7 @@
 //! Local includes
 #include "../utilities/Singleton.h"
 #include "Node.h"
+#include "Camera.h"
 #include "Mesh.h"
 
 namespace scene {
@@ -33,6 +34,7 @@ namespace scene {
 
 		private:
 			bool setupComplete;
+			Camera* activeCamera;
 
 			//! Assimp
 			Assimp::Importer aiImporter;
@@ -43,7 +45,7 @@ namespace scene {
 
 			//! Logfile
 			bool writeLogFile;
-			std::ofstream logFile;
+			std::ofstream logfile;
 
 			//! Matrix-stack
 			std::stack<glm::mat4> matrixStack;
@@ -62,6 +64,7 @@ namespace scene {
 			unsigned int NodeCount(void);
 
 			Node* GetNode(int i);
+			Camera* GetActiveCamera(void);
 
 			//! Drawing
 			glm::mat4 DrawNodes(void);

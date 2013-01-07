@@ -46,9 +46,6 @@ namespace scene {
 				indices.push_back(mesh->mFaces[f].mIndices[i]);
 			}
 		}
-
-		//! Material initialization
-		material.LoadTexture("./assets/texture/jpg/Head.jpg");
 	}
 
 	//! Creates the buffers holding the gemoetry, the normals and the uv coordinates

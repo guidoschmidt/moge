@@ -1,5 +1,7 @@
 //! Singleton.h
 /*!
+ * Template class for the singleton design pattern.
+ *
  * @date	04.01.2013
  * @author	Guido Schmidt
  */

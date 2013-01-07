@@ -29,11 +29,15 @@
 #include "FSQ.h"
 #include "FrameBufferObject.h"
 #include "../scene/SceneGraph.h"
+#include "../scene/MaterialManager.h"
 
 class Renderer
 {
 	private:
+		//! Singleton instances
 		scene::SceneGraph* scenegraph;
+		scene::MaterialManager* materialman;
+
 		const GLubyte* renderer;
 		const GLubyte* vendor;
 		const GLubyte* openglVersion;
@@ -75,6 +79,8 @@ class Renderer
 		glm::vec3 CameraUp;
 		//! Material
 		float Shininess;
+		//! Background color
+		glm::vec3 BackgroundColor;
 
 	protected:
 		void InitGLEW(void);

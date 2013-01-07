@@ -44,10 +44,10 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
 			"settings":
 			{
-				"buffer_size": 2770,
+				"buffer_size": 596,
 				"line_ending": "Unix"
 			}
 		}
@@ -96,6 +96,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/MinGW/lib/libassimp.dll.a",
+		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwAdvanced1.cpp",
+		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwSimpleGLFW.c",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.h",
@@ -109,7 +114,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
@@ -169,18 +173,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
 					"settings":
 					{
-						"buffer_size": 2770,
+						"buffer_size": 596,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								195,
-								195
+								332,
+								332
 							]
 						],
 						"settings":

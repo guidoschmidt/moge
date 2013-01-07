@@ -1,5 +1,7 @@
 //! Scenegraph.cpp
 /*!
+ * TODO Extend logging
+ *
  * @date	02.01.2013
  * @author	Guido Schmidt
  */
@@ -17,32 +19,47 @@ namespace scene {
 	{
 		setupComplete = false;
 		writeLogFile = true;
+
+		activeCamera = 0;
+
 		Initialize();
 	}
 
+
 	//! Destructor
+	/*!
+	 *
+	 */
 	SceneGraph::~SceneGraph()
 	{
 		if(writeLogFile)
-			logFile.close();
+			logfile.close();
 	}
 
+
 	//! Initializes the scenegraph
+	/*!
+	 *	TODO Add MaterialManager
+	 */
 	void SceneGraph::Initialize(void)
 	{
 		Node root();
 
 		if(writeLogFile)
 		{
-			logFile.open("logs/scene.txt");
+			logfile.open("logs/scene.txt");
 
-			logFile << "LOGFILE" << std::endl;
-			logFile << "SCENE & SCENEGRAPH" << std::endl;
+			logfile << "LOGFILE" << std::endl;
+			logfile << "SCENE & SCENEGRAPH" << std::endl;
 		}
 	}
 
 
 	//! Loads a scene from a file
+	/*!
+	 *
+	 * @param filename
+	 */
 	void SceneGraph::LoadSceneFromFile(const std::string filename)
 	{
 		std::ifstream infile(filename.c_str());
@@ -51,7 +68,7 @@ namespace scene {
 			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
 			if(!scene)
 			{
-				logFile << "ERROR | assimp: could not import " << filename << std::endl;
+				logfile << "ERROR | assimp: could not import " << filename << std::endl;
 			}
 			else
 			{
@@ -60,17 +77,59 @@ namespace scene {
 		}
 		else
 		{
-			logFile << "ERROR | assimp: file " << filename << " could not be read!" << std::endl;
+			logfile << "ERROR | assimp: file " << filename << " could not be read!" << std::endl;
 		}
 		infile.close();
 	}
 
-	//! Process an assimp scene
+
+	//! Processes an assimp scene
+	/*!
+	 *
+	 * @param scene
+	 */
 	void SceneGraph::ProcessScene(const aiScene* scene)
 	{
+		//! Cameras
+		logfile << "#Cameras: " << scene->mNumCameras << " camera" << std::endl;
+		//! TODO Camera import stuff, blender-collada export doesnt provide correct camera coordinates
+		/*!
+		 * Incomment code for correct import of camera
+		 *
+		if(scene->HasCameras())
+		{
+			for(unsigned int cam = 0; cam < scene->mNumCameras; cam++)
+			{
 
-		std::cout << scene->mRootNode->mNumChildren << std::endl;
+				glm::vec3 position(	scene->mCameras[cam]->mPosition.x,
+									scene->mCameras[cam]->mPosition.y,
+									scene->mCameras[cam]->mPosition.z);
+				glm::vec3 lookAt(	scene->mCameras[cam]->mLookAt.x,
+									scene->mCameras[cam]->mLookAt.y,
+									scene->mCameras[cam]->mLookAt.y);
+				glm::vec3 up(		scene->mCameras[cam]->mUp.x,
+									scene->mCameras[cam]->mUp.y,
+									scene->mCameras[cam]->mUp.z);
+				Camera* camera = new Camera(position, lookAt, up);
 
+				root.AddChild(camera);
+				activeCamera = camera;
+				logfile << "#Camera(" << cam << ") @ (" << position.x << "|" << position.y << "|" << position.z << ")" << std::endl;
+				logfile << "#Camera-LookAt(" << cam << ") @ (" << lookAt.x << "|" << lookAt.y << "|" << lookAt.z << ")" << std::endl;
+
+			}
+		}*/
+		//! Manually add a a camera
+		glm::vec3 position(0.0f, 5.0f, 8.0f);
+		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
+		glm::vec3 up(0.0f, 1.0f, 0.0f);
+		Camera* camera = new Camera(position, lookAt, up);
+		activeCamera = camera;
+		root.AddChild(camera);
+
+
+		//! Meshes
+		logfile << "#Meshes: " << scene->mNumMeshes << std::endl;
 		for(unsigned int c = 0; c < scene->mRootNode->mNumChildren; c++)
 		{
 			for(unsigned int m = 0; m < scene->mRootNode->mChildren[c]->mNumMeshes; m++)
@@ -99,23 +158,54 @@ namespace scene {
 		setupComplete = true;
 	}
 
+
 	//!
+	/*!
+	 *
+	 * @param logging
+	 */
 	void SceneGraph::Logging(bool logging)
 	{
 		writeLogFile = logging;
 	}
 
+
 	//! Returns the number of nodes
+	/*!
+	 *
+	 * @return
+	 */
 	unsigned int SceneGraph::NodeCount(void)
 	{
 		return root.ChildrenCount();
 	}
 
+
 	//! Returns the node at position i
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
 	Node* SceneGraph::GetNode(int i)
 	{
 		return root.GetChild(i);
 	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	Camera* SceneGraph::GetActiveCamera(void)
+	{
+		if(activeCamera != 0)
+			return activeCamera;
+		else
+			return new Camera();
+	}
+
 
 	//! Draws all drawable nodes
 	/*!
@@ -134,13 +224,24 @@ namespace scene {
 		return glm::mat4(1.0f);
 	}
 
+
 	//! Draws a given node of the scenegraph
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
 	glm::mat4 SceneGraph::DrawNode(unsigned int i)
 	{
 		if((i >= 0) && (i < root.ChildrenCount()))
 		{
-			root.GetChild(i)->Draw();
-			return root.GetChild(i)->GetModelMatrix();
+			//! Check if mesh
+			if(dynamic_cast<Mesh*>(root.GetChild(i)) != 0)
+			{
+				root.GetChild(i)->Draw();
+				return root.GetChild(i)->GetModelMatrix();
+			}
+			//!TODO check if camera or light
 		}
 		return glm::mat4(1.0f);
 	}

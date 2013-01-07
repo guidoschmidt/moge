@@ -1,5 +1,5 @@
 //! Renderer.cpp
-/*
+/*!
  * @date 	28.11.2012
  * @author 	Guido Schmidt
  */
@@ -14,8 +14,6 @@ bool loaded;
 bool rotation;
 static void TW_CALL SwitchDeffered(void* clientData){ deferred = !deferred;}
 static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
-static void TW_CALL SetSwitchScene(const void *value, void *clientData){}
-static void TW_CALL GetSwitchScene(void *value, void *clientData){}
 //! ANTTWEAKBAR CALLBACKS END
 
 
@@ -38,6 +36,8 @@ Renderer::Renderer(int width, int height)
 	context = new Context();
 	fsq = new FSQ();
 	Shininess = 5.0f;
+
+	BackgroundColor = glm::vec3(0.0f, 0.05f, 0.15f);
 
 	Initialize(width, height);
 }
@@ -78,20 +78,25 @@ void Renderer::Initialize(int width, int height)
 
 	//! AntTweakBar
 	TwAddButton(context->GetBar(), "toggledeferred", SwitchDeffered, NULL, "key='space' label='Toggle Deferred Rendering' group='Rendering'");
-	TwAddButton(context->GetBar(), "togglerotation", SwitchRotation, NULL, "label='Toggle Rotation' group='Rotation'");
-	//! Deffered render targets choice
+	//! Deferred: render targets choice
 	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_DEPTH, "Depthmap"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context->GetBar(), "deferredTextureChoice", texType, &currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
-	//! Scene choise
+	//! Scene choice
 	TwEnumVal sceneEV[NUM_SCENES] = { {HEAD, "Head"}, {GEOMETRY, "Geometry"}};
 	TwType sceneType = TwDefineEnum("SceneType", sceneEV, NUM_SCENES);
-	TwAddVarCB(context->GetBar(), "sceneChoice", sceneType, SetSwitchScene, GetSwitchScene, &currentScene, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
-
+	TwAddVarRW(context->GetBar(), "sceneChoice", sceneType, &currentScene, "label='Scene' group='Scene' keyIncr='<' keyDecr='>' help='Load another scene.' ");
+	//! Material
 	TwAddVarRW(context->GetBar(), "shininess", TW_TYPE_FLOAT, &Shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
+	//! Background color
+	TwAddVarRW(context->GetBar(), "background", TW_TYPE_COLOR3F, &BackgroundColor, "label='Background' group='Scene'");
+	//! Rotation
+	TwAddButton(context->GetBar(), "togglerotation", SwitchRotation, NULL, "label='Toggle Rotation' group='Rotation'");
 	TwAddVarRW(context->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 
+	//! Initialize singleton instances
 	scenegraph = Singleton<scene::SceneGraph>::Instance();
+	materialman = Singleton<scene::MaterialManager>::Instance();
 
 	/*! Init forward rendering
 	 **************************/
@@ -135,7 +140,7 @@ void Renderer::InitializeMatrices(void)
 	IdentityMatrix = glm::mat4(1.0f);
 
 	//! Viewmatrix
-	CameraPosition = glm::vec3(0.0, 3.0, 10.0);
+	CameraPosition = glm::vec3(0.0, 2.0, 10.0);
 	CameraTargetPosition = glm::vec3(0.0, 1.0, 0.0);
 	CameraUp = glm::vec3(0, 1, 0);
 
@@ -172,6 +177,7 @@ void Renderer::InitializeILUT(void)
 	iluInit();
 	ilutInit();
 }
+
 
 //! Writes the log
 /*!
@@ -212,6 +218,7 @@ void Renderer::WriteLog(log logLocation)
 	else if(logLocation == FILE){
 	}
 }
+
 
 //! Calculates frames per second
 /*!
@@ -257,6 +264,7 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 	}
 }
 
+
 //! Keyboard function
 /*!
  * Processes keyboard input using glfw.
@@ -264,49 +272,51 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 void Renderer::KeyboardFunction(void)
 {
 	double speed = 0.005;
-	if(glfwGetKey('W')){
-		CameraPosition[2] -= speed;
-		CameraTargetPosition[2] -= speed;
-	}
-	else if(glfwGetKey('S')){
-		CameraPosition[2] += speed;
-		CameraTargetPosition[2] += speed;
-	}
-	else if(glfwGetKey('A')){
-		CameraPosition[0] -= speed;
-		CameraTargetPosition[0] -= speed;
-	}
-	else if(glfwGetKey('D')){
-		CameraPosition[0] += speed;
-		CameraTargetPosition[0] += speed;
-	}
+//	if(glfwGetKey('W')){
+//		CameraPosition[2] -= speed;
+//		CameraTargetPosition[2] -= speed;
+//	}
+//	else if(glfwGetKey('S')){
+//		CameraPosition[2] += speed;
+//		CameraTargetPosition[2] += speed;
+//	}
+//	else if(glfwGetKey('A')){
+//		CameraPosition[0] -= speed;
+//		CameraTargetPosition[0] -= speed;
+//	}
+//	else if(glfwGetKey('D')){
+//		CameraPosition[0] += speed;
+//		CameraTargetPosition[0] += speed;
+//	}
 }
+
 
 //! Render loop
 /*!
  * While variabke RUNNING is true, the renderer loops thorugh this function.
  */
 void Renderer::RenderLoop(void){
-	if(!loaded){
-		switch (currentScene) {
-			case 0:
-				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
-				loaded = true;
-				break;
-			case 1:
-				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
-				loaded = true;
-				break;
-			default:
-				scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
-				loaded = true;
-				break;
-		}
-	}
-
-	glClearColor(0.75f, 0.75f, 0.75f, 1.0f);
-
 	while(RUNNING){
+		if(!loaded){
+			switch (currentScene) {
+				case HEAD:
+					scenegraph->LoadSceneFromFile("./assets/geometry/collada/Head.dae");
+					loaded = true;
+					break;
+				case GEOMETRY:
+					scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
+					loaded = true;
+					break;
+				default:
+					scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
+					loaded = true;
+					break;
+			}
+		}
+
+		//! Set background color
+		glClearColor(BackgroundColor.x, BackgroundColor.y, BackgroundColor.z, 1.0f);
+
 		//! Calculations
 		CalculateFPS(0.5, false);
 		KeyboardFunction();
@@ -315,7 +325,9 @@ void Renderer::RenderLoop(void){
 		//! Modelmatrix
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(angle, RotationAxis);
-		ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
+		//! Viewmatrix
+		//ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
+		ViewMatrix = scenegraph->GetActiveCamera()->GetViewMatrix();
 
 
 		/************************************
