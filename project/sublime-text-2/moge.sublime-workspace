@@ -55,7 +55,15 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
 			"settings":
 			{
-				"buffer_size": 5698,
+				"buffer_size": 5682,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
+			"settings":
+			{
+				"buffer_size": 3470,
 				"line_ending": "Unix"
 			}
 		}
@@ -63,9 +71,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 60.0,
+		"height": 375.0,
 		"selected_items":
 		[
+			[
+				"Mar",
+				"Markdown Preview: open Markdown Cheat sheet"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -104,6 +116,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/README.md",
 		"/C/Users/guidoschmidt/Development/MinGW/lib/libassimp.dll.a",
 		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwAdvanced1.cpp",
 		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwSimpleGLFW.c",
@@ -176,7 +189,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -214,15 +227,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
 					"settings":
 					{
-						"buffer_size": 5698,
+						"buffer_size": 5682,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1434,
-								1434
+								0,
+								0
 							]
 						],
 						"settings":
@@ -235,6 +248,37 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 1711.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
+					"settings":
+					{
+						"buffer_size": 3470,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Markdown/Markdown.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 874.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
