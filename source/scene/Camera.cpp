@@ -97,4 +97,17 @@ namespace scene {
 		lookAt.z += dz;
 	}
 
+	void Camera::SetCameraPositionX(float x)
+	{
+		position.x = x;
+	}
+	void Camera::SetCameraPositionY(float y)
+	{
+		position.y = y;
+	}
+	void Camera::SetCameraPositionZ(float z)
+	{
+		position.z = z;
+	}
+
 } //! namespace scene

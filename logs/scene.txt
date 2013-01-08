@@ -1,4 +1,4 @@
 LOGFILE
 SCENE & SCENEGRAPH
 #Cameras: 0 camera
-#Meshes: 2
+#Meshes: 3

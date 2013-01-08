@@ -136,7 +136,7 @@ namespace scene {
 		material0->SetReflectivity(0.0f);
 		materialman->AddMaterial(material0, "./assets/texture/jpg/Head.jpg");
 		material0->SetTexturePointer(materialman->GetTexture(0));
-//		//! Street
+		//! Street
 		Material* material1 = new Material();
 		material1->SetReflectivity(1.0f);
 		materialman->AddMaterial(material1, "./assets/texture/jpg/Road.jpg");
@@ -154,8 +154,8 @@ namespace scene {
 				Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
 				if(m == 0)
 					mesh->SetMaterial(material0);
-//				else
-//					mesh->SetMaterial(material1);
+				else
+					mesh->SetMaterial(material1);
 
 				//! Get aiNode's transformation
 				aiVector3D aiPosition, aiScale;

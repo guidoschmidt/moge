@@ -8,12 +8,13 @@
 
 namespace scene {
 
-	Transformation::Transformation() {
+	Transformation::Transformation()
+	{
 		// TODO Auto-generated constructor stub
-
 	}
 
-	Transformation::~Transformation() {
+	Transformation::~Transformation()
+	{
 		// TODO Auto-generated destructor stub
 	}
 
@@ -31,8 +32,9 @@ namespace scene {
 	void Transformation::AccumulateModelMatrix(void)
 	{
 		glm::mat4 TranslationMatrix = glm::translate(position);
-		// glm::mat4 ScaleMatrix = glm::scale(scale);
-		modelMatrix = glm::mat4(1.0f) * TranslationMatrix;
+		glm::mat4 RotationMatrix = glm::rotate(rotation.w, rotation.x, rotation.y, rotation.z);
+		glm::mat4 ScaleMatrix = glm::scale(scale);
+		modelMatrix = glm::mat4(1.0f) * TranslationMatrix * RotationMatrix * ScaleMatrix;
 	}
 
 	//!

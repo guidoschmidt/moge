@@ -39,6 +39,10 @@ namespace scene {
 			void TranslateX(float dx);
 			void TranslateY(float dy);
 			void TranslateZ(float dz);
+
+			void SetCameraPositionX(float x);
+			void SetCameraPositionY(float y);
+			void SetCameraPositionZ(float z);
 	};
 
 } //! namespace scene

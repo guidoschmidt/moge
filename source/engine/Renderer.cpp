@@ -12,6 +12,8 @@
 bool deferred;
 bool loaded;
 bool rotation;
+float theta = 0, phi = 0;
+float r = 0;
 static void TW_CALL SwitchDeffered(void* clientData){ deferred = !deferred;}
 static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
 //! ANTTWEAKBAR CALLBACKS END
@@ -29,7 +31,7 @@ Renderer::Renderer(int width, int height)
 	rotation = true;
 	rotSpeed = 0.05f;
 
-	currentScene = CONFERENCE;
+	currentScene = TEAPOT;
 	currentDeferredTex = TEX_COMPOSIT;
 	loaded = false;
 
@@ -228,7 +230,7 @@ void Renderer::WriteLog(log logLocation)
 void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 {
 	//! Static values which only get initialized the first time the function runs
-	static double initTime       = glfwGetTime(); //! Set the initial time to now
+	static double initTime = glfwGetTime(); //! Set the initial time to now
 	static int frameCount = 0;             //! Set the initial FPS frame count to 0
 	static double fps = 0.0;
 	static bool fpsAtBar = false;
@@ -310,24 +312,70 @@ void Renderer::KeyboardFunction(void)
 }
 
 
+void Renderer::CameraMovement()
+{
+	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		float speed = 0.01f;
+		int x_pos, y_pos;
+		glfwGetMousePos(&x_pos, &y_pos);
+		//! Right
+		if(x_pos > static_cast<float>(context->GetWidth())/2)
+		{
+			std::cout << "mouse right" << std::endl;
+		}
+		//! Left
+		if(x_pos < static_cast<float>(context->GetWidth())/2)
+		{
+			std::cout << "mouse left" << std::endl;
+		}
+		//! Down
+		if(y_pos > static_cast<float>(context->GetHeight())/2)
+		{
+			std::cout << "mouse down" << std::endl;
+		}
+		//! Up
+		if(y_pos < static_cast<float>(context->GetHeight())/2)
+		{
+			std::cout << "mouse up" << std::endl;
+		}
+	}
+
+	float newPosX = r * glm::sin(theta) * glm::cos(phi);
+	float newPosY = r * glm::cos(theta);
+	float newPosZ = r * glm::sin(theta) * glm::sin(phi);
+	scenegraph->GetActiveCamera()->SetCameraPositionX(newPosX);
+	scenegraph->GetActiveCamera()->SetCameraPositionY(newPosY);
+	scenegraph->GetActiveCamera()->SetCameraPositionZ(newPosZ);
+}
+
+
 //! Render loop
 /*!
- * While variabke RUNNING is true, the renderer loops thorugh this function.
+ * While variabke RUNNING is true, the renderer loops through this function.
  */
 void Renderer::RenderLoop(void){
 	while(RUNNING){
 		if(!loaded){
 			switch (currentScene) {
 				case HEAD:
-					scenegraph->LoadSceneFromFile("./assets/geometry/collada/Head.dae");
+					scenegraph->LoadSceneFromFile("./assets/scenes/collada/Head.dae");
 					loaded = true;
 					break;
 				case GEOMETRY:
-					scenegraph->LoadSceneFromFile("./assets/geometry/blend/Scene.blend");
+					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Scene.blend");
+					loaded = true;
+					break;
+				case BUDDHA:
+					scenegraph->LoadSceneFromFile("./assets/scenes/collada/Buddha.dae");
+					loaded = true;
+					break;
+				case TEAPOT:
+					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Teapot.blend");
 					loaded = true;
 					break;
 				default:
-					scenegraph->LoadSceneFromFile("./assets/geometry/blend/Head.blend");
+					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Head.blend");
 					loaded = true;
 					break;
 			}
@@ -339,13 +387,13 @@ void Renderer::RenderLoop(void){
 		//! Calculations
 		CalculateFPS(0.5, false);
 		KeyboardFunction();
+		CameraMovement();
 		if(rotation)
 			angle += rotSpeed;
 		//! Modelmatrix
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(angle, RotationAxis);
 		//! Viewmatrix
-		//ViewMatrix = glm::lookAt(CameraPosition, CameraTargetPosition, CameraUp);
 		ViewMatrix = scenegraph->GetActiveCamera()->GetViewMatrix();
 
 

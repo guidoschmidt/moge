@@ -58,7 +58,7 @@ class Renderer
 		#define NUM_TEXS 5
 		DeferredTexture currentDeferredTex;
 
-		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2} Scenes;
+		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
 		#define NUM_SCENES 2
 		Scenes currentScene;
 
@@ -95,6 +95,7 @@ class Renderer
 		void InitializeLight(void);
 		void InitializeILUT(void);
 		void KeyboardFunction(void);
+		void CameraMovement(void);
 		void RenderLoop(void);
 		void WriteLog(log logLocation);
 };

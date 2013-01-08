@@ -58,14 +58,6 @@
 				"buffer_size": 5682,
 				"line_ending": "Unix"
 			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
-			"settings":
-			{
-				"buffer_size": 3470,
-				"line_ending": "Unix"
-			}
 		}
 	],
 	"build_system": "",
@@ -116,6 +108,10 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
+		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kusntgeschichte 4.MD",
+		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kunstgeschichte 4.MD",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/README.md",
 		"/C/Users/guidoschmidt/Development/MinGW/lib/libassimp.dll.a",
 		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwAdvanced1.cpp",
@@ -129,7 +125,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
@@ -171,6 +166,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"geometry",
+			"GEOMETRY",
+			"geometry",
 			"BOOST"
 		],
 		"highlight": true,
@@ -189,7 +187,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -204,8 +202,8 @@
 						"selection":
 						[
 							[
-								332,
-								332
+								224,
+								224
 							]
 						],
 						"settings":
@@ -248,37 +246,6 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 1711.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
-					"settings":
-					{
-						"buffer_size": 3470,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"glsv_configured": true,
-							"glsv_enabled": 1,
-							"glsv_spec": 0,
-							"syntax": "Packages/Markdown/Markdown.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 874.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
