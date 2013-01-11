@@ -9,6 +9,7 @@
 
 //! C++ includes
 #include <iostream>
+#include <vector>
 #include <sstream>
 //! OpenGL include
 #include <GL/glew.h>
@@ -29,14 +30,17 @@
 #include "FSQ.h"
 #include "FrameBufferObject.h"
 #include "../utilities/Singleton.h"
+#include "../scene/Node.h"
 #include "../scene/SceneGraph.h"
 #include "../scene/MaterialManager.h"
+#include "../scene/SceneOrganizer.h"
 
 class Renderer
 {
 	private:
 		//! Singleton instances
 		scene::SceneGraph* scenegraph;
+		std::vector<scene::Node*>* renderQ;
 
 		const GLubyte* renderer;
 		const GLubyte* vendor;

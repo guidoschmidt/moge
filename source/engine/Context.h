@@ -18,7 +18,6 @@
 #include <AntTweakBar.h>
 //! Local includes
 
-
 void GLFWCALL KeyboardFunction(int key, int state);
 void GLFWCALL ResizeFunction(int w, int h);
 void GLFWCALL MousePositionFunction(int x, int y);

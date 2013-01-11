@@ -15,6 +15,7 @@ namespace scene {
 	MaterialManager::MaterialManager()
 	{
 		textureCounter = 0;
+		materialCounter = 0;
 
 		ErrorCheckTexture = 0;
 		Image_id = 0;
@@ -34,14 +35,31 @@ namespace scene {
 	//! Adds a new material to the material-stock
 	/*!
 	 *
-	 * @param material
+	 * @param name
 	 * @param texturefile
 	 */
-	void MaterialManager::AddMaterial(Material* material, std::string texturefile)
+	void MaterialManager::AddMaterial(std::string name, std::string texturefile)
 	{
-		materials.push_back(material);
 		GLuint textureID = LoadTexture(texturefile);
-		textures.push_back(textureID);
+		materials.push_back(new Material(materialCounter, name, textureCounter, &textureID));
+		materialCounter++;
+		textureCounter++;
+		std::cout << "MaterialCounter @ "<< materialCounter << std::endl;
+		std::cout << "TextureCounter @ "<< textureCounter << std::endl;
+	}
+
+
+	//! Adds a new material to the material-stock
+	/*!
+	 *
+	 * @param name
+	 * @param texturefile
+	 */
+	void MaterialManager::AddMaterial(std::string name)
+	{
+		materials.push_back(new Material(materialCounter, name));
+		materialCounter++;
+		std::cout << "MaterialCounter @ "<< materialCounter << std::endl;
 	}
 
 
@@ -55,7 +73,7 @@ namespace scene {
 	{
 		GLuint texture_id;
 		textures.push_back(texture_id);
-		//! TODO Load texture (assimp or DevIL)
+
 		ILboolean loadSuccess = ilLoadImage(filename.c_str());
 
 		if(loadSuccess){
@@ -87,8 +105,43 @@ namespace scene {
 			std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
 		}
 
-		textureCounter++;
-		return textures[textureCounter-1];
+		return textures[textureCounter];
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @param name
+	 * @return
+	 */
+	Material* MaterialManager::GetMaterial(std::string searchname)
+	{
+		for(unsigned int i = 0; i < materials.size(); i++)
+		{
+			if(materials[i]->GetName() == searchname)
+				return materials[i];
+		}
+		return 0;
+	}
+
+	//!
+	/*!
+	 *
+	 * @param index
+	 * @return
+	 */
+	Material* MaterialManager::GetMaterial(unsigned int index)
+	{
+		//std::cout << "GetMaterial counter = " << materialCounter << std::endl;
+		return materials[index];
+	}
+
+
+	//!
+	unsigned int MaterialManager::MaterialCount(void)
+	{
+		return materials.size();
 	}
 
 

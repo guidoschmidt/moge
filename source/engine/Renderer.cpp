@@ -29,9 +29,9 @@ Renderer::Renderer(int width, int height)
 {
 	deferred = true;
 	rotation = true;
-	rotSpeed = 0.05f;
+	rotSpeed = 0.005f;
 
-	currentScene = TEAPOT;
+	currentScene = HEAD;
 	currentDeferredTex = TEX_COMPOSIT;
 	loaded = false;
 
@@ -316,37 +316,29 @@ void Renderer::CameraMovement()
 {
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 	{
-		float speed = 0.01f;
 		int x_pos, y_pos;
 		glfwGetMousePos(&x_pos, &y_pos);
 		//! Right
 		if(x_pos > static_cast<float>(context->GetWidth())/2)
 		{
-			std::cout << "mouse right" << std::endl;
+//			std::cout << "mouse right" << std::endl;
 		}
 		//! Left
 		if(x_pos < static_cast<float>(context->GetWidth())/2)
 		{
-			std::cout << "mouse left" << std::endl;
+//			std::cout << "mouse left" << std::endl;
 		}
 		//! Down
 		if(y_pos > static_cast<float>(context->GetHeight())/2)
 		{
-			std::cout << "mouse down" << std::endl;
+//			std::cout << "mouse down" << std::endl;
 		}
 		//! Up
 		if(y_pos < static_cast<float>(context->GetHeight())/2)
 		{
-			std::cout << "mouse up" << std::endl;
+//			std::cout << "mouse up" << std::endl;
 		}
 	}
-
-	float newPosX = r * glm::sin(theta) * glm::cos(phi);
-	float newPosY = r * glm::cos(theta);
-	float newPosZ = r * glm::sin(theta) * glm::sin(phi);
-	scenegraph->GetActiveCamera()->SetCameraPositionX(newPosX);
-	scenegraph->GetActiveCamera()->SetCameraPositionY(newPosY);
-	scenegraph->GetActiveCamera()->SetCameraPositionZ(newPosZ);
 }
 
 
@@ -359,26 +351,24 @@ void Renderer::RenderLoop(void){
 		if(!loaded){
 			switch (currentScene) {
 				case HEAD:
-					scenegraph->LoadSceneFromFile("./assets/scenes/collada/Head.dae");
-					loaded = true;
+					scenegraph->LoadSceneFromFile("./assets/scenes/collada/SimpleScene.dae");
 					break;
 				case GEOMETRY:
 					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Scene.blend");
-					loaded = true;
 					break;
 				case BUDDHA:
 					scenegraph->LoadSceneFromFile("./assets/scenes/collada/Buddha.dae");
-					loaded = true;
 					break;
 				case TEAPOT:
 					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Teapot.blend");
-					loaded = true;
 					break;
 				default:
 					scenegraph->LoadSceneFromFile("./assets/scenes/blend/Head.blend");
-					loaded = true;
 					break;
 			}
+			renderQ = Singleton<scene::SceneOrganizer>::Instance()->OrganizeScene();
+			std::cout << "RenderQ has size: " << renderQ->size() << std::endl;
+			loaded = true;
 		}
 
 		//! Set background color
@@ -398,7 +388,7 @@ void Renderer::RenderLoop(void){
 
 
 		/************************************
-		 *  DRAWING
+		 *  RENDER LOOP
 		 ************************************/
 		if(deferred){
 			/*!* * * * * * * * * * * * * * *
@@ -415,18 +405,22 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass1->SetUniform("camera", CameraPosition);
 
 			//! Drawing
-			//! Head
-			deferredProgram_Pass1->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(0)), 5);
-			ModelMatrix = scenegraph->DrawNode(2);
-			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
-			//! Street
-			deferredProgram_Pass1->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(1)), 5);
-			ModelMatrix = scenegraph->DrawNode(1);
-			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
+			for(unsigned int n=0; n < renderQ->size(); n++)
+			{
+				if(static_cast<scene::Mesh*>((*renderQ)[n]))
+				{
+					ModelMatrix = static_cast<scene::Mesh*>((*renderQ)[n])->GetModelMatrix();
+					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+					MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
+					deferredProgram_Pass1->SetUniform("mvp", MVPMatrix);
+					if(static_cast<scene::Mesh*>((*renderQ)[n])->GetMaterial()->HasTexture())
+					{
+						int current_tex_id = dynamic_cast<scene::Mesh*>((*renderQ)[n])->GetMaterial()->GetID();
+						deferredProgram_Pass1->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_tex_id)), 5);
+					}
+					static_cast<scene::Mesh*>((*renderQ)[n])->Draw();
+				}
+			}
 
 			firstPassFBO->Unuse();
 			deferredProgram_Pass1->Unuse();
@@ -473,18 +467,22 @@ void Renderer::RenderLoop(void){
 			forwardProgram->SetUniform("mvp", MVPMatrix);
 
 			//! Drawing
-			//! Head
-			forwardProgram->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(0)), 5);
-			ModelMatrix = scenegraph->DrawNode(2);
-			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			forwardProgram->SetUniform("mvp", MVPMatrix);
-			//! Street
-			forwardProgram->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(1)), 5);
-			ModelMatrix = scenegraph->DrawNode(1);
-			ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-			MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			forwardProgram->SetUniform("mvp", MVPMatrix);
+			for(unsigned int n=0; n < renderQ->size(); n++)
+			{
+				if(static_cast<scene::Mesh*>((*renderQ)[n]))
+				{
+					ModelMatrix = static_cast<scene::Mesh*>((*renderQ)[n])->GetModelMatrix();
+					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+					MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
+					forwardProgram->SetUniform("mvp", MVPMatrix);
+					if(static_cast<scene::Mesh*>((*renderQ)[n])->GetMaterial()->HasTexture())
+					{
+						int current_tex_id = dynamic_cast<scene::Mesh*>((*renderQ)[n])->GetMaterial()->GetID();
+						forwardProgram->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_tex_id)), 5);
+					}
+					static_cast<scene::Mesh*>((*renderQ)[n])->Draw();
+				}
+			}
 
 			forwardProgram->Unuse();
 		}

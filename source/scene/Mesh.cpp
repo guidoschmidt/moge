@@ -9,6 +9,10 @@
 namespace scene {
 
 	//! Constructor
+	/*!
+	 *
+	 * @param m
+	 */
 	Mesh::Mesh(aiMesh* m)
 	{
 		mesh = m;
@@ -17,12 +21,21 @@ namespace scene {
 		Material material ();
 	}
 
+
+	//!
+	/*!
+	 *
+	 */
 	Mesh::~Mesh()
 	{
 		//! TODO Auto-generated destructor stub
 	}
 
+
 	//! Initializes vertex-list, index-list, normal-list and uv-list
+	/*!
+	 *
+	 */
 	void Mesh::Initialize(void)
 	{
 		//! Topology initialization
@@ -48,7 +61,11 @@ namespace scene {
 		}
 	}
 
+
 	//! Creates the buffers holding the gemoetry, the normals and the uv coordinates
+	/*!
+	 *
+	 */
 	void Mesh::CreateBuffers(void)
 	{
 		ErrorCheckMesh = glGetError();
@@ -88,12 +105,51 @@ namespace scene {
 
 
 	//!
+	/*!
+	 *
+	 */
 	void Mesh::Draw(void)
 	{
 		AccumulateModelMatrix();
 		glBindVertexArray(VAO_id);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+	}
+
+
+	//! Set the mesh's material
+	/*!
+	 *
+	 */
+	void Mesh::SetMaterial(Material* m)
+	{
+		material_ptr = m;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	Material* Mesh::GetMaterial(void)
+	{
+		if(material_ptr != 0)
+			return material_ptr;
+		return 0;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	bool Mesh::HasMaterial(void)
+	{
+		if(material_ptr != 0)
+			return true;
+		return false;
 	}
 
 
@@ -104,17 +160,8 @@ namespace scene {
 	 */
 	GLuint Mesh::GetTextureHandle(void)
 	{
-		return material->GetTexture();
+		return material_ptr->GetTexture();
 	}
 
-
-	//! Set the mesh's material
-	/*!
-	 *
-	 */
-	void Mesh::SetMaterial(Material* m)
-	{
-		material = m;
-	}
 
 } //! namespace scene

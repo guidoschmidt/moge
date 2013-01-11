@@ -131,17 +131,22 @@ namespace scene {
 
 
 		//! Materials
-		//! Head
-		Material* material0 = new Material();
-		material0->SetReflectivity(0.0f);
-		materialman->AddMaterial(material0, "./assets/texture/jpg/Head.jpg");
-		material0->SetTexturePointer(materialman->GetTexture(0));
-		//! Street
-		Material* material1 = new Material();
-		material1->SetReflectivity(1.0f);
-		materialman->AddMaterial(material1, "./assets/texture/jpg/Road.jpg");
-		material1->SetTexturePointer(materialman->GetTexture(1));
+		for(unsigned int mat = 0; mat < scene->mNumMaterials; mat++)
+		{
+			aiMaterial* material = scene->mMaterials[mat];
+			//! Get materials name
+			aiString mat_name;
+			aiGetMaterialString(material, AI_MATKEY_NAME, &mat_name);
+			//! Get materils' texture
+			aiString ai_tex_path;
 
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path);
+			std::string tex_path = &(ai_tex_path.data[0]);
+			size_t found = tex_path.find_last_of("/");
+			std::string tex_name = tex_path.substr(found+1);
+
+			materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name);
+		}
 
 		//! Meshes
 		logfile << "#Meshes: " << scene->mNumMeshes << std::endl;
@@ -152,10 +157,9 @@ namespace scene {
 				//! Get mesh and create new scenegraph node
 				unsigned int meshID = scene->mRootNode->mChildren[c]->mMeshes[m];
 				Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
-				if(m == 0)
-					mesh->SetMaterial(material0);
-				else
-					mesh->SetMaterial(material1);
+				//! Get material index of mesh
+				unsigned int material_index = scene->mMeshes[meshID]->mMaterialIndex;
+				mesh->SetMaterial(materialman->GetMaterial(material_index));
 
 				//! Get aiNode's transformation
 				aiVector3D aiPosition, aiScale;
@@ -163,18 +167,24 @@ namespace scene {
 				scene->mRootNode->mChildren[c]->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
 
 				//! Convert the aiNode's transformation and store them in mesh
+				//! Translation
 				glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
 				mesh->Translate(position);
+				//! Scale
 				glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
 				mesh->Scale(scale);
+				//! Rotation TODO Roation anpassen
 				glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
+
+				std::cout << "Rotation (" << rotation.w << ", " << rotation.y << ", " << rotation.x << ", " << rotation.z << ")" << std::endl;
 				mesh->Rotate(rotation);
 
 				//! Add mesh to scenegraph
 				root.AddChild(mesh);
+				std::cout << "Mesh #" << m << " was added to the scenegrapg!" << std::endl;
 			}
 		}
-
+		logfile << "Scene Processing was successfull" << std::endl;
 		setupComplete = true;
 	}
 

@@ -1,4 +1,5 @@
 LOGFILE
 SCENE & SCENEGRAPH
 #Cameras: 0 camera
-#Meshes: 3
+#Meshes: 4
+Scene Processing was successfull

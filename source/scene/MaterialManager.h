@@ -29,23 +29,33 @@
 namespace scene {
 
 	class MaterialManager {
+
 		private:
+			//! Material
 			std::vector<Material*> materials;
 			std::vector<GLuint> textures;
-			int textureCounter;
+			unsigned int textureCounter;
+			unsigned int materialCounter;
 
-			//!
+			//! Texture
 			ILenum ErrorCheckTexture;
 			ILuint Image_id;
+
+		protected:
+			GLuint LoadTexture(std::string filename);
 
 		public:
 			MaterialManager();
 			virtual ~MaterialManager();
 
-			void AddMaterial(Material* material, std::string texturefile);
+			//! Material
+			void AddMaterial(std::string name, std::string texturefile);
+			void AddMaterial(std::string name);
+			Material* GetMaterial(std::string searchname);
+			Material* GetMaterial(unsigned int index);
+			unsigned int MaterialCount(void);
 
-			GLuint LoadTexture(std::string filename);
-
+			//! Texture
 			GLuint* GetTexture(int i);
 	};
 

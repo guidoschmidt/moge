@@ -39,7 +39,7 @@ namespace scene {
 			GLuint VBO_id, IBO_id, NBO_id, UVBO_id;
 
 			//! Material
-			Material* material;
+			Material* material_ptr;
 
 		public:
 			Mesh(aiMesh* m);
@@ -48,10 +48,18 @@ namespace scene {
 			void Initialize(void);
 			void CreateBuffers(void);
 
+			//! Material
+			// Setter
 			void SetMaterial(Material* material);
+			// Getter
+			Material* GetMaterial(void);
+			// Check material
+			bool HasMaterial(void);
+
+			//! Texture
+			GLuint GetTextureHandle(void);
 
 			void Draw(void);
-			GLuint GetTextureHandle(void);
 	};
 
 } //! namespace scene

@@ -8,27 +8,40 @@
 
 namespace scene {
 
-	//!
-	/*!
-	 *
-	 */
-	Material::Material() {
-		texture_ptr = 0;
+
+	Material::Material(int mat_id, std::string mat_name)
+	{
+		//! Identification
+		id = mat_id;
+		name = mat_name;
+		texture_id = -1;
+
+		//! Material properties
 		reflectivity = 0;
 		glm::vec4 diffuseColor(0.8f);
 		glm::vec4 specularColor(0.8f);
+
+		texture_ptr = 0;
 	}
 
-
 	//!
 	/*!
 	 *
 	 */
-	Material::Material(GLuint* texture) {
-		texture_ptr = texture;
+	Material::Material(int mat_id, std::string mat_name, int tex_id, GLuint* texture)
+	{
+		//! Identification
+		id = mat_id;
+		name = mat_name;
+		texture_id = tex_id;
+
+		//! Material properties
 		reflectivity = 0;
 		glm::vec4 diffuseColor(0.8f);
 		glm::vec4 specularColor(0.8f);
+
+		//! Texture properties
+		texture_ptr = texture;
 	}
 
 
@@ -38,17 +51,6 @@ namespace scene {
 	 */
 	Material::~Material() {
 		// TODO Auto-generated destructor stub
-	}
-
-
-	//! Returns the texture handle
-	/*!
-	 *
-	 * @return
-	 */
-	GLuint Material::GetTexture(void)
-	{
-		return *texture_ptr;
 	}
 
 
@@ -70,6 +72,28 @@ namespace scene {
 	void Material::SetReflectivity(float reflection){ reflectivity= reflection; }
 
 
+	//! Returns the texture handle
+	/*!
+	 *
+	 * @return
+	 */
+	GLuint Material::GetTexture(void)
+	{
+		return *texture_ptr;
+	}
+
+
+	//! Returns the texture handle
+	/*!
+	 *
+	 * @return
+	 */
+	int Material::GetTextureID(void)
+	{
+		return texture_id;
+	}
+
+
 	//!
 	/*!
 	 *
@@ -77,6 +101,52 @@ namespace scene {
 	void Material::SetTexturePointer(GLuint* texture)
 	{
 		texture_ptr = texture;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @param tex_id
+	 */
+	void Material::SetTextureID(int tex_id)
+	{
+		texture_id = tex_id;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	int Material::GetID(void)
+	{
+		return id;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	std::string Material::GetName(void)
+	{
+		return name;
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	bool Material::HasTexture(void)
+	{
+		if(texture_ptr != 0)
+			return true;
+		return false;
 	}
 
 } //! namespace scene
