@@ -25,7 +25,6 @@
 #include <glm/gtc/quaternion.hpp>
 //! Local includes
 #include "Context.h"
-#include "Scene.h"
 #include "ShaderProgram.h"
 #include "FSQ.h"
 #include "FrameBufferObject.h"
