@@ -15,7 +15,7 @@
 class FSQ
 {
 	private:
-		GLuint FSQVAO_ID, FSQVBO_ID, FSQIndexBuffer_ID, FSQUVBuffer_ID;
+		GLuint m_VAO_ID, m_VBO_ID, m_IBO_ID, m_UVBO_ID;
 		void CreateBuffers(void);
 		void DeleteBuffers(void);
 

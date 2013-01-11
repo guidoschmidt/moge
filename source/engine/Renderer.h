@@ -39,32 +39,33 @@ class Renderer
 {
 	private:
 		//! Singleton instances
-		scene::SceneGraph* scenegraph;
-		std::vector<scene::Node*>* renderQ;
+		scene::SceneGraph* scenegraph_ptr;
+		std::vector<scene::Node*>* renderQ_ptr;
 
-		const GLubyte* renderer;
-		const GLubyte* vendor;
-		const GLubyte* openglVersion;
-		const GLubyte* glslVersion;
-		GLint major, minor;
+		//! OpenGL Info
+		const GLubyte* glinfo_renderer_ptr;
+		const GLubyte* glinfo_vendor_ptr;
+		const GLubyte* glindo_openglVersion_ptr;
+		const GLubyte* glinfo_glslVersion_ptr;
+		GLint glinfo_major, glinfo_minor;
 
 		typedef enum{FILE=0, CONSOLE=1} log;
-		GLboolean RUNNING;
-		Context* context;
-		FSQ* fsq;
-		ShaderProgram* forwardProgram, *deferredProgram_Pass1, *deferredProgram_Pass2;
-		FrameBufferObject* firstPassFBO;
-		float angle;
-		float rotSpeed;
+		GLboolean m_running;
+		Context* context_ptr;
+		FSQ* fsq_ptr;
+		ShaderProgram* forwardProgram_ptr, *deferredProgram_Pass1_ptr, *deferredProgram_Pass2_ptr;
+		FrameBufferObject* firstPassFBO_ptr;
+		float m_angle;
+		float m_rotSpeed;
 
 		//! AnttWeakBar texture choose
 		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_DEPTH=3} DeferredTexture;
 		#define NUM_TEXS 5
-		DeferredTexture currentDeferredTex;
+		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
 		#define NUM_SCENES 2
-		Scenes currentScene;
+		Scenes tw_currentScene;
 
 		//! Matrices
 		glm::mat4 IdentityMatrix;
@@ -81,10 +82,11 @@ class Renderer
 		glm::vec3 CameraPosition;
 		glm::vec3 CameraTargetPosition;
 		glm::vec3 CameraUp;
+
 		//! Material
-		float Shininess;
+		float m_shininess;
 		//! Background color
-		glm::vec3 BackgroundColor;
+		glm::vec3 m_backgroundColor;
 
 	protected:
 		void InitGLEW(void);

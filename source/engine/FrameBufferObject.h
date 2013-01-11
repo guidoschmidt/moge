@@ -18,12 +18,12 @@
 class FrameBufferObject
 {
 	private:
-		int WIDTH, HEIGHT;
-		int attachmentCounter;
-		GLuint FBO_ID;
-		GLuint depthBuffer;
-		GLuint depthTexture;
-		std::vector<GLuint> renderTargets;
+		int m_width, m_height;
+		int m_attachmentCounter;
+		GLuint m_FBO_ID;
+		GLuint m_depthBuffer;
+		GLuint m_depthTexture;
+		std::vector<GLuint> m_renderTargets;
 
 	public:
 		FrameBufferObject(int width, int height);

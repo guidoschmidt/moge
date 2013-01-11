@@ -25,8 +25,8 @@ void GLFWCALL MousePositionFunction(int x, int y);
 class Context
 {
 	private:
-		std::string TITLE;
-		TwBar* bar;
+		std::string m_title;
+		TwBar* bar_ptr;
 
 	protected:
 		void setSize(int width, int height);

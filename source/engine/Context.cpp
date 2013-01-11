@@ -65,7 +65,7 @@ void GLFWCALL MousePositionFunction(int mouseX, int mouseY)
 //! Constructor
 Context::Context(int height, int width)
 {
-	bar = 0;
+	bar_ptr = 0;
 	WIDTH = width;
 	HEIGHT = height;
 	if(!glfwInit()){
@@ -98,7 +98,7 @@ Context::~Context()
 void Context::OpenWindow(int width, int height, std::string title, int openglVersionMajor, int openglVersionMinor){
 	WIDTH = width;
 	HEIGHT = height;
-	TITLE = title;
+	m_title = title;
 
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, openglVersionMajor);
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, openglVersionMinor);
@@ -111,7 +111,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 	glViewport(0, 0, WIDTH, HEIGHT);
 
 	glfwSetWindowPos(0, 0 );
-	glfwSetWindowTitle(TITLE.c_str());
+	glfwSetWindowTitle(m_title.c_str());
 	glfwSetWindowSizeCallback(ResizeFunction);
 	glfwSetKeyCallback(KeyboardFunction);
 	glfwSetMousePosCallback(MousePositionFunction);
@@ -125,7 +125,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
  * @param title
  */
 void Context::setTitle(std::string title){
-	TITLE = title;
+	m_title = title;
 }
 
 
@@ -171,7 +171,7 @@ bool Context::IsExiting(void){
  */
 std::string* Context::GetTitle(void)
 {
-	return &TITLE;
+	return &m_title;
 }
 
 //! Returns the AntTweakBar bar used in this context
@@ -180,7 +180,7 @@ std::string* Context::GetTitle(void)
  * @return context's TwBar
  */
 TwBar* Context::GetBar(){
-	return bar;
+	return bar_ptr;
 }
 
 
@@ -214,7 +214,7 @@ void Context::AddAntTweakBar(void){
 	TwWindowSize(WIDTH, HEIGHT);
 	TwInit(TW_OPENGL, 0);
 
-	bar = TwNewBar("GUI");
+	bar_ptr = TwNewBar("GUI");
 
 	TwDefine("GUI label='Engine Properties' contained='true' fontstyle='fixed' color='0 0 0' alpha='100' text='light' position='0 0' size='250 600'");
 

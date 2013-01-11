@@ -9,11 +9,11 @@
 //! Constructor
 FrameBufferObject::FrameBufferObject(int width, int height)
 {
-	WIDTH = width;
-	HEIGHT = height;
-	attachmentCounter = 0;
-	glGenFramebuffers(1, &FBO_ID);
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO_ID);
+	m_width = width;
+	m_height = height;
+	m_attachmentCounter = 0;
+	glGenFramebuffers(1, &m_FBO_ID);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
 	CreateGBuffer();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -53,7 +53,7 @@ void FrameBufferObject::AddColorAttachment(GLint textureUnit)
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glGenTextures(1, &renderTexture);
 	glBindTexture(GL_TEXTURE_2D, renderTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
@@ -61,9 +61,9 @@ void FrameBufferObject::AddColorAttachment(GLint textureUnit)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
 	//! Bind texture to color attachment point
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachmentCounter, GL_TEXTURE_2D, renderTexture, 0);
-	attachmentCounter++;
-	renderTargets.push_back(renderTexture);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + m_attachmentCounter, GL_TEXTURE_2D, renderTexture, 0);
+	m_attachmentCounter++;
+	m_renderTargets.push_back(renderTexture);
 }
 
 
@@ -74,12 +74,12 @@ void FrameBufferObject::AddColorAttachment(GLint textureUnit)
 void FrameBufferObject::AddDepthAttachment_Buffer(void)
 {
 	//! Create a depth buffer
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+	glGenRenderbuffers(1, &m_depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
 
 	//! Bind depth buffer to FBO
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
 }
 
 //! Adds a depth map to the framebuffer object
@@ -91,18 +91,18 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 {
 	//! Create depth texture
 	glActiveTexture(GL_TEXTURE4);
-	glGenTextures(1, &depthTexture);
-	glBindTexture(GL_TEXTURE_2D, depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WIDTH, HEIGHT, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+	glGenTextures(1, &m_depthTexture);
+	glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glGenRenderbuffers(1, &depthBuffer);
-	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthBuffer);
+	glGenRenderbuffers(1, &m_depthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
 }
 
 
@@ -112,12 +112,12 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
  */
 void FrameBufferObject::Use(void)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, FBO_ID);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
 	GLenum drawBuffers[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
 	glDrawBuffers(3, drawBuffers);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 }
 
 //! Unbinds the framebuffer object
@@ -134,10 +134,10 @@ void FrameBufferObject::Unuse(void)
  */
 GLuint FrameBufferObject::GetTexture(unsigned int index)
 {
-	if(index > renderTargets.size()-1){
+	if(index > m_renderTargets.size()-1){
 		std::cout << "ERROR | FrameBufferObject: texture index out of bounds!" << std::endl;
 	}
-	return renderTargets[index];
+	return m_renderTargets[index];
 }
 
 //! Returns the frame buffers depth map
@@ -147,5 +147,5 @@ GLuint FrameBufferObject::GetTexture(unsigned int index)
  */
 GLuint FrameBufferObject::GetDepthTexture(void)
 {
-	return depthTexture;
+	return m_depthTexture;
 }

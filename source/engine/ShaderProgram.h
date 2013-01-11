@@ -39,13 +39,14 @@ namespace GLSL{
 class ShaderProgram
 {
 	private:
-		GLint ShaderProgram_ID;
-		std::vector<GLint> Shader_IDS;
-		bool linked;
-		bool activeUniformsWritten;
-		bool activeAttributesWritten;
-		GLenum ErrorCheckValue;
-		std::string log;
+		GLint m_shaderProgram_ID;
+		std::vector<GLint> m_shader_IDs;
+		bool m_islinked;
+		bool m_activeUniformsWritten;
+		bool m_activeAttributesWritten;
+		GLenum m_errorCheckValue;
+		std::string m_log;
+
 		int GetUniformLocation(std::string name);
 		bool CheckFileExist(const std::string &filename);
 
