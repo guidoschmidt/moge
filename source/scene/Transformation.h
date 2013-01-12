@@ -19,10 +19,10 @@ namespace scene {
 	class Transformation {
 
 		protected:
-			glm::vec3 position;
-			glm::quat rotation;
-			glm::vec3 scale;
-			glm::mat4 modelMatrix;
+			glm::vec3 m_position;
+			glm::quat m_rotation;
+			glm::vec3 m_scale;
+			glm::mat4 m_modelMatrix;
 
 		public:
 			Transformation();
@@ -43,6 +43,7 @@ namespace scene {
 
 			//! Getter
 			glm::mat4 GetModelMatrix(void);
+			glm::vec3 GetPosition(void);
 	};
 
 } //! namespace scene

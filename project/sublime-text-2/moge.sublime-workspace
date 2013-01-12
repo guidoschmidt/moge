@@ -43,22 +43,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
-			"settings":
-			{
-				"buffer_size": 596,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
-			"settings":
-			{
-				"buffer_size": 5682,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -108,6 +92,12 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Camera.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Common.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kusntgeschichte 4.MD",
@@ -121,7 +111,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.h",
@@ -130,7 +119,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
@@ -187,69 +175,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
-					"settings":
-					{
-						"buffer_size": 596,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								224,
-								224
-							]
-						],
-						"settings":
-						{
-							"glsv_configured": true,
-							"glsv_enabled": 1,
-							"glsv_spec": 0,
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
-					"settings":
-					{
-						"buffer_size": 5682,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"glsv_configured": true,
-							"glsv_enabled": 1,
-							"glsv_spec": 0,
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1711.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

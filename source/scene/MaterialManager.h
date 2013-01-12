@@ -49,7 +49,7 @@ namespace scene {
 			virtual ~MaterialManager();
 
 			//! Material
-			void AddMaterial(std::string name, std::string texturefile);
+			void AddMaterial(std::string name, std::string texturefile, float reflectivity);
 			void AddMaterial(std::string name);
 			Material* GetMaterial(std::string searchname);
 			Material* GetMaterial(unsigned int index);

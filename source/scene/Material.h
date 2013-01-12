@@ -30,12 +30,12 @@ namespace scene {
 
 			//! Texture
 			GLuint* texture_ptr;
-			int texture_id;
+			int m_texture_id;
 
 			//! Material properties
-			glm::vec4 diffuseColor;
-			glm::vec4 specularColor;
-			float reflectivity;
+			glm::vec4 m_diffuseColor;
+			glm::vec4 m_specularColor;
+			float m_reflectivity;
 
 		public:
 			Material(int mat_id, std::string);

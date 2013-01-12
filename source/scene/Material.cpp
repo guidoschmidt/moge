@@ -14,10 +14,10 @@ namespace scene {
 		//! Identification
 		id = mat_id;
 		name = mat_name;
-		texture_id = -1;
+		m_texture_id = -1;
 
 		//! Material properties
-		reflectivity = 0;
+		m_reflectivity = 0.0f;
 		glm::vec4 diffuseColor(0.8f);
 		glm::vec4 specularColor(0.8f);
 
@@ -33,10 +33,10 @@ namespace scene {
 		//! Identification
 		id = mat_id;
 		name = mat_name;
-		texture_id = tex_id;
+		m_texture_id = tex_id;
 
 		//! Material properties
-		reflectivity = 0;
+		m_reflectivity = 0;
 		glm::vec4 diffuseColor(0.8f);
 		glm::vec4 specularColor(0.8f);
 
@@ -58,18 +58,18 @@ namespace scene {
 	/*!
 	 *
 	 */
-	inline glm::vec4 Material::GetDiffuseColor(void){ return diffuseColor; }
-	inline glm::vec4 Material::GetSpecularColor(void){ return specularColor; }
-	inline float Material::GetReflectivity(void){ return reflectivity; }
+	glm::vec4 Material::GetDiffuseColor(void){ return m_diffuseColor; }
+	glm::vec4 Material::GetSpecularColor(void){ return m_specularColor; }
+	float Material::GetReflectivity(void){ return m_reflectivity; }
 
 
 	//!
 	/*!
 	 *
 	 */
-	void Material::SetDiffuseColor(glm::vec4 diffuse){ diffuseColor = diffuse; }
-	void Material::SetSpecularColor(glm::vec4 specular){ specularColor = specular; }
-	void Material::SetReflectivity(float reflection){ reflectivity= reflection; }
+	void Material::SetDiffuseColor(glm::vec4 diffuse){ m_diffuseColor = diffuse; }
+	void Material::SetSpecularColor(glm::vec4 specular){ m_specularColor = specular; }
+	void Material::SetReflectivity(float reflection){ m_reflectivity= reflection; }
 
 
 	//! Returns the texture handle
@@ -90,7 +90,7 @@ namespace scene {
 	 */
 	int Material::GetTextureID(void)
 	{
-		return texture_id;
+		return m_texture_id;
 	}
 
 
@@ -111,7 +111,7 @@ namespace scene {
 	 */
 	void Material::SetTextureID(int tex_id)
 	{
-		texture_id = tex_id;
+		m_texture_id = tex_id;
 	}
 
 

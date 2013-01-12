@@ -14,6 +14,9 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+//! Local includes
+#include "../utilities/Singleton.h"
+#include "../engine/Context.h"
 
 class FrameBufferObject
 {
@@ -41,6 +44,7 @@ class FrameBufferObject
 		//! Getters
 		GLuint GetTexture(unsigned int index);
 		GLuint GetDepthTexture(void);
+		int GetRenderTargetCound(void);
 };
 
 #endif /* FRAMEBUFFEROBJECT_H_ */

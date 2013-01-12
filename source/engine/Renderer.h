@@ -56,10 +56,11 @@ class Renderer
 		FrameBufferObject* firstPassFBO_ptr;
 		float m_angle;
 		float m_rotSpeed;
+		float m_fieldOfView;
 
 		//! AnttWeakBar texture choose
-		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_DEPTH=3} DeferredTexture;
-		#define NUM_TEXS 5
+		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_MATID=3, TEX_REFL=4, TEX_DEPTH=5} DeferredTexture;
+		#define NUM_TEXS 7
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;

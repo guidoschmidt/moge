@@ -6,6 +6,10 @@
 
 #include "FSQ.h"
 
+//!
+/*!
+ *
+ */
 FSQ::FSQ()
 {
 	m_VAO_ID = 0;
@@ -14,12 +18,21 @@ FSQ::FSQ()
 	m_UVBO_ID = 0;
 }
 
+
+//!
+/*!
+ *
+ */
 FSQ::~FSQ()
 {
 	DeleteBuffers();
 }
 
+
 //!
+/*!
+ *
+ */
 void FSQ::CreateBuffers(void)
 {
 	GLfloat fsqVertices[] = {
@@ -59,20 +72,32 @@ void FSQ::CreateBuffers(void)
 	glEnableVertexAttribArray(1);
 }
 
+
 //!
+/*!
+ *
+ */
 void FSQ::DeleteBuffers(void)
 {
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 }
 
+
 //!
+/*!
+ *
+ */
 void FSQ::CreateFSQ(void)
 {
 	CreateBuffers();
 }
 
+
 //!
+/*!
+ *
+ */
 void FSQ::Draw(void)
 {
 	glBindVertexArray(m_VAO_ID);
@@ -81,5 +106,3 @@ void FSQ::Draw(void)
 
 	glBindVertexArray(0);
 }
-
-

@@ -7,10 +7,15 @@
 #include "FrameBufferObject.h"
 
 //! Constructor
+/*!
+ *
+ * @param width
+ * @param height
+ */
 FrameBufferObject::FrameBufferObject(int width, int height)
 {
-	m_width = width;
-	m_height = height;
+	m_width = Singleton<Context>::Instance()->GetWidth();
+	m_height = Singleton<Context>::Instance()->GetHeight();
 	m_attachmentCounter = 0;
 	glGenFramebuffers(1, &m_FBO_ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
@@ -19,7 +24,11 @@ FrameBufferObject::FrameBufferObject(int width, int height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+
 //! Destructor
+/*!
+ *
+ */
 FrameBufferObject::~FrameBufferObject()
 {
 }
@@ -32,13 +41,17 @@ FrameBufferObject::~FrameBufferObject()
 void FrameBufferObject::CreateGBuffer(void)
 {
 	//! Positions
-	AddColorAttachment(1);
+	AddColorAttachment(0);
 	//! Colors
-	AddColorAttachment(2);
+	AddColorAttachment(1);
 	//! Normals
+	AddColorAttachment(2);
+	//! MaterialIDs
 	AddColorAttachment(3);
+	//! Reflectivity
+	AddColorAttachment(4);
 	//! Depth
-	AddDepthAttachment_Texture(4);
+	AddDepthAttachment_Texture(5);
 }
 
 
@@ -82,6 +95,7 @@ void FrameBufferObject::AddDepthAttachment_Buffer(void)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
 }
 
+
 //! Adds a depth map to the framebuffer object
 /*!
  * Adds a depth map to the framebuffer object, using a renderbuffer and a generated texture as render target.
@@ -90,7 +104,7 @@ void FrameBufferObject::AddDepthAttachment_Buffer(void)
 void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 {
 	//! Create depth texture
-	glActiveTexture(GL_TEXTURE4);
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glGenTextures(1, &m_depthTexture);
 	glBindTexture(GL_TEXTURE_2D, m_depthTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
@@ -99,7 +113,6 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-	glGenRenderbuffers(1, &m_depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
@@ -114,8 +127,8 @@ void FrameBufferObject::Use(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-	GLenum drawBuffers[4] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-	glDrawBuffers(3, drawBuffers);
+	GLenum drawBuffers[5] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
+	glDrawBuffers(5, drawBuffers);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 }
@@ -125,6 +138,7 @@ void FrameBufferObject::Unuse(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
 
 //! Returns a render target texture
 /*!
@@ -139,6 +153,7 @@ GLuint FrameBufferObject::GetTexture(unsigned int index)
 	}
 	return m_renderTargets[index];
 }
+
 
 //! Returns the frame buffers depth map
 /*!

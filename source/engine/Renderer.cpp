@@ -30,12 +30,13 @@ Renderer::Renderer(int width, int height)
 	deferred = true;
 	rotation = true;
 	m_rotSpeed = 0.005f;
+	m_fieldOfView = 60.0f;
 
 	tw_currentScene = HEAD;
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	loaded = false;
 
-	context_ptr = new Context();
+	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
 	m_shininess = 12.0f;
 
@@ -79,10 +80,13 @@ void Renderer::Initialize(int width, int height)
 
 	glEnable(GL_DEPTH_TEST);
 
-	//! AntTweakBar
+	/*!
+	 * AntTweakBar
+	 * TODO Set HSV as standard for color inputs
+	 */
 	TwAddButton(context_ptr->GetBar(), "toggledeferred", SwitchDeffered, NULL, "key='space' label='Toggle Deferred Rendering' group='Rendering'");
 	//! Deferred: render targets choice
-	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_DEPTH, "Depthmap"}};
+	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_MATID, "Material ID"}, {TEX_REFL, "Reflectance"}, {TEX_DEPTH, "Depthmap"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context_ptr->GetBar(), "deferredTextureChoice", texType, &tw_currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
 	//! Scene choice
@@ -96,6 +100,9 @@ void Renderer::Initialize(int width, int height)
 	//! Rotation
 	TwAddButton(context_ptr->GetBar(), "togglerotation", SwitchRotation, NULL, "key='r' label='Toggle Rotation' group='Rotation'");
 	TwAddVarRW(context_ptr->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &m_rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
+	//! Camera
+	TwAddVarRW(context_ptr->GetBar(), "fieldofview", TW_TYPE_FLOAT, &m_fieldOfView, "step='0.1' max='170.0' min='2.0' label='Field Of View' group='Camera'");
+
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -146,9 +153,8 @@ void Renderer::InitializeMatrices(void)
 	CameraTargetPosition = glm::vec3(0.0, 1.0, 0.0);
 	CameraUp = glm::vec3(0, 1, 0);
 
-	//! Projectionmatrix
-	ProjectionMatrix = glm::perspective(60.0f, (float)context_ptr->GetWidth()/(float)context_ptr->GetHeight(), 0.01f, 100.0f);
 }
+
 
 //! Initialize light setup
 /*!
@@ -374,18 +380,23 @@ void Renderer::RenderLoop(void){
 		//! Set background color
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
 
-		//! Calculations
+		//! Input handling
 		CalculateFPS(0.5, false);
 		KeyboardFunction();
-		CameraMovement();
+
+		//! Modelmatrix
 		if(rotation)
 			m_angle += m_rotSpeed;
-		//! Modelmatrix
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(m_angle, RotationAxis);
+
+		//! Camera
+		CameraMovement();
+		scenegraph_ptr->GetActiveCamera()->SetFielOfView(m_fieldOfView);
 		//! Viewmatrix
 		ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
-
+		//! Projectionmatrixs
+		ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
 
 		/************************************
 		 *  RENDER LOOP
@@ -415,8 +426,10 @@ void Renderer::RenderLoop(void){
 					deferredProgram_Pass1_ptr->SetUniform("mvp", MVPMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						int current_tex_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
-						deferredProgram_Pass1_ptr->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_tex_id)), 5);
+						int current_mat_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
+						deferredProgram_Pass1_ptr->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_mat_id)), 5);
+						deferredProgram_Pass1_ptr->SetUniform("Material.id", current_mat_id);
+						deferredProgram_Pass1_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
 					}
 					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
 				}
@@ -428,24 +441,28 @@ void Renderer::RenderLoop(void){
 			 *		DEFERRED RENDERING	   *
 			 *		2ND RENDER PASS		   *
 			 * * * * * * * * * * * * * * * */
-
 			deferredProgram_Pass2_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+			//! Light uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Light.Position", LightPosition);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Ambient", LightAmbient);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", LightDiffuse);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
-
+			//! ColorattachmentID to choose which attachment is displayed
 			deferredProgram_Pass2_ptr->SetUniform("textureID", tw_currentDeferredTex);
-
-			deferredProgram_Pass1_ptr->SetUniform("camera", CameraPosition);
-
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", firstPassFBO_ptr->GetTexture(0), 1);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", firstPassFBO_ptr->GetTexture(1), 2);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", firstPassFBO_ptr->GetTexture(2), 3);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", firstPassFBO_ptr->GetDepthTexture(), 4);
+			//! Camera uniforms
+			deferredProgram_Pass1_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			//! Window uniforms
+			deferredProgram_Pass1_ptr->SetUniform("Window.Width", context_ptr->GetWidth());
+			deferredProgram_Pass1_ptr->SetUniform("Window.Height", context_ptr->GetHeight());
+			//! Colorattachments
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", firstPassFBO_ptr->GetTexture(0), 0);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", firstPassFBO_ptr->GetTexture(1), 1);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", firstPassFBO_ptr->GetTexture(2), 2);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", firstPassFBO_ptr->GetTexture(3), 3);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", firstPassFBO_ptr->GetTexture(4), 4);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", firstPassFBO_ptr->GetDepthTexture(), 5);
 
 			fsq_ptr->Draw();
 

@@ -38,10 +38,11 @@ namespace scene {
 	 * @param name
 	 * @param texturefile
 	 */
-	void MaterialManager::AddMaterial(std::string name, std::string texturefile)
+	void MaterialManager::AddMaterial(std::string name, std::string texturefile, float reflectivity)
 	{
 		GLuint textureID = LoadTexture(texturefile);
 		materials.push_back(new Material(materialCounter, name, textureCounter, &textureID));
+		materials[materialCounter]->SetReflectivity(reflectivity);
 		materialCounter++;
 		textureCounter++;
 		std::cout << "MaterialCounter @ "<< materialCounter << std::endl;

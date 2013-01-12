@@ -8,6 +8,7 @@
 #include "SceneOrganizer.h"
 
 namespace scene {
+
 	//!
 	/*!
 	 *
@@ -28,7 +29,7 @@ namespace scene {
 	}
 
 
-	//!
+	//! Organizes the render queue
 	/*!
 	 *
 	 */

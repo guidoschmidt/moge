@@ -14,15 +14,16 @@ namespace scene {
 	 */
 	Camera::Camera()
 	{
-		speed = 0.005;
+		m_speed = 0.005;
 
 		glm::vec3 position(0.0f, 0.0f,1.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 
-		fieldOfView = 60.0f;
-		clipPlaneFar = 100.0f;
-		clipPlaneNear = 0.1f;
+		m_fieldOfView = 60.0f;
+		m_aspect = CalculateAspect();
+		m_nearPlane = 20.0f;
+		m_farPlane = 0.1f;
 	}
 
 
@@ -34,16 +35,18 @@ namespace scene {
 	 */
 	Camera::Camera(glm::vec3 positionVec, glm::vec3 lookAtVec, glm::vec3 upVec)
 	{
-		speed = 0.005;
+		m_speed = 0.005;
 
-		position = positionVec;
-		lookAt = lookAtVec;
-		up = upVec;
+		m_position = positionVec;
+		m_lookAt = lookAtVec;
+		m_up = upVec;
 
-		fieldOfView = 60.0f;
-		clipPlaneFar = 100.0f;
-		clipPlaneNear = 0.1f;
+		m_fieldOfView = 60.0f;
+		m_aspect = CalculateAspect();
+		m_nearPlane = 20.0f;
+		m_farPlane = 0.1f;
 	}
+
 
 	//!
 	/*!
@@ -59,10 +62,23 @@ namespace scene {
 	 *
 	 * @return
 	 */
+	float Camera::CalculateAspect(void)
+	{
+		int w = Singleton<Context>::Instance()->GetWidth();
+		int h = Singleton<Context>::Instance()->GetHeight();
+		return (static_cast<float>(w))/(static_cast<float>(h));
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
 	glm::mat4 Camera::GetViewMatrix(void)
 	{
-		return glm::lookAt(position, lookAt, up);
+		return glm::lookAt(m_position, m_lookAt, m_up);
 	}
+
 
 	//!
 	/*!
@@ -71,43 +87,77 @@ namespace scene {
 	 */
 	glm::mat4 Camera::GetProjectionMatrix(void)
 	{
-		//! TODO Aspect ratio
-		return glm::perspective(60.0f, 1.0f, 0.01f, 100.0f);
+		return glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
 	}
 
 
-	//! TODO Overload
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	glm::mat4 Camera::GetViewProjectionMatrix(void)
+	{
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
+		return m_viewMatrix * m_projectionMatrix;
+	}
+
+	//!
 	void Camera::TranslateX(float dx)
 	{
-		position.x += dx;
-		lookAt.x += dx;
+		m_position.x += dx;
+		m_lookAt.x += dx;
 	}
 
 	//!
 	void Camera::TranslateY(float dy)
 	{
-		position.y += dy;
-		lookAt.y += dy;
+		m_position.y += dy;
+		m_lookAt.y += dy;
 	}
 
 	//!
 	void Camera::TranslateZ(float dz)
 	{
-		position.z += dz;
-		lookAt.z += dz;
+		m_position.z += dz;
+		m_lookAt.z += dz;
 	}
 
+	//!
 	void Camera::SetCameraPositionX(float x)
 	{
-		position.x = x;
+		m_position.x = x;
 	}
+
+	//!
 	void Camera::SetCameraPositionY(float y)
 	{
-		position.y = y;
+		m_position.y = y;
 	}
+
+	//!
 	void Camera::SetCameraPositionZ(float z)
 	{
-		position.z = z;
+		m_position.z = z;
+	}
+
+	//!
+	void Camera::SetFielOfView(float angle)
+	{
+		m_fieldOfView = angle;
+	}
+
+	//!
+	void Camera::SetNearPlane(float near)
+	{
+		m_nearPlane = near;
+	}
+
+	//!
+	void Camera::SetFarPlane(float far)
+	{
+		m_farPlane = far;
 	}
 
 } //! namespace scene

@@ -15,7 +15,7 @@ namespace scene {
 	 */
 	Mesh::Mesh(aiMesh* m)
 	{
-		mesh = m;
+		mesh_ptr = m;
 		Initialize();
 		CreateBuffers();
 		Material material ();
@@ -39,24 +39,24 @@ namespace scene {
 	void Mesh::Initialize(void)
 	{
 		//! Topology initialization
-		for(unsigned int v=0; v < mesh->mNumVertices; v++){
+		for(unsigned int v=0; v < mesh_ptr->mNumVertices; v++){
 			//! Write vertices
-			vertices.push_back(mesh->mVertices[v].x);
-			vertices.push_back(mesh->mVertices[v].y);
-			vertices.push_back(mesh->mVertices[v].z);
+			vertices.push_back(mesh_ptr->mVertices[v].x);
+			vertices.push_back(mesh_ptr->mVertices[v].y);
+			vertices.push_back(mesh_ptr->mVertices[v].z);
 			//! Write normals
-			normals.push_back(mesh->mNormals[v].x);
-			normals.push_back(mesh->mNormals[v].y);
-			normals.push_back(mesh->mNormals[v].z);
+			normals.push_back(mesh_ptr->mNormals[v].x);
+			normals.push_back(mesh_ptr->mNormals[v].y);
+			normals.push_back(mesh_ptr->mNormals[v].z);
 			//! Write uv coordinates/texture coordinates if they exist
-			if(mesh->HasTextureCoords(0)){
-				uvs.push_back(mesh->mTextureCoords[0][v].x);
-				uvs.push_back(mesh->mTextureCoords[0][v].y);
+			if(mesh_ptr->HasTextureCoords(0)){
+				uvs.push_back(mesh_ptr->mTextureCoords[0][v].x);
+				uvs.push_back(mesh_ptr->mTextureCoords[0][v].y);
 			}
 		}
-		for(unsigned int f=0; f < mesh->mNumFaces; f++){
-			for(unsigned int i=0; i < mesh->mFaces[f].mNumIndices; i++){
-				indices.push_back(mesh->mFaces[f].mIndices[i]);
+		for(unsigned int f=0; f < mesh_ptr->mNumFaces; f++){
+			for(unsigned int i=0; i < mesh_ptr->mFaces[f].mNumIndices; i++){
+				indices.push_back(mesh_ptr->mFaces[f].mIndices[i]);
 			}
 		}
 	}

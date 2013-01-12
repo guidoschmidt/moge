@@ -19,14 +19,14 @@ namespace scene {
 	}
 
 	//!
-	void Transformation::Translate(glm::vec3 t){ position = t; }
-	void Transformation::TranslateX(float dx){ position.x += dx; }
-	void Transformation::TranslateY(float dy){ position.y += dy; }
-	void Transformation::TranslateZ(float dz){ position.z += dz; }
+	void Transformation::Translate(glm::vec3 t){ m_position = t; }
+	void Transformation::TranslateX(float dx){ m_position.x += dx; }
+	void Transformation::TranslateY(float dy){ m_position.y += dy; }
+	void Transformation::TranslateZ(float dz){ m_position.z += dz; }
 	//!
-	void Transformation::Rotate(glm::quat r){ rotation = r; }
+	void Transformation::Rotate(glm::quat r){ m_rotation = r; }
 	//!
-	void Transformation::Scale(glm::vec3 s){ scale = s; }
+	void Transformation::Scale(glm::vec3 s){ m_scale = s; }
 
 	//!
 	/*!
@@ -34,9 +34,9 @@ namespace scene {
 	 */
 	void Transformation::AccumulateModelMatrix(void)
 	{
-		glm::mat4 TranslationMatrix = glm::translate(position);
-		glm::mat4 tempRotationMatrix = glm::mat4_cast(rotation);
-		glm::mat4 ScaleMatrix = glm::scale(scale);
+		glm::mat4 TranslationMatrix = glm::translate(m_position);
+		glm::mat4 tempRotationMatrix = glm::mat4_cast(m_rotation);
+		glm::mat4 ScaleMatrix = glm::scale(m_scale);
 
 //		float tempY0 = tempRotationMatrix[1][0];
 //		float tempY1 = tempRotationMatrix[1][1];
@@ -47,7 +47,7 @@ namespace scene {
 //		RotationMatrix[][]
 
 		//! TODO Rotationmatrix
-		modelMatrix = glm::mat4(1.0f) * TranslationMatrix * ScaleMatrix * tempRotationMatrix;
+		m_modelMatrix = glm::mat4(1.0f) * TranslationMatrix * ScaleMatrix * tempRotationMatrix;
 	}
 
 	//!
@@ -58,7 +58,17 @@ namespace scene {
 	glm::mat4 Transformation::GetModelMatrix(void)
 	{
 		AccumulateModelMatrix();
-		return modelMatrix;
+		return m_modelMatrix;
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	glm::vec3 Transformation::GetPosition(void)
+	{
+		return m_position;
 	}
 
 } //! namespace scene

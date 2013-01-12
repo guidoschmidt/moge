@@ -6,9 +6,6 @@
 
 #include "Context.h"
 
-int initWIDTH, initHEIGHT;
-int WIDTH, HEIGHT;
-
 //! GLFW callback functions
 /*********************************************************************/
 //! GLFW keyboard function
@@ -41,10 +38,9 @@ void GLFWCALL KeyboardFunction(int key, int action)
  */
 void GLFWCALL ResizeFunction(int width, int height)
 {
-	WIDTH = width;
-	HEIGHT = height;
-	glViewport(0, 0, WIDTH, HEIGHT);
-	TwWindowSize(WIDTH, HEIGHT);
+	Singleton<Context>::Instance()->SetSize(width, height);
+	glViewport(0, 0, width, height);
+	TwWindowSize(width, height);
 }
 
 
@@ -66,8 +62,8 @@ void GLFWCALL MousePositionFunction(int mouseX, int mouseY)
 Context::Context(int height, int width)
 {
 	bar_ptr = 0;
-	WIDTH = width;
-	HEIGHT = height;
+	m_width = width;
+	m_height = height;
 	if(!glfwInit()){
 		std::cout << "ERROR: could not initialize GLFW!" << std::endl;
 		glfwTerminate();
@@ -96,19 +92,19 @@ Context::~Context()
  * @param openglVersionMinor
  */
 void Context::OpenWindow(int width, int height, std::string title, int openglVersionMajor, int openglVersionMinor){
-	WIDTH = width;
-	HEIGHT = height;
+	m_width = width;
+	m_height = height;
 	m_title = title;
 
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, openglVersionMajor);
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, openglVersionMinor);
 
-	if(!glfwOpenWindow(WIDTH, HEIGHT, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)){
+	if(!glfwOpenWindow(m_width, m_height, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)){
 		std::cout << "ERROR: could not open a GLFW window!" << std::endl;
 		glfwTerminate();
 	}
 
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glViewport(0, 0, m_width, m_height);
 
 	glfwSetWindowPos(0, 0 );
 	glfwSetWindowTitle(m_title.c_str());
@@ -137,8 +133,8 @@ void Context::setTitle(std::string title){
  * @param height
  */
 void Context::setSize(int width, int height){
-	WIDTH = width;
-	HEIGHT = height;
+	m_width = width;
+	m_height = height;
 }
 
 
@@ -191,7 +187,7 @@ TwBar* Context::GetBar(){
  */
 int Context::GetWidth()
 {
-	return WIDTH;
+	return m_width;
 }
 
 
@@ -202,7 +198,20 @@ int Context::GetWidth()
  */
 int Context::GetHeight()
 {
-	return HEIGHT;
+	return m_height;
+}
+
+
+//! Set the contexts size
+/*!
+ *
+ * @param width
+ * @param height
+ */
+void Context::SetSize(int width, int height)
+{
+	m_width = width;
+	m_height = height;
 }
 
 
@@ -211,7 +220,7 @@ int Context::GetHeight()
  * Adds a GUI to this context, using a TwBar from AntTweakBar.
  */
 void Context::AddAntTweakBar(void){
-	TwWindowSize(WIDTH, HEIGHT);
+	TwWindowSize(m_width, m_height);
 	TwInit(TW_OPENGL, 0);
 
 	bar_ptr = TwNewBar("GUI");

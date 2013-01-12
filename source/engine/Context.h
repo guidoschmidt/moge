@@ -17,6 +17,7 @@
 //! AntTweakBar include
 #include <AntTweakBar.h>
 //! Local includes
+#include "../utilities/Singleton.h"
 
 void GLFWCALL KeyboardFunction(int key, int state);
 void GLFWCALL ResizeFunction(int w, int h);
@@ -27,6 +28,7 @@ class Context
 	private:
 		std::string m_title;
 		TwBar* bar_ptr;
+		int m_width, m_height;
 
 	protected:
 		void setSize(int width, int height);

@@ -145,7 +145,16 @@ namespace scene {
 			size_t found = tex_path.find_last_of("/");
 			std::string tex_name = tex_path.substr(found+1);
 
-			materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name);
+
+			if(tex_name == "Wood.jpg")
+			{
+				std::cout << "LOOK HERE " << tex_name << std::endl;
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 1.0);
+			}
+			else
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.0);
+
+
 		}
 
 		//! Meshes

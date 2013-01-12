@@ -27,7 +27,7 @@ namespace scene {
 	class Mesh : public Node {
 		private:
 			//! Topology variables
-			aiMesh* mesh;
+			aiMesh* mesh_ptr;
 			std::vector<GLfloat> vertices;
 			std::vector<GLint> indices;
 			std::vector<GLfloat> normals;
@@ -41,12 +41,14 @@ namespace scene {
 			//! Material
 			Material* material_ptr;
 
+		protected:
+			void Initialize(void);
+			void CreateBuffers(void);
+
 		public:
 			Mesh(aiMesh* m);
 			virtual ~Mesh();
 
-			void Initialize(void);
-			void CreateBuffers(void);
 
 			//! Material
 			// Setter
