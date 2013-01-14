@@ -51,10 +51,10 @@ namespace scene {
 		}
 
 		//! Put organized node-list onto console
-		std::cout << "Organized vector: " << std::endl;
+		std::cout << "Organized RenderQ (by material): ";
 		for(unsigned int x=0; x < oneMaterial.size(); x++)
 		{
-			std::cout << static_cast<Mesh*>(oneMaterial[x])->GetMaterial()->GetName() << std::endl;
+			std::cout << "(" << x << ")" << static_cast<Mesh*>(oneMaterial[x])->GetMaterial()->GetName() << ", ";
 		}
 
 		return &oneMaterial;

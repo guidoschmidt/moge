@@ -320,11 +320,15 @@ void Renderer::KeyboardFunction(void)
 
 void Renderer::CameraMovement()
 {
+	//! Mouse position
+	int x_pos, y_pos;
+	glfwGetMousePos(&x_pos, &y_pos);
+	//std::cout << "Mouse @ (" << x_pos << ", " << y_pos << std::endl;
+
 	//! Zoom
 	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
 	m_fieldOfView = 50.0f - x;
-
 
 	//!
 	float speed = 0.0001f;
@@ -355,6 +359,39 @@ void Renderer::CameraMovement()
 //			std::cout << "mouse up" << std::endl;
 		}
 
+	}
+
+	//! Pan
+	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE))
+	{
+		int y_offset = context_ptr->GetHeight()/2;
+		int x_offset = context_ptr->GetWidth()/2;
+
+		int x = x_offset - x_pos;
+		int y = y_offset - y_pos;
+
+		double speed = 0.00005;
+
+		//! Right
+		if(x_pos > static_cast<float>(context_ptr->GetWidth())/2)
+		{
+			scenegraph_ptr->GetActiveCamera()->TranslateX(speed * -x);
+		}
+		//! Left
+		if(x_pos < static_cast<float>(context_ptr->GetWidth())/2)
+		{
+			scenegraph_ptr->GetActiveCamera()->TranslateX(speed * -x);
+		}
+		//! Down
+		if(y_pos > static_cast<float>(context_ptr->GetHeight())/2)
+		{
+			scenegraph_ptr->GetActiveCamera()->TranslateY(speed * y);
+		}
+		//! Up
+		if(y_pos < static_cast<float>(context_ptr->GetHeight())/2)
+		{
+			scenegraph_ptr->GetActiveCamera()->TranslateY(speed * y);
+		}
 	}
 
 }

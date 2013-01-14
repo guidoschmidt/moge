@@ -45,8 +45,6 @@ namespace scene {
 		materials[materialCounter]->SetReflectivity(reflectivity);
 		materialCounter++;
 		textureCounter++;
-		std::cout << "MaterialCounter @ "<< materialCounter << std::endl;
-		std::cout << "TextureCounter @ "<< textureCounter << std::endl;
 	}
 
 
@@ -60,7 +58,6 @@ namespace scene {
 	{
 		materials.push_back(new Material(materialCounter, name));
 		materialCounter++;
-		std::cout << "MaterialCounter @ "<< materialCounter << std::endl;
 	}
 
 
@@ -99,11 +96,11 @@ namespace scene {
 							ilGetData());
 			//! Delete image
 			ilDeleteImages(1, &Image_id);
-			std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
+			//std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
 		}
 		else if(!loadSuccess){
 			ErrorCheckTexture = ilGetError();
-			std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
+			//std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
 		}
 
 		return textures[textureCounter];

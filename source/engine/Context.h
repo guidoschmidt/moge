@@ -31,8 +31,7 @@ class Context
 		int m_width, m_height;
 
 	protected:
-		void setSize(int width, int height);
-		void setTitle(std::string title);
+		void SetTitle(std::string title);
 
 	public:
 		Context(int width = 500, int height = 500);
@@ -48,7 +47,6 @@ class Context
 		int GetWidth();
 		int GetHeight();
 
-		//! Setter
 		void SetSize(int width, int height);
 };
 

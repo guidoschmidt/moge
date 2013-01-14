@@ -112,7 +112,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
  *
  * @param title
  */
-void Context::setTitle(std::string title){
+void Context::SetTitle(std::string title){
 	m_title = title;
 }
 
@@ -124,7 +124,7 @@ void Context::setTitle(std::string title){
  * @param width
  * @param height
  */
-void Context::setSize(int width, int height){
+void Context::SetSize(int width, int height){
 	m_width = width;
 	m_height = height;
 }
@@ -191,19 +191,6 @@ int Context::GetWidth()
 int Context::GetHeight()
 {
 	return m_height;
-}
-
-
-//! Set the contexts size
-/*!
- *
- * @param width
- * @param height
- */
-void Context::SetSize(int width, int height)
-{
-	m_width = width;
-	m_height = height;
 }
 
 

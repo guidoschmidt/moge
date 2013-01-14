@@ -148,7 +148,6 @@ namespace scene {
 
 			if(tex_name == "Wood.jpg")
 			{
-				std::cout << "LOOK HERE " << tex_name << std::endl;
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.75);
 			}
 			else
@@ -182,15 +181,13 @@ namespace scene {
 				//! Scale
 				glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
 				mesh->Scale(scale);
-				//! Rotation TODO Roation anpassen
+				//! Rotation
 				glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
-
-				std::cout << "Rotation (" << rotation.w << ", " << rotation.y << ", " << rotation.x << ", " << rotation.z << ")" << std::endl;
 				mesh->RotateQuat(rotation);
 
 				//! Add mesh to scenegraph
 				root.AddChild(mesh);
-				std::cout << "Mesh #" << m << " was added to the scenegrapg!" << std::endl;
+				logfile << "Mesh #" << m << " was added to the scenegrapg!" << std::endl;
 			}
 		}
 		logfile << "Scene Processing was successfull" << std::endl;
