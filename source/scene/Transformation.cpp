@@ -10,7 +10,7 @@ namespace scene {
 
 	Transformation::Transformation()
 	{
-		// TODO Auto-generated constructor stub
+		// TODO
 	}
 
 	Transformation::~Transformation()
@@ -24,7 +24,8 @@ namespace scene {
 	void Transformation::TranslateY(float dy){ m_position.y += dy; }
 	void Transformation::TranslateZ(float dz){ m_position.z += dz; }
 	//!
-	void Transformation::Rotate(glm::quat r){ m_rotation = r; }
+	void Transformation::RotateEuler(float angle, glm::vec3 vector){ m_rotationMatrix = glm::rotate(angle, vector.x, vector.y, vector.z); }
+	void Transformation::RotateQuat(glm::quat rotation){ m_rotation = rotation; }
 	//!
 	void Transformation::Scale(glm::vec3 s){ m_scale = s; }
 
@@ -34,20 +35,11 @@ namespace scene {
 	 */
 	void Transformation::AccumulateModelMatrix(void)
 	{
-		glm::mat4 TranslationMatrix = glm::translate(m_position);
-		glm::mat4 tempRotationMatrix = glm::mat4_cast(m_rotation);
-		glm::mat4 ScaleMatrix = glm::scale(m_scale);
+		m_translationMatrix = glm::translate(m_position);
+		m_rotationMatrix = glm::mat4_cast(m_rotation);
+		m_scaleMatrix = glm::scale(m_scale);
 
-//		float tempY0 = tempRotationMatrix[1][0];
-//		float tempY1 = tempRotationMatrix[1][1];
-//		float tempY2 = tempRotationMatrix[1][2];
-//		float tempY3 = tempRotationMatrix[1][3];
-//
-//		glm::mat4 RotationMatrix;
-//		RotationMatrix[][]
-
-		//! TODO Rotationmatrix
-		m_modelMatrix = glm::mat4(1.0f) * TranslationMatrix * ScaleMatrix * tempRotationMatrix;
+		m_modelMatrix = glm::mat4(1.0f) * m_translationMatrix * m_scaleMatrix * m_rotationMatrix;
 	}
 
 	//!

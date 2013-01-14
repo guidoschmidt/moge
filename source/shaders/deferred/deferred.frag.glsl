@@ -8,15 +8,18 @@ struct LightInfo
 	vec3 Diffuse;
 	vec3 Specular;
 };
-struct WindowInfo
+struct ScreenInfo
 {
 	float Width;
 	float Height;
 };
 struct CameraInfo
 {
+	mat4 CameraToClipMatrix;
 	vec4 Position;
 	vec3 LookAt;
+	float NearPlane;
+	float FarPlane;
 };
 
 // INS
@@ -28,7 +31,7 @@ out vec4 FragColor;
 // UNIFORMS
 uniform LightInfo Light;
 uniform CameraInfo Camera;
-uniform WindowInfo Window;
+uniform ScreenInfo Screen;
 uniform float Shininess;
 uniform int textureID;
 uniform sampler2D deferredPositionTex;
@@ -39,14 +42,9 @@ uniform sampler2D deferredReflectanceTex;
 uniform sampler2D deferredDepthTex;
 
 // FUNCTIONS
-vec3 reflectionShading(vec3 position, vec3 normal, vec3 diffuseColor, float depth)
+vec3 reflectionShading()
 {
-	vec3 viewVector = normalize(vec3(Camera.Position) - position);
-	vec3 reflectVector = reflect(viewVector, normal);
-	vec3 shaded = reflectVector;
-	if(reflectVector.z == depth){
-		vec3 shaded = diffuseColor;
-	}
+	vec3 shaded = vec3(1.0f, 1.0f, 1.0f);
 	return shaded;
 } 
 
@@ -64,15 +62,19 @@ void main(void)
 {
 	if(textureID == -1)
 	{
-		vec3 pos = vec3(texture(deferredPositionTex, vert_UV));
+		vec3 position = vec3(texture(deferredPositionTex, vert_UV));
 		vec3 normal = vec3(texture(deferredNormalTex, vert_UV));
 		vec3 diffuseColor = vec3(texture(deferredColorTex, vert_UV));
 		float reflectance = float(texture(deferredReflectanceTex,vert_UV));
 		float depth = float(texture(deferredDepthTex,vert_UV));
+		
+		FragColor = vec4(diffuseShading(position, normal, diffuseColor), 1.0f);
 		if(reflectance > 0.0f)
-			FragColor = vec4(reflectionShading(pos, normal, diffuseColor, depth), 1.0f);
-		else
-			FragColor = vec4(diffuseShading(pos, normal, diffuseColor), 1.0f);
+		{
+			//FragColor = vec4(reflectionShading(pos, normal, diffuseColor), 1.0f);
+			FragColor = vec4((reflectance * reflectionShading() * (1 - reflectance) * vec3(FragColor)), 1.0f);
+		}
+		
 	}
 	else if(textureID == 0)
 		FragColor = texture(deferredPositionTex, vert_UV);

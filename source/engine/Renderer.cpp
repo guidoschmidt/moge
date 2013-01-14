@@ -320,6 +320,14 @@ void Renderer::KeyboardFunction(void)
 
 void Renderer::CameraMovement()
 {
+	//! Zoom
+	//! TODO Try camera movement instead of fov
+	int x = glfwGetMouseWheel();
+	m_fieldOfView = 50.0f - x;
+
+
+	//!
+	float speed = 0.0001f;
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 	{
 		int x_pos, y_pos;
@@ -327,24 +335,28 @@ void Renderer::CameraMovement()
 		//! Right
 		if(x_pos > static_cast<float>(context_ptr->GetWidth())/2)
 		{
-//			std::cout << "mouse right" << std::endl;
+			phi += speed;
 		}
 		//! Left
 		if(x_pos < static_cast<float>(context_ptr->GetWidth())/2)
 		{
-//			std::cout << "mouse left" << std::endl;
+			phi -= speed;
 		}
 		//! Down
 		if(y_pos > static_cast<float>(context_ptr->GetHeight())/2)
 		{
+			theta += speed;
 //			std::cout << "mouse down" << std::endl;
 		}
 		//! Up
 		if(y_pos < static_cast<float>(context_ptr->GetHeight())/2)
 		{
+			theta -= speed;
 //			std::cout << "mouse up" << std::endl;
 		}
+
 	}
+
 }
 
 
@@ -453,9 +465,12 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniform("textureID", tw_currentDeferredTex);
 			//! Camera uniforms
 			deferredProgram_Pass1_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			deferredProgram_Pass1_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
+			deferredProgram_Pass1_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
+			deferredProgram_Pass1_ptr->SetUniform("Camera.CameraToClipMatrix", scenegraph_ptr->GetActiveCamera()->GetCameraToClipMatrix());
 			//! Window uniforms
-			deferredProgram_Pass1_ptr->SetUniform("Window.Width", context_ptr->GetWidth());
-			deferredProgram_Pass1_ptr->SetUniform("Window.Height", context_ptr->GetHeight());
+			deferredProgram_Pass1_ptr->SetUniform("Screen.Width", context_ptr->GetWidth());
+			deferredProgram_Pass1_ptr->SetUniform("Screen.Height", context_ptr->GetHeight());
 			//! Colorattachments
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", firstPassFBO_ptr->GetTexture(0), 0);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", firstPassFBO_ptr->GetTexture(1), 1);

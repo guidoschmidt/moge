@@ -46,9 +46,15 @@ namespace scene {
 			glm::mat4 GetProjectionMatrix(void);
 			glm::mat4 GetViewProjectionMatrix(void);
 
+			glm::mat4 GetCameraToClipMatrix(void);
+
 			void TranslateX(float dx);
 			void TranslateY(float dy);
 			void TranslateZ(float dz);
+
+			void RotateX(float angle);
+			void RotateY(float angle);
+			void RotateZ(float angle);
 
 			void SetCameraPositionX(float x);
 			void SetCameraPositionY(float y);
@@ -58,6 +64,10 @@ namespace scene {
 			void SetFielOfView(float angle);
 			void SetNearPlane(float near);
 			void SetFarPlane(float far);
+			//! Getter
+			float GetFieldOfView(void);
+			float GetNearPlane(void);
+			float GetFarPlane(void);
 	};
 
 } //! namespace scene

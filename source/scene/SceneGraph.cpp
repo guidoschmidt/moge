@@ -149,7 +149,7 @@ namespace scene {
 			if(tex_name == "Wood.jpg")
 			{
 				std::cout << "LOOK HERE " << tex_name << std::endl;
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 1.0);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.75);
 			}
 			else
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.0);
@@ -186,7 +186,7 @@ namespace scene {
 				glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
 
 				std::cout << "Rotation (" << rotation.w << ", " << rotation.y << ", " << rotation.x << ", " << rotation.z << ")" << std::endl;
-				mesh->Rotate(rotation);
+				mesh->RotateQuat(rotation);
 
 				//! Add mesh to scenegraph
 				root.AddChild(mesh);

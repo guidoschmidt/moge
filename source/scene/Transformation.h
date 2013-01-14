@@ -22,6 +22,10 @@ namespace scene {
 			glm::vec3 m_position;
 			glm::quat m_rotation;
 			glm::vec3 m_scale;
+
+			glm::mat4 m_translationMatrix;
+			glm::mat4 m_rotationMatrix;
+			glm::mat4 m_scaleMatrix;
 			glm::mat4 m_modelMatrix;
 
 		public:
@@ -32,7 +36,8 @@ namespace scene {
 			void TranslateX(float dx);
 			void TranslateY(float dy);
 			void TranslateZ(float dz);
-			void Rotate(glm::quat r);
+			void RotateEuler(float angle, glm::vec3 vector);
+			void RotateQuat(glm::quat);
 			void Scale(glm::vec3 s);
 
 			//! ModelMatrix

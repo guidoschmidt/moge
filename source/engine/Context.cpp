@@ -17,14 +17,6 @@ void GLFWCALL KeyboardFunction(int key, int action)
 	if(!(TwEventKeyGLFW(key, action)))
 	{
 		switch(key){
-			case 87: //! w
-				break;
-			case 83: //! s
-				break;
-			case 65: //! a
-				break;
-			case 68: //! d
-				break;
 			default:
 				//std::cout << "key: " << key << ", action: " << action << std::endl;
 				break;
