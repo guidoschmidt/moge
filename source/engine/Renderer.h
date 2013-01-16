@@ -53,7 +53,7 @@ class Renderer
 		Context* context_ptr;
 		FSQ* fsq_ptr;
 		ShaderProgram* forwardProgram_ptr, *deferredProgram_Pass1_ptr, *deferredProgram_Pass2_ptr;
-		FrameBufferObject* firstPassFBO_ptr;
+		FrameBufferObject* gBuffer_ptr;
 		float m_angle;
 		float m_rotSpeed;
 		float m_fieldOfView;
@@ -66,6 +66,9 @@ class Renderer
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
 		#define NUM_SCENES 2
 		Scenes tw_currentScene;
+
+		int x_pos, y_pos;
+		int correct_x_pos, correct_y_pos;
 
 		//! Matrices
 		glm::mat4 IdentityMatrix;

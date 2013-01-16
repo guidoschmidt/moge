@@ -12,6 +12,8 @@
 //! GLM includes
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 //! Local includes
 #include "Node.h"
 #include "../utilities/Singleton.h"
@@ -24,15 +26,16 @@ namespace scene {
 
 		private:
 			double m_speed;
-
+			//! View
 			glm::vec3 m_lookAt;
 			glm::vec3 m_up;
-
+			//! Perspective
 			float m_fieldOfView;
 			float m_aspect;
 			float m_farPlane, m_nearPlane;
-
+			//! Matrices
 			glm::mat4 m_viewMatrix, m_projectionMatrix;
+			glm::mat4 rotation;
 
 		protected:
 			float CalculateAspect(void);
@@ -42,32 +45,30 @@ namespace scene {
 			Camera(glm::vec3 posVec, glm::vec3 lookAtVec, glm::vec3 upVec);
 			virtual ~Camera();
 
+			//! Getter
+			float GetFieldOfView(void);
+			float GetNearPlane(void);
+			float GetFarPlane(void);
 			glm::mat4 GetViewMatrix(void);
 			glm::mat4 GetProjectionMatrix(void);
-			glm::mat4 GetViewProjectionMatrix(void);
+			//glm::mat4 GetViewProjectionMatrix(void);
 
 			glm::mat4 GetCameraToClipMatrix(void);
-
-			void TranslateX(float dx);
-			void TranslateY(float dy);
-			void TranslateZ(float dz);
-
-			void RotateX(float angle);
-			void RotateY(float angle);
-			void RotateZ(float angle);
-
-			void SetCameraPositionX(float x);
-			void SetCameraPositionY(float y);
-			void SetCameraPositionZ(float z);
 
 			//! Setter
 			void SetFielOfView(float angle);
 			void SetNearPlane(float near);
 			void SetFarPlane(float far);
-			//! Getter
-			float GetFieldOfView(void);
-			float GetNearPlane(void);
-			float GetFarPlane(void);
+
+			void UpdateViewMatrix(void);
+			void UpdateProjectionMatrix(void);
+
+			//! Movement
+			void Translate(float dx, float dy, float dz);
+
+			void Yaw(float angle);
+			void Roll(float angle);
+			void Pitch(float angle);
 	};
 
 } //! namespace scene

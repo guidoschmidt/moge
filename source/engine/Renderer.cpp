@@ -102,7 +102,9 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &m_rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 	//! Camera
 	TwAddVarRW(context_ptr->GetBar(), "fieldofview", TW_TYPE_FLOAT, &m_fieldOfView, "step='0.1' max='170.0' min='2.0' label='Field Of View' group='Camera'");
-
+	//! Mouse
+	TwAddVarRO(context_ptr->GetBar(), "mousex", TW_TYPE_INT16, &correct_x_pos, "group='Mouse' label='X'");
+	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -121,7 +123,7 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/pass_one.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/pass_one.frag.glsl"
 		);
-		firstPassFBO_ptr = new FrameBufferObject(
+		gBuffer_ptr = new FrameBufferObject(
 				context_ptr->GetWidth(), context_ptr->GetHeight()
 		);
 
@@ -283,19 +285,19 @@ void Renderer::KeyboardFunction(void)
 	double speed = 0.005;
 	if(glfwGetKey('W'))
 	{
-		scenegraph_ptr->GetActiveCamera()->TranslateZ(-speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -speed);
 	}
 	if(glfwGetKey('S'))
 	{
-		scenegraph_ptr->GetActiveCamera()->TranslateZ(speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, speed);
 	}
 	if(glfwGetKey('A'))
 	{
-		scenegraph_ptr->GetActiveCamera()->TranslateX(-speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(-speed, 0, 0);
 	}
 	if(glfwGetKey('D'))
 	{
-		scenegraph_ptr->GetActiveCamera()->TranslateX(speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(speed, 0, 0);
 	}
 
 	//! Light
@@ -321,9 +323,10 @@ void Renderer::KeyboardFunction(void)
 void Renderer::CameraMovement()
 {
 	//! Mouse position
-	int x_pos, y_pos;
 	glfwGetMousePos(&x_pos, &y_pos);
-	//std::cout << "Mouse @ (" << x_pos << ", " << y_pos << std::endl;
+
+	correct_x_pos = x_pos - context_ptr->GetWidth()/2;
+	correct_y_pos = y_pos - context_ptr->GetHeight()/2;
 
 	//! Zoom
 	//! TODO Try camera movement instead of fov
@@ -331,67 +334,22 @@ void Renderer::CameraMovement()
 	m_fieldOfView = 50.0f - x;
 
 	//!
-	float speed = 0.0001f;
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
 	{
-		int x_pos, y_pos;
-		glfwGetMousePos(&x_pos, &y_pos);
-		//! Right
-		if(x_pos > static_cast<float>(context_ptr->GetWidth())/2)
-		{
-			phi += speed;
-		}
-		//! Left
-		if(x_pos < static_cast<float>(context_ptr->GetWidth())/2)
-		{
-			phi -= speed;
-		}
-		//! Down
-		if(y_pos > static_cast<float>(context_ptr->GetHeight())/2)
-		{
-			theta += speed;
-//			std::cout << "mouse down" << std::endl;
-		}
-		//! Up
-		if(y_pos < static_cast<float>(context_ptr->GetHeight())/2)
-		{
-			theta -= speed;
-//			std::cout << "mouse up" << std::endl;
-		}
-
+		//! Calculate angles
+		phi += correct_y_pos * 0.001f;
+		theta += correct_x_pos * 0.001f;
+		//! Rotate camera
+		scenegraph_ptr->GetActiveCamera()->Yaw(-theta);
+		scenegraph_ptr->GetActiveCamera()->Roll(-phi);
+		//! Reset for next click
+		theta = 0.0f;
+		phi = 0.0f;
 	}
 
-	//! Pan
+	//!
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE))
 	{
-		int y_offset = context_ptr->GetHeight()/2;
-		int x_offset = context_ptr->GetWidth()/2;
-
-		int x = x_offset - x_pos;
-		int y = y_offset - y_pos;
-
-		double speed = 0.00005;
-
-		//! Right
-		if(x_pos > static_cast<float>(context_ptr->GetWidth())/2)
-		{
-			scenegraph_ptr->GetActiveCamera()->TranslateX(speed * -x);
-		}
-		//! Left
-		if(x_pos < static_cast<float>(context_ptr->GetWidth())/2)
-		{
-			scenegraph_ptr->GetActiveCamera()->TranslateX(speed * -x);
-		}
-		//! Down
-		if(y_pos > static_cast<float>(context_ptr->GetHeight())/2)
-		{
-			scenegraph_ptr->GetActiveCamera()->TranslateY(speed * y);
-		}
-		//! Up
-		if(y_pos < static_cast<float>(context_ptr->GetHeight())/2)
-		{
-			scenegraph_ptr->GetActiveCamera()->TranslateY(speed * y);
-		}
 	}
 
 }
@@ -456,7 +414,7 @@ void Renderer::RenderLoop(void){
 			 *		1ST RENDER PASS		   *
 			 * * * * * * * * * * * * * * * */
 			//! Framebuffer object setup and clear buffers
-			firstPassFBO_ptr->Use();
+			gBuffer_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//! Shader program setup & uniform bindings
@@ -471,8 +429,15 @@ void Renderer::RenderLoop(void){
 				{
 					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
 					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-					MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-					deferredProgram_Pass1_ptr->SetUniform("mvp", MVPMatrix);
+					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
+					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
+					//! Matrix uniforms
+					deferredProgram_Pass1_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
+					deferredProgram_Pass1_ptr->SetUniform("ModelMatrix", ModelMatrix);
+					deferredProgram_Pass1_ptr->SetUniform("ViewMatrix", ViewMatrix);
+					deferredProgram_Pass1_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
+					deferredProgram_Pass1_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
+					deferredProgram_Pass1_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
 						int current_mat_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
@@ -484,7 +449,7 @@ void Renderer::RenderLoop(void){
 				}
 			}
 
-			firstPassFBO_ptr->Unuse();
+			gBuffer_ptr->Unuse();
 			deferredProgram_Pass1_ptr->Unuse();
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
@@ -500,21 +465,27 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
 			//! ColorattachmentID to choose which attachment is displayed
 			deferredProgram_Pass2_ptr->SetUniform("textureID", tw_currentDeferredTex);
+			//! Mouse uniforms
+			float x = static_cast<float>(x_pos)/static_cast<float>(context_ptr->GetWidth());
+			float y = static_cast<float>(y_pos)/static_cast<float>(context_ptr->GetHeight());
+			deferredProgram_Pass2_ptr->SetUniform("Mouse.X", x);
+			deferredProgram_Pass2_ptr->SetUniform("Mouse.Y", y);
 			//! Camera uniforms
 			deferredProgram_Pass1_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass1_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
 			deferredProgram_Pass1_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
-			deferredProgram_Pass1_ptr->SetUniform("Camera.CameraToClipMatrix", scenegraph_ptr->GetActiveCamera()->GetCameraToClipMatrix());
+			deferredProgram_Pass1_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass1_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
 			//! Window uniforms
-			deferredProgram_Pass1_ptr->SetUniform("Screen.Width", context_ptr->GetWidth());
-			deferredProgram_Pass1_ptr->SetUniform("Screen.Height", context_ptr->GetHeight());
+			deferredProgram_Pass1_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			deferredProgram_Pass1_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Colorattachments
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", firstPassFBO_ptr->GetTexture(0), 0);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", firstPassFBO_ptr->GetTexture(1), 1);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", firstPassFBO_ptr->GetTexture(2), 2);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", firstPassFBO_ptr->GetTexture(3), 3);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", firstPassFBO_ptr->GetTexture(4), 4);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", firstPassFBO_ptr->GetDepthTexture(), 5);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
 
 			fsq_ptr->Draw();
 

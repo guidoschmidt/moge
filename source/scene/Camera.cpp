@@ -22,8 +22,8 @@ namespace scene {
 
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
-		m_nearPlane = 20.0f;
-		m_farPlane = 0.1f;
+		m_nearPlane = 0.1f;
+		m_farPlane = 100.0f;
 
 		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
 		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
@@ -46,8 +46,11 @@ namespace scene {
 
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
-		m_nearPlane = 20.0f;
-		m_farPlane = 0.1f;
+		m_nearPlane = 0.1f;
+		m_farPlane = 100.f;
+
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
 	}
 
 
@@ -79,7 +82,8 @@ namespace scene {
 	 */
 	glm::mat4 Camera::GetViewMatrix(void)
 	{
-		return glm::lookAt(m_position, m_lookAt, m_up);
+		UpdateViewMatrix();
+		return m_viewMatrix;
 	}
 
 
@@ -90,95 +94,48 @@ namespace scene {
 	 */
 	glm::mat4 Camera::GetProjectionMatrix(void)
 	{
-		return glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
+		UpdateProjectionMatrix();
+		return m_projectionMatrix;
+	}
+
+	//! Updates the camera's view matrix
+	/*!
+	 *
+	 */
+	void Camera::UpdateViewMatrix(void)
+	{
+		m_viewMatrix = rotation * glm::lookAt(m_position, m_lookAt, m_up);
+	}
+
+	//!
+	void Camera::UpdateProjectionMatrix(void)
+	{
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 
 	//!
 	/*!
 	 *
-	 * @return
+	 * @param dz
 	 */
-	glm::mat4 Camera::GetViewProjectionMatrix(void)
-	{
-		return m_viewMatrix * m_projectionMatrix;
-	}
-
-	//!
-	void Camera::TranslateX(float dx)
+	void Camera::Translate(float dx, float dy, float dz)
 	{
 		m_position.x += dx;
-		m_lookAt.x += dx;
-	}
-
-	//!
-	void Camera::TranslateY(float dy)
-	{
 		m_position.y += dy;
-		m_lookAt.y += dy;
-	}
-
-	//!
-	void Camera::TranslateZ(float dz)
-	{
 		m_position.z += dz;
+		m_lookAt.x += dx;
+		m_lookAt.y += dy;
 		m_lookAt.z += dz;
 	}
 
 	//!
-	void Camera::RotateX(float angle){ m_viewMatrix = glm::rotate(angle, 1.0f, 0.0f, 0.0f); }
-	void Camera::RotateY(float angle){}
-	void Camera::RotateZ(float angle){}
-
-	//!
 	glm::mat4 Camera::GetCameraToClipMatrix(void)
 	{
-
-		glm::mat4 cameraToClipMatrix = glm::mat4(0.0f);
-
-		const float degToRad = 3.14159f / 180.0f;
-		float viewAngleRad = m_fieldOfView * degToRad;
-		float frustumScale = 1.0f / tan(viewAngleRad / 2.0f);
-
-		cameraToClipMatrix[0].x = frustumScale;
-		cameraToClipMatrix[1].y = frustumScale;
-		cameraToClipMatrix[2].z = (m_farPlane + m_nearPlane)/(m_nearPlane - m_farPlane);
-		cameraToClipMatrix[2].w = -1.0f;
-		cameraToClipMatrix[3].z = (2.0f * m_farPlane * m_nearPlane)/(m_nearPlane - m_farPlane);
-
-		return cameraToClipMatrix;
+		//! TODO return Cmaera to clip matrix
+		return glm::mat4(1.0f);
 	}
 
-
-	//!
-	/*!
-	 *
-	 * @param x
-	 */
-	void Camera::SetCameraPositionX(float x)
-	{
-		m_position.x = x;
-	}
-
-	//!
-	/*!
-	 *
-	 * @param y
-	 */
-	void Camera::SetCameraPositionY(float y)
-	{
-		m_position.y = y;
-	}
-
-	//!
-	/*!
-	 *
-	 * @param z
-	 */
-	void Camera::SetCameraPositionZ(float z)
-	{
-		m_position.z = z;
-	}
 
 	//!
 	/*!
@@ -230,5 +187,21 @@ namespace scene {
 	 * @return
 	 */
 	float Camera::GetNearPlane(void){ return m_nearPlane; }
+
+
+	//!
+	void Camera::Yaw(float angle)
+	{
+	}
+	//!
+	void Camera::Roll(float angle)
+	{
+	}
+
+	//!
+	void Camera::Pitch(float angle)
+	{
+	}
+
 
 } //! namespace scene

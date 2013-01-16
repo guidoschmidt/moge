@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <stack>
+#include <omp.h>
 //! Assimp includes
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
