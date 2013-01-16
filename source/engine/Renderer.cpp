@@ -120,18 +120,22 @@ void Renderer::Initialize(int width, int height)
 	 * *************************/
 		//! Inits for 1st pass
 		deferredProgram_Pass1_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/deferred/pass_one.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/deferred/pass_one.frag.glsl"
+				GLSL::VERTEX, "./source/shaders/deferred/1-pass_one.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/deferred/1-pass_one.frag.glsl"
 		);
-		gBuffer_ptr = new FrameBufferObject(
-				context_ptr->GetWidth(), context_ptr->GetHeight()
-		);
-
+		gBuffer_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
 		//! Inits for 2nd pass
 		deferredProgram_Pass2_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/deferred/deferred.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/deferred/deferred.frag.glsl"
+				GLSL::VERTEX, "./source/shaders/deferred/2-deferred_lighting.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/deferred/2-deferred_lighting.frag.glsl"
 		);
+		fbo_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
+		//! Inits for 3nd pass
+		deferredProgram_Pass3_ptr = new ShaderProgram(
+				GLSL::VERTEX, "./source/shaders/deferred/3-deferred_reflections.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/deferred/3-deferred_reflections.frag.glsl"
+		);
+		//! Fullscreen quad init
 		fsq_ptr->CreateFSQ();
 
 	InitializeMatrices();
@@ -416,11 +420,8 @@ void Renderer::RenderLoop(void){
 			//! Framebuffer object setup and clear buffers
 			gBuffer_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 			//! Shader program setup & uniform bindings
 			deferredProgram_Pass1_ptr->Use();
-			//! uniform camera binding
-			deferredProgram_Pass1_ptr->SetUniform("camera", CameraPosition);
 
 			//! Drawing
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
@@ -455,8 +456,9 @@ void Renderer::RenderLoop(void){
 			 *		DEFERRED RENDERING	   *
 			 *		2ND RENDER PASS		   *
 			 * * * * * * * * * * * * * * * */
-			deferredProgram_Pass2_ptr->Use();
+			fbo_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			deferredProgram_Pass2_ptr->Use();
 			//! Light uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Light.Position", LightPosition);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Ambient", LightAmbient);
@@ -489,7 +491,20 @@ void Renderer::RenderLoop(void){
 
 			fsq_ptr->Draw();
 
+			fbo_ptr->Unuse();
 			deferredProgram_Pass2_ptr->Unuse();
+			/*!* * * * * * * * * * * * * * *
+			 *		DEFERRED RENDERING	   *
+			 *		3ND RENDER PASS		   *
+			 * * * * * * * * * * * * * * * */
+			deferredProgram_Pass3_ptr->Use();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			deferredProgram_Pass3_ptr->SetUniformSampler("diffuseColorTex", fbo_ptr->GetTexture(0), 0);
+
+			fsq_ptr->Draw();
+
+			deferredProgram_Pass3_ptr->Unuse();
 		}
 		else{
 			/*!* * * * * * * * * * * * * * *

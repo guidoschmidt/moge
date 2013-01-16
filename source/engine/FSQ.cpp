@@ -101,7 +101,7 @@ void FSQ::CreateFSQ(void)
 void FSQ::Draw(void)
 {
 	glBindVertexArray(m_VAO_ID);
-	glLineWidth(20);
+
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);

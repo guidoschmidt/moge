@@ -58,18 +58,9 @@ vec3 viewSpaceToScreenSpace(vec3 vector)
 	return screenSpace;
 }
 
-
 vec3 reflectionShading()
-{	
-	// Variables
-	vec3 shaded = vec3(0.0f, 0.0f, 0.0f);
-	
-	
-
-	
-	// Calculations
-		
-	return shaded;
+{
+	return vec3(texture(deferredColorTex, 1.0f - vert_UV));
 }
 
 vec3 diffuseShading(vec3 position, vec3 normal, vec3 diffuseColor, vec4 lightPos)
@@ -102,11 +93,6 @@ void main(void)
 		// Shading
 		// Diffuse
 		FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightpos), 1.0f);
-		// Reflection
-		if(reflectance > 0.0f)
-		{
-			FragColor = vec4(reflectionShading(), 1.0f);
-		}
 	}
 	// Positions
 	else if(textureID == 0)

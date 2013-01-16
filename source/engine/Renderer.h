@@ -52,8 +52,8 @@ class Renderer
 		GLboolean m_running;
 		Context* context_ptr;
 		FSQ* fsq_ptr;
-		ShaderProgram* forwardProgram_ptr, *deferredProgram_Pass1_ptr, *deferredProgram_Pass2_ptr;
-		FrameBufferObject* gBuffer_ptr;
+		ShaderProgram* forwardProgram_ptr, *deferredProgram_Pass1_ptr, *deferredProgram_Pass2_ptr, *deferredProgram_Pass3_ptr;
+		FrameBufferObject* gBuffer_ptr, *fbo_ptr;
 		float m_angle;
 		float m_rotSpeed;
 		float m_fieldOfView;
