@@ -124,7 +124,8 @@ void Context::SetTitle(std::string title){
  * @param width
  * @param height
  */
-void Context::SetSize(int width, int height){
+void Context::SetSize(int width, int height)
+{
 	m_width = width;
 	m_height = height;
 }
@@ -134,7 +135,8 @@ void Context::SetSize(int width, int height){
 /*!
  * Calls GLFW's swap buffers function.
  */
-void Context::SwapBuffers(void){
+void Context::SwapBuffers(void)
+{
 	glfwSwapBuffers();
 }
 
@@ -144,7 +146,8 @@ void Context::SwapBuffers(void){
  *
  * @return the context's existance
  */
-bool Context::IsExiting(void){
+bool Context::IsExiting(void)
+{
 	if(glfwGetKey(GLFW_KEY_ESC) || !glfwGetWindowParam(GLFW_OPENED))
 		return true;
 	else
@@ -167,7 +170,8 @@ std::string* Context::GetTitle(void)
  *
  * @return context's TwBar
  */
-TwBar* Context::GetBar(){
+TwBar* Context::GetBar()
+{
 	return bar_ptr;
 }
 
@@ -198,7 +202,8 @@ int Context::GetHeight()
 /*!
  * Adds a GUI to this context, using a TwBar from AntTweakBar.
  */
-void Context::AddAntTweakBar(void){
+void Context::AddAntTweakBar(void)
+{
 	TwWindowSize(m_width, m_height);
 	TwInit(TW_OPENGL, 0);
 

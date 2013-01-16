@@ -170,11 +170,11 @@ void Renderer::InitializeMatrices(void)
 void Renderer::InitializeLight(void)
 {
 	LightPosition = glm::vec4(0.0f, 5.0f, 2.0f, 0.0f);
-	LightAmbient = glm::vec3(0.0f, 0.0f, 0.0f);
-	LightDiffuse = glm::vec3(1.0f, 1.0f, 1.0f);
-	LightSpecular = glm::vec3(0.35f, 0.45f, 0.55f);
+	//LightAmbient = glm::vec3(0.0f, 0.0f, 0.0f);
+	LightDiffuse = glm::vec3(0.95f, 0.75f, 0.85f);
+	LightSpecular = glm::vec3(0.35f, 0.55f, 0.95f);
 
-	TwAddVarRW(context_ptr->GetBar(), "lightAmbient", TW_TYPE_COLOR3F, &LightAmbient, "label='Ambient' group='Light'");
+	//TwAddVarRW(context_ptr->GetBar(), "lightAmbient", TW_TYPE_COLOR3F, &LightAmbient, "label='Ambient' group='Light'");
 	TwAddVarRW(context_ptr->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light'");
 	TwAddVarRW(context_ptr->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light'");
 }
@@ -335,7 +335,10 @@ void Renderer::CameraMovement()
 	//! Zoom
 	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
-	m_fieldOfView = 50.0f - x;
+	if(!(m_fieldOfView > 170.0f) || !(m_fieldOfView < 5.0f))
+	{
+		m_fieldOfView = 50.0f - x;
+	}
 
 	//!
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
@@ -465,22 +468,20 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", LightDiffuse);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
-			//! ColorattachmentID to choose which attachment is displayed
-			deferredProgram_Pass2_ptr->SetUniform("textureID", tw_currentDeferredTex);
 			//! Mouse uniforms
 			float x = static_cast<float>(x_pos)/static_cast<float>(context_ptr->GetWidth());
 			float y = static_cast<float>(y_pos)/static_cast<float>(context_ptr->GetHeight());
 			deferredProgram_Pass2_ptr->SetUniform("Mouse.X", x);
 			deferredProgram_Pass2_ptr->SetUniform("Mouse.Y", y);
 			//! Camera uniforms
-			deferredProgram_Pass1_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
-			deferredProgram_Pass1_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
-			deferredProgram_Pass1_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
-			deferredProgram_Pass1_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
-			deferredProgram_Pass1_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
+			deferredProgram_Pass2_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			deferredProgram_Pass2_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
+			deferredProgram_Pass2_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
+			deferredProgram_Pass2_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass2_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
 			//! Window uniforms
-			deferredProgram_Pass1_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
-			deferredProgram_Pass1_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
+			deferredProgram_Pass2_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			deferredProgram_Pass2_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Colorattachments
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
@@ -499,8 +500,25 @@ void Renderer::RenderLoop(void){
 			 * * * * * * * * * * * * * * * */
 			deferredProgram_Pass3_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			deferredProgram_Pass3_ptr->SetUniformSampler("diffuseColorTex", fbo_ptr->GetTexture(0), 0);
+			//! Camera uniforms
+			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
+			deferredProgram_Pass3_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
+			deferredProgram_Pass3_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass3_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
+			//! Window uniforms
+			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
+			//! ColorattachmentID to choose which attachment is displayed
+			deferredProgram_Pass3_ptr->SetUniform("textureID", tw_currentDeferredTex);
+			//! Colorattachments
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 6);
 
 			fsq_ptr->Draw();
 

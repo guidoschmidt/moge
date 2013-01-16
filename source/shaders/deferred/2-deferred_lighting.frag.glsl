@@ -75,41 +75,20 @@ vec3 diffuseShading(vec3 position, vec3 normal, vec3 diffuseColor, vec4 lightPos
 // MAIN
 void main(void)
 {	// Compositing
-	if(textureID == -1)
-	{
-		// Lightposition to view space, and control it with mouse
-		vec4 lightpos = Camera.Projection * Camera.View * Light.Position;
-		lightpos.x = 5.0f * Mouse.X;
-		lightpos.y = 3.0f;
-		lightpos.z = 5.0f * Mouse.Y;
-		
-		// Gather G-Buffer information from textures
-		vec3 position = vec3(texture(deferredPositionTex, vert_UV));
-		vec3 normal = vec3(texture(deferredNormalTex, vert_UV));
-		vec3 diffuseColor = vec3(texture(deferredColorTex, vert_UV));
-		float reflectance = float(texture(deferredReflectanceTex,vert_UV));
-		float depth = float(texture(deferredDepthTex,vert_UV));
-		
-		// Shading
-		// Diffuse
-		FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightpos), 1.0f);
-	}
-	// Positions
-	else if(textureID == 0)
-		FragColor = texture(deferredPositionTex, vert_UV);
-	// Albedo (Color)
-	else if(textureID == 1)
-		FragColor = texture(deferredColorTex, vert_UV);
-	// Normals
-	else if(textureID == 2)
-		FragColor = texture(deferredNormalTex, vert_UV);
-	// Material IDs
-	else if(textureID == 3)
-		FragColor = texture(deferredMaterialIDTex, vert_UV);
-	// Reflectance
-	else if(textureID == 4)
-		FragColor = texture(deferredReflectanceTex, vert_UV);
-	// Depth
-	else if(textureID == 5)
-		FragColor = texture(deferredDepthTex, vert_UV);
+	// Lightposition to view space, and control it with mouse
+	vec4 lightpos = Camera.Projection * Camera.View * Light.Position;
+	lightpos.x = 5.0f * Mouse.X;
+	lightpos.y = 3.0f;
+	lightpos.z = 5.0f * Mouse.Y;
+	
+	// Gather G-Buffer information from textures
+	vec3 position = vec3(texture(deferredPositionTex, vert_UV));
+	vec3 normal = vec3(texture(deferredNormalTex, vert_UV));
+	vec3 diffuseColor = vec3(texture(deferredColorTex, vert_UV));
+	float reflectance = float(texture(deferredReflectanceTex,vert_UV));
+	float depth = float(texture(deferredDepthTex,vert_UV));
+	
+	// Shading
+	// Diffuse
+	FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightpos), 1.0f);
 }

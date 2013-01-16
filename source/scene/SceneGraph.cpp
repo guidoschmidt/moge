@@ -146,7 +146,7 @@ namespace scene {
 			std::string tex_name = tex_path.substr(found+1);
 
 
-			if(tex_name == "Wood.jpg")
+			if(tex_name == "Marble.jpg")
 			{
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.75);
 			}
