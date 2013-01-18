@@ -1,6 +1,6 @@
 #version 400
 
-// TYPEDEFS
+/*** Uniform block definitions ************************************************/
 struct LightInfo
 {
 	vec4 Position;
@@ -8,39 +8,48 @@ struct LightInfo
 	vec3 Diffuse;
 	vec3 Specular;
 };
+
 struct ScreenInfo
 {
 	float Width;
 	float Height;
 };
+
 struct MouseInfo
 {
 	float X;
 	float Y;
 };
+
 struct CameraInfo
 {
-	mat4 View;
-	mat4 Projection;
 	vec3 Position;
 	vec3 LookAt;
 	float NearPlane;
 	float FarPlane;
 };
 
-// INS
+/*** Input ********************************************************************/
 in vec2 vert_UV;
 
-// OUTS
+/*** Output *******************************************************************/
 out vec4 FragColor;
 
-// UNIFORMS
+/*** Uniforms *****************************************************************/
 uniform LightInfo Light;
 uniform CameraInfo Camera;
 uniform ScreenInfo Screen;
 uniform MouseInfo Mouse;
-uniform float Shininess;
+
 uniform int textureID;
+
+uniform bool mouseLight;
+
+uniform float Shininess;
+
+uniform mat4 ViewMatrix;
+uniform mat4 ProjectionMatrix;
+
 uniform sampler2D deferredPositionTex;
 uniform sampler2D deferredColorTex;
 uniform sampler2D deferredNormalTex;
@@ -48,10 +57,10 @@ uniform sampler2D deferredMaterialIDTex;
 uniform sampler2D deferredReflectanceTex;
 uniform sampler2D deferredDepthTex;
 
-// FUNCTIONS
+/*** Functions ****************************************************************/
 vec3 viewSpaceToScreenSpace(vec3 vector)
 {
-	vec4 clipSpace = Camera.Projection * Camera.View * vec4(vector, 1.0f);
+	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);
 	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;
 	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;
 	
@@ -72,14 +81,24 @@ vec3 diffuseShading(vec3 position, vec3 normal, vec3 diffuseColor, vec4 lightPos
 	return shaded;
 }
 
-// MAIN
+/*** Main *********************************************************************/
 void main(void)
 {	// Compositing
 	// Lightposition to view space, and control it with mouse
-	vec4 lightpos = Camera.Projection * Camera.View * Light.Position;
-	lightpos.x = 5.0f * Mouse.X;
-	lightpos.y = 3.0f;
-	lightpos.z = 5.0f * Mouse.Y;
+	vec4 lightPosition = ProjectionMatrix * ViewMatrix * Light.Position;
+	
+	if(mouseLight)
+	{
+		float mouseX = Mouse.X/Screen.Width;
+		float mouseY = Mouse.Y/Screen.Height;
+		mouseX = ((mouseX - 0.5f) * 2.0f);
+		mouseY = ((mouseY - 0.5f) * 2.0f);
+	
+		lightPosition.x += 20.0f * mouseX;
+		lightPosition.z += 20.0f * mouseY;
+	}
+	
+
 	
 	// Gather G-Buffer information from textures
 	vec3 position = vec3(texture(deferredPositionTex, vert_UV));
@@ -90,5 +109,5 @@ void main(void)
 	
 	// Shading
 	// Diffuse
-	FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightpos), 1.0f);
+	FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightPosition), 1.0f);
 }

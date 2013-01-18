@@ -1,5 +1,6 @@
 #version 400
-// TYPEDEFS
+
+/*** Uniform block definitions ************************************************/
 struct CameraInfo
 {
 	mat4 View;
@@ -9,22 +10,25 @@ struct CameraInfo
 	float NearPlane;
 	float FarPlane;
 };
+
 struct ScreenInfo
 {
 	float Width;
 	float Height;
 };
 
-// INS
+/*** Input ********************************************************************/
 in vec2 vert_UV;
 
-// OUTS
+/*** Output *******************************************************************/
 out vec4 FragColor;
 
-// UNIFORMS
+/*** Uniforms *****************************************************************/
 uniform CameraInfo Camera;
 uniform ScreenInfo Screen;
+
 uniform int textureID;
+
 uniform sampler2D deferredPositionTex;
 uniform sampler2D deferredColorTex;
 uniform sampler2D deferredNormalTex;
@@ -34,7 +38,7 @@ uniform sampler2D deferredDepthTex;
 uniform sampler2D deferredDiffuseTex;
 
 
-// FUNCTIONS
+/*** Functions ****************************************************************/
 vec2 getScreenSpacePosition()
 {
 	return gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
@@ -149,7 +153,7 @@ vec3 reflectionPass()
 	return shaded;
 }
 
-// MAIN
+/*** Main *********************************************************************/
 void main(void)
 {	
 	// Compositing

@@ -9,13 +9,13 @@
 
 //! ANTTWEAKBAR CALLBACKS BEGIN
 /*! Variables and button callbacks */
-bool deferred;
+bool tw_deferred;
+bool tw_rotation;
 bool loaded;
-bool rotation;
 float theta = 0, phi = 0;
 float r = 0;
-static void TW_CALL SwitchDeffered(void* clientData){ deferred = !deferred;}
-static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
+static void TW_CALL SwitchDeffered(void* clientData){ tw_deferred = !tw_deferred;}
+static void TW_CALL SwitchRotation(void* clientData){ tw_rotation = !tw_rotation;}
 //! ANTTWEAKBAR CALLBACKS END
 
 
@@ -27,14 +27,16 @@ static void TW_CALL SwitchRotation(void* clientData){ rotation = !rotation;}
  */
 Renderer::Renderer(int width, int height)
 {
-	deferred = true;
-	rotation = true;
-	m_rotSpeed = 0.005f;
+	tw_rotSpeed = 0.005f;
 	m_fieldOfView = 60.0f;
 
+	loaded = false;
+
+	tw_deferred = true;
 	tw_currentScene = HEAD;
 	tw_currentDeferredTex = TEX_COMPOSIT;
-	loaded = false;
+	tw_rotation = false;
+	tw_mouseLight = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -96,15 +98,16 @@ void Renderer::Initialize(int width, int height)
 	//! Material
 	TwAddVarRW(context_ptr->GetBar(), "shininess", TW_TYPE_FLOAT, &m_shininess, "step='0.01' max='100.0' min='0.0' label='Shininess' group='Material'");
 	//! Background color
-	TwAddVarRW(context_ptr->GetBar(), "background", TW_TYPE_COLOR3F, &m_backgroundColor, "label='Background' group='Scene'");
+	TwAddVarRW(context_ptr->GetBar(), "background", TW_TYPE_COLOR3F, &m_backgroundColor, "label='Background' group='Scene' colormode='hls'");
 	//! Rotation
 	TwAddButton(context_ptr->GetBar(), "togglerotation", SwitchRotation, NULL, "key='r' label='Toggle Rotation' group='Rotation'");
-	TwAddVarRW(context_ptr->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &m_rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
+	TwAddVarRW(context_ptr->GetBar(), "rotationSpeed", TW_TYPE_FLOAT, &tw_rotSpeed, "step='0.001' max='1.0' min='0.0' label='Rotationspeed' group='Rotation'");
 	//! Camera
 	TwAddVarRW(context_ptr->GetBar(), "fieldofview", TW_TYPE_FLOAT, &m_fieldOfView, "step='0.1' max='170.0' min='2.0' label='Field Of View' group='Camera'");
 	//! Mouse
 	TwAddVarRO(context_ptr->GetBar(), "mousex", TW_TYPE_INT16, &correct_x_pos, "group='Mouse' label='X'");
 	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
+	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOL16, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -155,10 +158,6 @@ void Renderer::InitializeMatrices(void)
 	IdentityMatrix = glm::mat4(1.0f);
 
 	//! Viewmatrix
-	CameraPosition = glm::vec3(0.0, 2.0, 10.0);
-	CameraTargetPosition = glm::vec3(0.0, 1.0, 0.0);
-	CameraUp = glm::vec3(0, 1, 0);
-
 }
 
 
@@ -169,14 +168,12 @@ void Renderer::InitializeMatrices(void)
  */
 void Renderer::InitializeLight(void)
 {
-	LightPosition = glm::vec4(0.0f, 5.0f, 2.0f, 0.0f);
-	//LightAmbient = glm::vec3(0.0f, 0.0f, 0.0f);
-	LightDiffuse = glm::vec3(0.95f, 0.75f, 0.85f);
-	LightSpecular = glm::vec3(0.35f, 0.55f, 0.95f);
+	LightPosition = glm::vec4(0.0f, 4.0f, 0.0f, 0.0f);
+	LightDiffuse = glm::vec3(0.65f, 0.45f, 0.45f);
+	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
 
-	//TwAddVarRW(context_ptr->GetBar(), "lightAmbient", TW_TYPE_COLOR3F, &LightAmbient, "label='Ambient' group='Light'");
-	TwAddVarRW(context_ptr->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light'");
-	TwAddVarRW(context_ptr->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light'");
+	TwAddVarRW(context_ptr->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light' colormode='hls'");
+	TwAddVarRW(context_ptr->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
 }
 
 //! Initializes the DevIL image loader utility
@@ -399,8 +396,8 @@ void Renderer::RenderLoop(void){
 		KeyboardFunction();
 
 		//! Modelmatrix
-		if(rotation)
-			m_angle += m_rotSpeed;
+		if(tw_rotation)
+			m_angle += tw_rotSpeed;
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(m_angle, RotationAxis);
 
@@ -415,7 +412,7 @@ void Renderer::RenderLoop(void){
 		/************************************
 		 *  RENDER LOOP
 		 ************************************/
-		if(deferred){
+		if(tw_deferred){
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
 			 *		1ST RENDER PASS		   *
@@ -467,18 +464,19 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniform("Light.Ambient", LightAmbient);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", LightDiffuse);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
+			//! Material uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
+			//! Matrix uniforms
+			deferredProgram_Pass2_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass2_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
 			//! Mouse uniforms
-			float x = static_cast<float>(x_pos)/static_cast<float>(context_ptr->GetWidth());
-			float y = static_cast<float>(y_pos)/static_cast<float>(context_ptr->GetHeight());
-			deferredProgram_Pass2_ptr->SetUniform("Mouse.X", x);
-			deferredProgram_Pass2_ptr->SetUniform("Mouse.Y", y);
+			deferredProgram_Pass2_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
+			deferredProgram_Pass2_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
+			deferredProgram_Pass2_ptr->SetUniform("mouseLight", tw_mouseLight);
 			//! Camera uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass2_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
 			deferredProgram_Pass2_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
-			deferredProgram_Pass2_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
-			deferredProgram_Pass2_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
 			//! Window uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
@@ -490,6 +488,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
 
+			//! Drawing
 			fsq_ptr->Draw();
 
 			fbo_ptr->Unuse();
@@ -520,6 +519,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 6);
 
+			//! Drawing
 			fsq_ptr->Draw();
 
 			deferredProgram_Pass3_ptr->Unuse();
@@ -531,13 +531,20 @@ void Renderer::RenderLoop(void){
 			forwardProgram_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			//! Uniform bindings
+			//! Light uniforms
 			forwardProgram_ptr->SetUniform("Light.Position", LightPosition);
 			forwardProgram_ptr->SetUniform("Light.Ambient", LightAmbient);
 			forwardProgram_ptr->SetUniform("Light.Diffuse", LightDiffuse);
 			forwardProgram_ptr->SetUniform("Light.Specular", LightSpecular);
-
-			forwardProgram_ptr->SetUniform("mvp", MVPMatrix);
+			//! Material uniforms
+			forwardProgram_ptr->SetUniform("Shininess", m_shininess);
+			//! Mouse uniforms
+			forwardProgram_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
+			forwardProgram_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
+			forwardProgram_ptr->SetUniform("mouseLight", tw_mouseLight);
+			//! Window uniforms
+			forwardProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			forwardProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 
 			//! Drawing
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
@@ -546,8 +553,15 @@ void Renderer::RenderLoop(void){
 				{
 					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
 					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-					MVPMatrix = ProjectionMatrix * ViewMatrix * ModelMatrix;
-					forwardProgram_ptr->SetUniform("mvp", MVPMatrix);
+					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
+					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
+					//! Matrix uniforms
+					forwardProgram_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
+					forwardProgram_ptr->SetUniform("ModelMatrix", ModelMatrix);
+					forwardProgram_ptr->SetUniform("ViewMatrix", ViewMatrix);
+					forwardProgram_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
+					forwardProgram_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
+					forwardProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
 						int current_tex_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
