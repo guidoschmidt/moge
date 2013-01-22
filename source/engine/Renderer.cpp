@@ -37,6 +37,8 @@ Renderer::Renderer(int width, int height)
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
+	tw_deltaDepth = 0.01f;
+	tw_SSR = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -108,6 +110,10 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRO(context_ptr->GetBar(), "mousex", TW_TYPE_INT16, &correct_x_pos, "group='Mouse' label='X'");
 	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOL16, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
+	//! SSR parameters
+	TwAddVarRW(context_ptr->GetBar(), "ssrdeltaDepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.01' group='SSR' label='Depth delta'");
+	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOL16, &tw_SSR, "group='SSR' label='Switch SSR'");
+	TwAddVarRW(context_ptr->GetBar(), "switch", TW_TYPE_BOOL16, &tw_switch, "group='SSR' label='toggle'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -168,7 +174,7 @@ void Renderer::InitializeMatrices(void)
  */
 void Renderer::InitializeLight(void)
 {
-	LightPosition = glm::vec4(0.0f, 4.0f, 0.0f, 0.0f);
+	LightPosition = glm::vec4(0.0f, 1.0f, -10.0f, 0.0f);
 	LightDiffuse = glm::vec3(0.65f, 0.45f, 0.45f);
 	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
 
@@ -283,40 +289,22 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 void Renderer::KeyboardFunction(void)
 {
 	//! Camera
-	double speed = 0.005;
-	if(glfwGetKey('W'))
-	{
-		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -speed);
-	}
-	if(glfwGetKey('S'))
+	double speed = 0.015;
+	if(glfwGetKey('W')) //! Forwards
 	{
 		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, speed);
 	}
-	if(glfwGetKey('A'))
+	if(glfwGetKey('S')) //! Backwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(-speed, 0, 0);
+		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -speed);
 	}
-	if(glfwGetKey('D'))
+	if(glfwGetKey('A')) //! Left
 	{
 		scenegraph_ptr->GetActiveCamera()->Translate(speed, 0, 0);
 	}
-
-	//! Light
-	if(glfwGetKey('I'))
+	if(glfwGetKey('D')) //! Right
 	{
-		LightPosition.z += speed;
-	}
-	if(glfwGetKey('K'))
-	{
-		LightPosition.z -= speed;
-	}
-	if(glfwGetKey('J'))
-	{
-		LightPosition.x += speed;
-	}
-	if(glfwGetKey('L'))
-	{
-		LightPosition.x -= speed;
+		scenegraph_ptr->GetActiveCamera()->Translate(-speed, 0, 0);
 	}
 }
 
@@ -338,14 +326,14 @@ void Renderer::CameraMovement()
 	}
 
 	//!
-	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT))
+	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		//! Calculate angles
-		phi += correct_y_pos * 0.001f;
-		theta += correct_x_pos * 0.001f;
+		phi += correct_y_pos * 0.0025f;
+		theta += correct_x_pos * 0.0025f;
 		//! Rotate camera
-		scenegraph_ptr->GetActiveCamera()->Yaw(-theta);
-		scenegraph_ptr->GetActiveCamera()->Roll(-phi);
+		scenegraph_ptr->GetActiveCamera()->Pitch(phi);
+		scenegraph_ptr->GetActiveCamera()->Yaw(theta);
 		//! Reset for next click
 		theta = 0.0f;
 		phi = 0.0f;
@@ -388,7 +376,7 @@ void Renderer::RenderLoop(void){
 			loaded = true;
 		}
 
-		//! Set background color
+		//! Set background colory
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
 
 		//! Input handling
@@ -495,16 +483,21 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->Unuse();
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
-			 *		3ND RENDER PASS		   *
+			 *		3RD RENDER PASS		   *
 			 * * * * * * * * * * * * * * * */
 			deferredProgram_Pass3_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//! Raytrace uniform parameters
+			deferredProgram_Pass3_ptr->SetUniform("deltaDepth", tw_deltaDepth);
+			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
+			deferredProgram_Pass3_ptr->SetUniform("switcher", tw_switch);
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
-			deferredProgram_Pass3_ptr->SetUniform("Camera.View", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
-			deferredProgram_Pass3_ptr->SetUniform("Camera.Projection", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
+			//! Matrix uniforms
+			deferredProgram_Pass3_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass3_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
 			//! Window uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));

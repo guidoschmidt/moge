@@ -129,7 +129,6 @@ namespace scene {
 		activeCamera = camera;
 		root.AddChild(camera);
 
-
 		//! Materials
 		for(unsigned int mat = 0; mat < scene->mNumMaterials; mat++)
 		{
@@ -145,15 +144,12 @@ namespace scene {
 			size_t found = tex_path.find_last_of("/");
 			std::string tex_name = tex_path.substr(found+1);
 
-
-			if(tex_name == "Marble.jpg")
+			if(tex_name == "Road.jpg")
 			{
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.75);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.85);
 			}
 			else
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.0);
-
-
 		}
 
 		//! Meshes

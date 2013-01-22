@@ -25,8 +25,11 @@ namespace scene {
 		m_nearPlane = 0.1f;
 		m_farPlane = 100.0f;
 
+		m_translationMatrix = glm::mat4(1.0f);
+		m_rotationMatrix = glm::mat4(1.0f);
+
 		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
-		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 
@@ -49,8 +52,11 @@ namespace scene {
 		m_nearPlane = 0.1f;
 		m_farPlane = 100.f;
 
+		m_translationMatrix = glm::mat4(1.0f);
+		m_rotationMatrix = glm::mat4(1.0f);
+
 		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
-		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_farPlane, m_nearPlane);
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 
@@ -78,11 +84,28 @@ namespace scene {
 	//!
 	/*!
 	 *
+	 */
+	void Camera::UpdateViewMatrix(void)
+	{
+		//m_viewMatrix = m_rotationMatrix * m_viewMatrix;
+	}
+
+
+	//!
+	/*!
+	 *
+	 */
+	void Camera::UpdateProjectionMatrix(void)
+	{
+	}
+
+	//!
+	/*!
+	 *
 	 * @return
 	 */
 	glm::mat4 Camera::GetViewMatrix(void)
 	{
-		UpdateViewMatrix();
 		return m_viewMatrix;
 	}
 
@@ -94,23 +117,7 @@ namespace scene {
 	 */
 	glm::mat4 Camera::GetProjectionMatrix(void)
 	{
-		UpdateProjectionMatrix();
 		return m_projectionMatrix;
-	}
-
-	//! Updates the camera's view matrix
-	/*!
-	 *
-	 */
-	void Camera::UpdateViewMatrix(void)
-	{
-		m_viewMatrix = rotation * glm::lookAt(m_position, m_lookAt, m_up);
-	}
-
-	//!
-	void Camera::UpdateProjectionMatrix(void)
-	{
-		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 
@@ -124,18 +131,9 @@ namespace scene {
 		m_position.x += dx;
 		m_position.y += dy;
 		m_position.z += dz;
-		m_lookAt.x += dx;
-		m_lookAt.y += dy;
-		m_lookAt.z += dz;
+		m_translationMatrix = glm::translate(dx, dy, dz);
+		m_viewMatrix = m_translationMatrix * m_viewMatrix;
 	}
-
-	//!
-	glm::mat4 Camera::GetCameraToClipMatrix(void)
-	{
-		//! TODO return Cmaera to clip matrix
-		return glm::mat4(1.0f);
-	}
-
 
 	//!
 	/*!
@@ -172,6 +170,16 @@ namespace scene {
 	 *
 	 * @return
 	 */
+	glm::vec3 Camera::GetPosition(void)
+	{
+		return m_position;
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
 	float Camera::GetFieldOfView(void){ return m_fieldOfView; }
 
 	//!
@@ -192,15 +200,23 @@ namespace scene {
 	//!
 	void Camera::Yaw(float angle)
 	{
+		m_rotationMatrix = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
+		m_viewMatrix = m_rotationMatrix * m_viewMatrix;
 	}
 	//!
 	void Camera::Roll(float angle)
 	{
 	}
 
-	//!
+	//! Rotatesn camera around x-axis
+	/*!
+	 *
+	 * @param angle
+	 */
 	void Camera::Pitch(float angle)
 	{
+		m_rotationMatrix = glm::rotate(angle, 1.0f, 0.0f, 0.0f);
+		m_viewMatrix = m_rotationMatrix * m_viewMatrix;
 	}
 
 

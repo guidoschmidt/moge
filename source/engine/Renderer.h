@@ -68,6 +68,9 @@ class Renderer
 
 		float tw_rotSpeed;
 		bool tw_mouseLight;
+		float tw_deltaDepth;
+		bool tw_SSR;
+		bool tw_switch;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

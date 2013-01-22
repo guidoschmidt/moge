@@ -43,28 +43,28 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
-			"settings":
-			{
-				"buffer_size": 20527,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 375.0,
+		"height": 110.0,
 		"selected_items":
 		[
 			[
-				"Mar",
-				"Markdown Preview: open Markdown Cheat sheet"
+				"Insta",
+				"Package Control: Install Package"
 			],
 			[
 				"insta",
 				"Package Control: Install Package"
+			],
+			[
+				"Insa",
+				"Package Control: Install Package"
+			],
+			[
+				"Mar",
+				"Markdown Preview: open Markdown Cheat sheet"
 			],
 			[
 				":i",
@@ -100,6 +100,17 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.vs",
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.fs",
+		"/C/Users/guidoschmidt/Development/code/glsl/bilateral filter/bilateralFilter.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/.gitconfig",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/img/bsc09.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Camera.h",
@@ -107,7 +118,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kusntgeschichte 4.MD",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kunstgeschichte 4.MD",
@@ -115,7 +125,6 @@
 		"/C/Users/guidoschmidt/Development/MinGW/lib/libassimp.dll.a",
 		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwAdvanced1.cpp",
 		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwSimpleGLFW.c",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.cpp",
@@ -175,7 +184,7 @@
 		"replace_history":
 		[
 		],
-		"reverse": false,
+		"reverse": true,
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
@@ -184,39 +193,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
-					"settings":
-					{
-						"buffer_size": 20527,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								17099,
-								17099
-							]
-						],
-						"settings":
-						{
-							"glsv_configured": true,
-							"glsv_enabled": 1,
-							"glsv_spec": 0,
-							"syntax": "Packages/C++/C++.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 11224.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],

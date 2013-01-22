@@ -35,10 +35,12 @@ namespace scene {
 			float m_farPlane, m_nearPlane;
 			//! Matrices
 			glm::mat4 m_viewMatrix, m_projectionMatrix;
-			glm::mat4 rotation;
+			glm::mat4 m_rotationMatrix, m_translationMatrix;
 
 		protected:
 			float CalculateAspect(void);
+			void UpdateViewMatrix(void);
+			void UpdateProjectionMatrix(void);
 
 		public:
 			Camera();
@@ -49,19 +51,14 @@ namespace scene {
 			float GetFieldOfView(void);
 			float GetNearPlane(void);
 			float GetFarPlane(void);
+			glm::vec3 GetPosition(void);
 			glm::mat4 GetViewMatrix(void);
 			glm::mat4 GetProjectionMatrix(void);
-			//glm::mat4 GetViewProjectionMatrix(void);
-
-			glm::mat4 GetCameraToClipMatrix(void);
 
 			//! Setter
 			void SetFielOfView(float angle);
 			void SetNearPlane(float near);
 			void SetFarPlane(float far);
-
-			void UpdateViewMatrix(void);
-			void UpdateProjectionMatrix(void);
 
 			//! Movement
 			void Translate(float dx, float dy, float dz);
