@@ -57,6 +57,10 @@ class Renderer
 		float m_angle;
 		float m_fieldOfView;
 
+		double m_speed;
+
+		float time1, time2, timedif;
+
 		//! AnttWeakBar texture choose
 		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_MATID=3, TEX_REFL=4, TEX_DEPTH=5} DeferredTexture;
 		#define NUM_TEXS 7
@@ -70,7 +74,7 @@ class Renderer
 		bool tw_mouseLight;
 		float tw_deltaDepth;
 		bool tw_SSR;
-		bool tw_switch;
+		bool tw_blur;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

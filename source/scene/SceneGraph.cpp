@@ -146,7 +146,7 @@ namespace scene {
 
 			if(tex_name == "Road.jpg")
 			{
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.85);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.65);
 			}
 			else
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.0);

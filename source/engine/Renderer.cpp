@@ -27,8 +27,11 @@ static void TW_CALL SwitchRotation(void* clientData){ tw_rotation = !tw_rotation
  */
 Renderer::Renderer(int width, int height)
 {
-	tw_rotSpeed = 0.005f;
+	tw_rotSpeed = 0.2f;
 	m_fieldOfView = 60.0f;
+
+	time1 = 0.0f;
+	time2 = 0.0f;
 
 	loaded = false;
 
@@ -37,7 +40,7 @@ Renderer::Renderer(int width, int height)
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
-	tw_deltaDepth = 0.01f;
+	tw_deltaDepth = 0.0125f;
 	tw_SSR = false;
 
 	context_ptr = Singleton<Context>::Instance();
@@ -111,9 +114,9 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOL16, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 	//! SSR parameters
-	TwAddVarRW(context_ptr->GetBar(), "ssrdeltaDepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.01' group='SSR' label='Depth delta'");
+	TwAddVarRW(context_ptr->GetBar(), "ssrdeltaDepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.0001' group='SSR' label='Depth delta'");
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOL16, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "switch", TW_TYPE_BOOL16, &tw_switch, "group='SSR' label='toggle'");
+	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOL16, &tw_blur, "group='SSR' label='Blur'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -289,22 +292,21 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 void Renderer::KeyboardFunction(void)
 {
 	//! Camera
-	double speed = 0.015;
 	if(glfwGetKey('W')) //! Forwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, m_speed);
 	}
 	if(glfwGetKey('S')) //! Backwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -speed);
+		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -m_speed);
 	}
 	if(glfwGetKey('A')) //! Left
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(speed, 0, 0);
+		scenegraph_ptr->GetActiveCamera()->Translate(m_speed, 0, 0);
 	}
 	if(glfwGetKey('D')) //! Right
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(-speed, 0, 0);
+		scenegraph_ptr->GetActiveCamera()->Translate(-m_speed, 0, 0);
 	}
 }
 
@@ -320,17 +322,14 @@ void Renderer::CameraMovement()
 	//! Zoom
 	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
-	if(!(m_fieldOfView > 170.0f) || !(m_fieldOfView < 5.0f))
-	{
-		m_fieldOfView = 50.0f - x;
-	}
+	m_fieldOfView = 50.0f - x;
 
 	//!
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		//! Calculate angles
-		phi += correct_y_pos * 0.0025f;
-		theta += correct_x_pos * 0.0025f;
+		phi += correct_y_pos * (m_speed/10.0f);
+		theta += correct_x_pos * (m_speed/10.0f);
 		//! Rotate camera
 		scenegraph_ptr->GetActiveCamera()->Pitch(phi);
 		scenegraph_ptr->GetActiveCamera()->Yaw(theta);
@@ -338,12 +337,6 @@ void Renderer::CameraMovement()
 		theta = 0.0f;
 		phi = 0.0f;
 	}
-
-	//!
-	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_MIDDLE))
-	{
-	}
-
 }
 
 
@@ -353,6 +346,13 @@ void Renderer::CameraMovement()
  */
 void Renderer::RenderLoop(void){
 	while(m_running){
+		//! Time calculations
+		timedif = time2 - time1;
+		m_speed = 2.0f * timedif;
+
+		time1 = glfwGetTime();
+
+		//! Scene loading
 		if(!loaded){
 			switch (tw_currentScene) {
 				case HEAD:
@@ -376,7 +376,7 @@ void Renderer::RenderLoop(void){
 			loaded = true;
 		}
 
-		//! Set background colory
+		//! Set background color
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
 
 		//! Input handling
@@ -490,7 +490,7 @@ void Renderer::RenderLoop(void){
 			//! Raytrace uniform parameters
 			deferredProgram_Pass3_ptr->SetUniform("deltaDepth", tw_deltaDepth);
 			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
-			deferredProgram_Pass3_ptr->SetUniform("switcher", tw_switch);
+			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
@@ -571,6 +571,7 @@ void Renderer::RenderLoop(void){
 		TwDraw();
 		context_ptr->SwapBuffers();
 
+		time2 = glfwGetTime();
 		//! Check for context exiting
 		if(context_ptr->IsExiting()){
 			m_running = false;

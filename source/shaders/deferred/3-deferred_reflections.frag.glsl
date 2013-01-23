@@ -28,7 +28,7 @@ uniform ScreenInfo Screen;
 uniform int textureID;
 
 uniform bool SSR;
-uniform bool switcher;
+uniform bool blur;
 
 uniform float deltaDepth;
 	
@@ -45,6 +45,11 @@ uniform sampler2D deferredDiffuseTex;
 
 
 /*** Functions ****************************************************************/
+
+float rand(vec2 n)
+{
+  return 0.5 + 0.5 * fract(sin(dot(n.xy, vec2(12.9898, 78.233)))* 43758.5453);
+}
 
 vec4 bilateralFilter() {
 	int kernelSize = 10;
@@ -171,7 +176,7 @@ vec4 reflectShading()
 
 	// Calculate view vector
 	vec3 cameraPosition = Camera.Position;
-	vec3 shadedPosition = texture(deferredPositionTex, vert_UV).xyz;
+	vec3 shadedPosition = vec3(texture(deferredPositionTex, vert_UV));
 	vec3 shadedNormal = texture(deferredNormalTex, vert_UV).xyz;
 	
 	// Reflect view vector at the normal of current position to get reflection vector
@@ -182,14 +187,15 @@ vec4 reflectShading()
 	
 	// Get pixel size
 	vec2 fragSize = vec2(1.0f/Screen.Width, 1.0f/Screen.Height);
-	//fragSize += fragSize/2;
+	fragSize += fragSize/2;
+	
 	// Initialze traced ray
 	float stepSize = min(fragSize.x, fragSize.y);
 	vec3 rayStep = ssReflectionVector * stepSize;
 	vec3 tracedRay = ssReflectionVector * stepSize;
 	
 	// Find sampling position
-	vec2 sampledPosition = vert_UV - tracedRay.xy;
+	vec2 sampledPosition = vert_UV + tracedRay.xy;
 	
 	// Get depths of ray and sampled position
 	//***************************************
@@ -201,8 +207,8 @@ vec4 reflectShading()
 	float rayDepth = fragmentDepth + tracedRay.z;
 	
 	// Raytrace while ray is inside of screen space
-	while(	sampledPosition.x >= -1.0f && sampledPosition.x <= 1.0f &&
-			sampledPosition.y >= -1.0f && sampledPosition.y <= 1.0f)
+	while(	sampledPosition.x <= 1.0f && sampledPosition.x >= 0.0f &&
+			sampledPosition.y <= 1.0f && sampledPosition.y >= 0.0f)
 	{
 		// Update values
 		//***************************************
@@ -212,20 +218,41 @@ vec4 reflectShading()
 		sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 		// Ray depth
 		rayDepth = fragmentDepth + tracedRay.z;
-			
-		if(rayDepth >= sampledDepth)
+		
+		//! If ray depth gets bigger than sampled depth at the current
+		//! intersection fragment of screen space
+		if(rayDepth > sampledDepth)
 		{
-			if((rayDepth - fragmentDepth) < deltaDepth)
+			if((rayDepth - sampledDepth) < deltaDepth)
 			{
-				reflectionColor = texture(deferredDiffuseTex, sampledPosition);
-				break;		
+				// Blur implemented as simple averaging along x and y axis
+				if(blur)
+				{
+					// @TODO Jittering, blur in negative & positive x,y-axis
+					vec3 sum = vec3(0.0f);
+					float size = 0.01f;
+					for(float i = -0.01f; i < size; i+=0.001)
+					{
+						vec2 pos = sampledPosition;
+						pos += i;
+						sum += vec3(texture(deferredDiffuseTex, pos));
+					}
+					sum /= (2 * size) * 1000;
+					
+					reflectionColor = vec4(sum, 1.0f);
+				}
+				// If not blurred get diffuse lighted color from texture of deferred step
+				else
+					reflectionColor = texture(deferredDiffuseTex, sampledPosition);
+				
 			}
+			// Break when depth inztersection is found
+			break;		
 		}
 		
+		// Extend traced ray by one 'ray step'
 		tracedRay += rayStep;
 	}
-	if(switcher)
-		reflectionColor = vec4(ssReflectionVector.z, ssReflectionVector.z, ssReflectionVector.z, 1.0f);
 	
 	return reflectionColor;
 }
@@ -321,7 +348,7 @@ void main(void)
 				// Working SSR
 				//FragColor = reflectionPass();
 				// 2nd (new) Attempt SSR
-				FragColor = reflectShading();
+				FragColor = reflectance * reflectShading() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
 			}
 		}
 	}
