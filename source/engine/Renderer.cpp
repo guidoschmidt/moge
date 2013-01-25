@@ -294,19 +294,32 @@ void Renderer::KeyboardFunction(void)
 	//! Camera
 	if(glfwGetKey('W')) //! Forwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, m_speed);
+		//scenegraph_ptr->GetActiveCamera()->Translate(0, 0, m_speed);
 	}
 	if(glfwGetKey('S')) //! Backwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -m_speed);
+		//scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -m_speed);
 	}
 	if(glfwGetKey('A')) //! Left
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(m_speed, 0, 0);
+		//scenegraph_ptr->GetActiveCamera()->Translate(m_speed, 0, 0);
 	}
 	if(glfwGetKey('D')) //! Right
 	{
-		scenegraph_ptr->GetActiveCamera()->Translate(-m_speed, 0, 0);
+		//scenegraph_ptr->GetActiveCamera()->Translate(-m_speed, 0, 0);
+	}
+	//! Reload shader code
+	if(glfwGetKey('1'))
+	{
+		deferredProgram_Pass1_ptr->ReloadAllShaders();
+	}
+	if(glfwGetKey('2'))
+	{
+		deferredProgram_Pass2_ptr->ReloadAllShaders();
+	}
+	if(glfwGetKey('3'))
+	{
+		deferredProgram_Pass3_ptr->ReloadAllShaders();
 	}
 }
 

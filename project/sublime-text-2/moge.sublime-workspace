@@ -4,6 +4,166 @@
 		"selected_items":
 		[
 			[
+				"refle",
+				"reflection"
+			],
+			[
+				"sam",
+				"samplingPosition"
+			],
+			[
+				"defe",
+				"deferredDiffuseTex"
+			],
+			[
+				"ref",
+				"reflectionColor"
+			],
+			[
+				"ray",
+				"rayDepth"
+			],
+			[
+				"ssSh",
+				"ssShadedPosition"
+			],
+			[
+				"vs",
+				"vsReflectionVector"
+			],
+			[
+				"Ca",
+				"Calculate"
+			],
+			[
+				"vsS",
+				"vsShadedNormal"
+			],
+			[
+				"W",
+				"Width"
+			],
+			[
+				"ra",
+				"rayDepth"
+			],
+			[
+				"def",
+				"deferredDiffuseTex"
+			],
+			[
+				"sampled",
+				"sampledDepth"
+			],
+			[
+				"norm",
+				"normalize"
+			],
+			[
+				"refl",
+				"reflect"
+			],
+			[
+				"new",
+				"newReflectionVector"
+			],
+			[
+				"vec",
+				"vec4"
+			],
+			[
+				"nor",
+				"normal"
+			],
+			[
+				"cam",
+				"Camera"
+			],
+			[
+				"pos",
+				"position"
+			],
+			[
+				"xy",
+				"xyz"
+			],
+			[
+				"nr",
+				"normal"
+			],
+			[
+				"n",
+				"normalize"
+			],
+			[
+				"defer",
+				"deferredNormalTex"
+			],
+			[
+				"frag",
+				"fragSize"
+			],
+			[
+				"fra",
+				"fragmentDepth"
+			],
+			[
+				"ver",
+				"vert_UV"
+			],
+			[
+				"deferreD",
+				"deferredDiffuseTex"
+			],
+			[
+				"deferre",
+				"deferredDiffuseTex"
+			],
+			[
+				"rayD",
+				"rayDepth"
+			],
+			[
+				"sa",
+				"sampledPosition"
+			],
+			[
+				"rec",
+				"reflectedColor"
+			],
+			[
+				"de",
+				"deferredDepthTex"
+			],
+			[
+				"trac",
+				"tracedRay"
+			],
+			[
+				"step",
+				"stepSize"
+			],
+			[
+				"traced",
+				"tracedRay"
+			],
+			[
+				"reflecta",
+				"reflectance"
+			],
+			[
+				"reflection",
+				"reflectionVector"
+			],
+			[
+				"view",
+				"viewVector"
+			],
+			[
+				"deferr",
+				"deferredPositionTex"
+			],
+			[
 				"in",
 				"include"
 			],
@@ -100,7 +260,16 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
+		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
@@ -111,7 +280,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/.gitconfig",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/img/bsc09.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Camera.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Common.h",
@@ -172,6 +340,22 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			" (",
+			";\n",
+			"return",
+			"position",
+			"015f",
+			";\n",
+			"sampledPosition",
+			"sampledDepth",
+			"()",
+			"Convert",
+			"vec3",
+			"FragColor",
+			"wsViewVec",
+			";\n",
+			" \n",
+			" )",
 			"geometry",
 			"GEOMETRY",
 			"geometry",
@@ -269,7 +453,7 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": true,
-	"side_bar_width": 203.0,
+	"side_bar_visible": false,
+	"side_bar_width": 126.0,
 	"status_bar_visible": true
 }

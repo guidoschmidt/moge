@@ -244,7 +244,6 @@ vec4 reflectShading()
 				// If not blurred get diffuse lighted color from texture of deferred step
 				else
 					reflectionColor = texture(deferredDiffuseTex, sampledPosition);
-				
 			}
 			// Break when depth inztersection is found
 			break;		

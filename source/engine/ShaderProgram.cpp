@@ -102,8 +102,11 @@ ShaderProgram::ShaderProgram(GLSL::GLSLShaderType shaderType0, std::string filen
 	m_activeAttributesWritten = false;
 	m_activeUniformsWritten = false;
 
-	AddShader(shaderType0, filename0);
-	AddShader(shaderType1, filename1);
+	m_shader_sources.push_back(filename0);
+	m_shader_sources.push_back(filename1);
+
+	AddShader(shaderType0, m_shader_sources[0]);
+	AddShader(shaderType1, m_shader_sources[1]);
 	glAttachShader(m_shaderProgram_ID, m_shader_IDs[0]);
 	glAttachShader(m_shaderProgram_ID, m_shader_IDs[1]);
 	Link();
@@ -148,6 +151,39 @@ void ShaderProgram::AddShader(GLSL::GLSLShaderType shaderType, std::string filen
 	GLSL::PrintShaderInfoLog(Shader_ID);
 
 	m_shader_IDs.push_back(Shader_ID);
+}
+
+
+//!
+/*!
+ *
+ */
+void ShaderProgram::ReloadAllShaders(void)
+{
+	for(unsigned int i=0; i < m_shader_sources.size(); i++)
+	{
+		std::string shaderSource = GLSL::ReadShaderSource(m_shader_sources[i]);
+		const char* shaderSourcePointer = shaderSource.c_str();
+		glShaderSource(m_shader_IDs[i], 1, &shaderSourcePointer, NULL);
+		glCompileShader(m_shader_IDs[i]);
+		GLSL::PrintShaderInfoLog(m_shader_IDs[i]);
+	}
+	Link();
+}
+
+
+//!
+/*!
+ *
+ */
+void ShaderProgram::ReloadShader(int i)
+{
+	std::string shaderSource = GLSL::ReadShaderSource(m_shader_sources[i]);
+	const char* shaderSourcePointer = shaderSource.c_str();
+	glShaderSource(m_shader_IDs[i], 1, &shaderSourcePointer, NULL);
+	glCompileShader(m_shader_IDs[i]);
+	GLSL::PrintShaderInfoLog(m_shader_IDs[i]);
+	Link();
 }
 
 
