@@ -51,6 +51,28 @@ float linearizeDepth(float depth)
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
+vec4 newSSR()
+{
+	// Variables
+	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	// Texture information
+	vec3 wsCameraPosition = Camera.Position;
+	vec3 vsNormal = texture(deferredNormalTex, vert_UV).xyz;
+	vec3 vsPosition = texture(deferredPositionTex, vert_UV).xyz;
+
+	vec4 vsViewVector = normalize(vec4(vsPosition, 1.0f) - vec4(wsCameraPosition, 1.0f));
+	vsViewVector = vsViewVector + vec4(wsCameraPosition, 1.0f);
+	vec4 vsReflectionVector = normalize(reflect(vsViewVector, vec4(vsNormal, 0.0f)));
+	
+	vec3 ssReflectionVector = (vsReflectionVector).xyz;
+
+	fragmentColor = vec4(ssReflectionVector, 1.0f);
+
+	// Return color from sampled fragment
+	return fragmentColor;
+}
+
 /******************************************************************************/
 /* SSR (screen space reflections)
  * @date 	22.01.13
@@ -91,7 +113,7 @@ vec4 reflectShading()
 	// Depth at sampled position
 	float sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 	// Depth at ray position
-	float rayDepth = fragmentDepth + tracedRay.z;
+	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z);
 	
 	// Raytrace while ray is inside of screen space
 	while(	sampledPosition.x <= 1.0f && sampledPosition.x >= 0.0f &&
@@ -104,7 +126,7 @@ vec4 reflectShading()
 		// Sampled depth
 		sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 		// Ray depth
-		rayDepth = fragmentDepth + tracedRay.z * fragmentDepth;
+		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z);
 		
 		//! If ray depth gets bigger than sampled depth at the current
 		//! intersection fragment of screen space
@@ -242,6 +264,7 @@ void main(void)
 				FragColor = reflectance * reflectShading() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
 			}
 		}
+		FragColor = newSSR();
 	}
 	// Positions
 	else if(textureID == 0)

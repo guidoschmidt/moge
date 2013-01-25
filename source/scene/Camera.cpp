@@ -32,7 +32,6 @@ namespace scene {
 		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
-
 	//!
 	/*!
 	 *
@@ -68,7 +67,6 @@ namespace scene {
 		// TODO Auto-generated destructor stub
 	}
 
-
 	//!
 	/*!
 	 *
@@ -79,24 +77,6 @@ namespace scene {
 		int w = Singleton<Context>::Instance()->GetWidth();
 		int h = Singleton<Context>::Instance()->GetHeight();
 		return (static_cast<float>(w))/(static_cast<float>(h));
-	}
-
-	//!
-	/*!
-	 *
-	 */
-	void Camera::UpdateViewMatrix(void)
-	{
-		//m_viewMatrix = m_rotationMatrix * m_viewMatrix;
-	}
-
-
-	//!
-	/*!
-	 *
-	 */
-	void Camera::UpdateProjectionMatrix(void)
-	{
 	}
 
 	//!
@@ -119,105 +99,5 @@ namespace scene {
 	{
 		return m_projectionMatrix;
 	}
-
-
-	//!
-	/*!
-	 *
-	 * @param dz
-	 */
-	void Camera::Translate(float dx, float dy, float dz)
-	{
-		m_position.x += dx;
-		m_position.y += dy;
-		m_position.z += dz;
-		m_translationMatrix = glm::translate(dx, dy, dz);
-		m_viewMatrix = m_translationMatrix * m_viewMatrix;
-	}
-
-	//!
-	/*!
-	 *
-	 * @param angle
-	 */
-	void Camera::SetFielOfView(float angle)
-	{
-		m_fieldOfView = angle;
-	}
-
-	//!
-	/*!
-	 *
-	 * @param near
-	 */
-	void Camera::SetNearPlane(float near)
-	{
-		m_nearPlane = near;
-	}
-
-	//!
-	/*!
-	 *
-	 * @param far
-	 */
-	void Camera::SetFarPlane(float far)
-	{
-		m_farPlane = far;
-	}
-
-	//!
-	/*!
-	 *
-	 * @return
-	 */
-	glm::vec3 Camera::GetPosition(void)
-	{
-		return m_position;
-	}
-
-	//!
-	/*!
-	 *
-	 * @return
-	 */
-	float Camera::GetFieldOfView(void){ return m_fieldOfView; }
-
-	//!
-	/*!
-	 *
-	 * @return
-	 */
-	float Camera::GetFarPlane(void){ return m_farPlane; }
-
-	//!
-	/*!
-	 *
-	 * @return
-	 */
-	float Camera::GetNearPlane(void){ return m_nearPlane; }
-
-
-	//!
-	void Camera::Yaw(float angle)
-	{
-		m_rotationMatrix = glm::rotate(angle, 0.0f, 1.0f, 0.0f);
-		m_viewMatrix = m_rotationMatrix * m_viewMatrix;
-	}
-	//!
-	void Camera::Roll(float angle)
-	{
-	}
-
-	//! Rotatesn camera around x-axis
-	/*!
-	 *
-	 * @param angle
-	 */
-	void Camera::Pitch(float angle)
-	{
-		m_rotationMatrix = glm::rotate(angle, 1.0f, 0.0f, 0.0f);
-		m_viewMatrix = m_rotationMatrix * m_viewMatrix;
-	}
-
 
 } //! namespace scene

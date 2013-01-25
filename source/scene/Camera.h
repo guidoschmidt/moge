@@ -61,11 +61,6 @@ namespace scene {
 			void SetFarPlane(float far);
 
 			//! Movement
-			void Translate(float dx, float dy, float dz);
-
-			void Yaw(float angle);
-			void Roll(float angle);
-			void Pitch(float angle);
 	};
 
 } //! namespace scene

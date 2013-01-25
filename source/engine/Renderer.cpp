@@ -343,9 +343,7 @@ void Renderer::CameraMovement()
 		//! Calculate angles
 		phi += correct_y_pos * (m_speed/10.0f);
 		theta += correct_x_pos * (m_speed/10.0f);
-		//! Rotate camera
-		scenegraph_ptr->GetActiveCamera()->Pitch(phi);
-		scenegraph_ptr->GetActiveCamera()->Yaw(theta);
+
 		//! Reset for next click
 		theta = 0.0f;
 		phi = 0.0f;
