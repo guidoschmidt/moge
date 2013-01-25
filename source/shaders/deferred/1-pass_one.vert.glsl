@@ -22,7 +22,7 @@ out vec3 vert_Camera;
 // MAIN
 void main(void)
 {	
-	vert_Position = vec3(ModelMatrix * vec4(vertex, 1.0f));
+	vert_Position = vec3(ViewMatrix * ModelMatrix * vec4(vertex, 1.0f));
 	// Normals are multiplied with transposed inverse model view matrix
 	vert_Normal = normalize(vec3(NormalMatrix * vec4(normal, 0.0f)));
 	vert_UV = uv;

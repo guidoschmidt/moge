@@ -434,7 +434,7 @@ void Renderer::RenderLoop(void){
 					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
 					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
 					//! Matrix uniforms
-					deferredProgram_Pass1_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
+					deferredProgram_Pass1_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
 					deferredProgram_Pass1_ptr->SetUniform("ModelMatrix", ModelMatrix);
 					deferredProgram_Pass1_ptr->SetUniform("ViewMatrix", ViewMatrix);
 					deferredProgram_Pass1_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);

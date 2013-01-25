@@ -44,131 +44,18 @@ uniform sampler2D deferredDepthTex;
 uniform sampler2D deferredDiffuseTex;
 
 
-/*** Functions ****************************************************************/
-
-float rand(vec2 n)
-{
-  return 0.5 + 0.5 * fract(sin(dot(n.xy, vec2(12.9898, 78.233)))* 43758.5453);
-}
-
-vec4 bilateralFilter() {
-	int kernelSize = 10;
-	vec4 color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	vec2 center = gl_FragCoord.xy;
-	vec2 sampledFrag;
-	float sum = 0.0;
-	float coefG, coefZ, finalCoef;
-	float Zp = texture(deferredDepthTex, center).z;
-
-	const float epsilon = 0.01;
-
-	for(int i = -(kernelSize - 1)/2; i <= (kernelSize - 1)/2; i++) {
-		for(int j = -(kernelSize - 1)/2; j <= (kernelSize - 1)/2; j++) {
-		sampledFrag = center + vec2(i, j) / Screen.Width;
-		coefG = 1.2f;
-		float zTmp = texture(deferredDepthTex, sampledFrag).z;
-		coefZ = 1.0 / (epsilon + abs(Zp - zTmp));
-		finalCoef = coefG * coefZ;
-		sum += finalCoef;
-		color += finalCoef * texture(deferredDiffuseTex, sampledFrag);
-		}
-	}
-	
-	return color;
-} 
-
-vec2 getScreenSpacePosition()
-{
-	return gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
-}
-
-vec3 viewSpaceToScreenSpace(vec3 vector)
-{
-	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);
-	vec3 NDCSpace = clipSpace.xyz / clipSpace.w;
-	vec3 screenSpace = 0.5f * NDCSpace + 0.5f;
-	return screenSpace;
-}
-
-float linearizeDepth2(float depth)
-{
-	// Linerization
-	float linearDepth = 1.0f/Camera.FarPlane / ((Camera.FarPlane/(Camera.FarPlane - Camera.NearPlane)) - depth);
-	return linearDepth;
-}
-
+/*** Functions ****************************************************************/ 
 float linearizeDepth(float depth)
 {
 	// Linerization
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-vec4 ComputeReflection()
-{
-	// Variables
-	float initialStepAmount = .01;
-	float stepRefinementAmount = .7;
-	int maxRefinements = 3;
-	int maxDepth = 1;
-	
-	// Values from textures
-	vec2 screenSpacePosition2D = vert_UV;
-	vec3 cameraSpacePosition = texture(deferredPositionTex, screenSpacePosition2D).xyz;
-	vec3 cameraSpaceNormal = texture(deferredNormalTex, screenSpacePosition2D).xyz;
-
-	// Screen space vector
-	vec3 cameraSpaceViewDir = normalize(cameraSpaceNormal - Camera.Position);
-	vec3 cameraSpaceVector = normalize(reflect(cameraSpaceViewDir, cameraSpaceNormal));
-	vec3 screenSpacePosition = viewSpaceToScreenSpace(cameraSpacePosition);
-	vec3 cameraSpaceVectorPosition = cameraSpacePosition + cameraSpaceVector;
-	vec3 screenSpaceVectorPosition = viewSpaceToScreenSpace(cameraSpaceVectorPosition);
-	vec3 screenSpaceVector = initialStepAmount * normalize(screenSpaceVectorPosition - screenSpacePosition);
-	
-	vec3 oldPosition = screenSpacePosition + screenSpaceVector;
-	vec3 currentPosition = oldPosition + screenSpaceVector;
-	
-	vec4 color = vec4(0,0,0,1);
-	int count = 0;
-	int numRefinements = 0;
-	int depth = 0;
-
-	// Raytracing
-	while(count < 200)
-	{
-		//Stop ray trace when it goes outside screen space
-		if(currentPosition.x < 0 || currentPosition.x > 1 ||
-		   currentPosition.y < 0 || currentPosition.y > 1 ||
-		   currentPosition.z < 0 || currentPosition.z > 1)
-			break;
-
-		//intersections
-		vec2 samplePos = currentPosition.xy;
-		float currentDepth = linearizeDepth(currentPosition.z);
-		float sampleDepth = linearizeDepth(texture(deferredDepthTex, samplePos).x);
-		float diff = currentDepth - sampleDepth;
-		float error = 0.25f;
-		if(diff >= 0)
-		{
-			screenSpaceVector *= stepRefinementAmount;
-			currentPosition = oldPosition;
-			numRefinements++;
-			if(numRefinements >= maxRefinements)
-			{
-				color = texture(deferredDiffuseTex, samplePos);
-				break;
-			}
-		}
-
-		//Step ray
-		oldPosition = currentPosition;
-		currentPosition = oldPosition + screenSpaceVector;
-		count++;
-	}
-	
-	return color;
-}
-
-// New SSR
+/******************************************************************************/
+/* SSR (screen space reflections)
+ * @date 	22.01.13
+ * @author	Guido Schmidt
+ */
 vec4 reflectShading()
 {
 	// Variables
@@ -183,14 +70,14 @@ vec4 reflectShading()
 	vec3 viewVector = normalize(shadedPosition - cameraPosition);
 	vec4 reflectionVector = reflect(vec4(viewVector, 0.0f), vec4(shadedNormal, 0.0f));
 	// Convert reflection vector into screen space
-	vec3 ssReflectionVector = normalize(vec3(ProjectionMatrix * ViewMatrix * reflectionVector));
-	
+	vec3 ssReflectionVector = normalize((ProjectionMatrix * reflectionVector)).xyz;
+
 	// Get pixel size
 	vec2 fragSize = vec2(1.0f/Screen.Width, 1.0f/Screen.Height);
 	fragSize += fragSize/2;
 	
 	// Initialze traced ray
-	float stepSize = min(fragSize.x, fragSize.y);
+	float stepSize = 0.015f;//min(fragSize.x, fragSize.y);
 	vec3 rayStep = ssReflectionVector * stepSize;
 	vec3 tracedRay = ssReflectionVector * stepSize;
 	
@@ -217,7 +104,7 @@ vec4 reflectShading()
 		// Sampled depth
 		sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 		// Ray depth
-		rayDepth = fragmentDepth + tracedRay.z;
+		rayDepth = fragmentDepth + tracedRay.z * fragmentDepth;
 		
 		//! If ray depth gets bigger than sampled depth at the current
 		//! intersection fragment of screen space
@@ -243,19 +130,24 @@ vec4 reflectShading()
 				}
 				// If not blurred get diffuse lighted color from texture of deferred step
 				else
+				{
 					reflectionColor = texture(deferredDiffuseTex, sampledPosition);
+				}
+				
 			}
 			// Break when depth inztersection is found
 			break;		
 		}
 		
 		// Extend traced ray by one 'ray step'
-		tracedRay += rayStep;
+		tracedRay += tracedRay * (1.0f + rayStep);
 	}
 	
 	return reflectionColor;
 }
 
+
+/******************************************************************************/
 // Working SSR
 vec4 traceReflection(vec4 reflectionVector, vec2 normalisedResolution, float startDepth)
 {

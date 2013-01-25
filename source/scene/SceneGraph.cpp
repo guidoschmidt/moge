@@ -144,12 +144,12 @@ namespace scene {
 			size_t found = tex_path.find_last_of("/");
 			std::string tex_name = tex_path.substr(found+1);
 
-			if(tex_name == "Road.jpg")
+			if(tex_name == "Wood.png")
 			{
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.65);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.65f);
 			}
 			else
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/jpg/" + tex_name, 0.0);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.0f);
 		}
 
 		//! Meshes
