@@ -8,17 +8,17 @@
 
 namespace scene {
 
-	//!
+	//! Empty constructor
 	/*!
 	 *
 	 */
 	Camera::Camera()
 	{
-		m_speed = 0.005;
-
-		glm::vec3 position(0.0f, 0.0f,1.0f);
-		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
-		glm::vec3 up(0.0f, 1.0f, 0.0f);
+		m_position = glm::vec3(0.0f, 0.0f,1.0f);
+		m_lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
+		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+		m_lookVec = m_lookAt - m_position;
+		m_side = glm::cross(m_lookVec, m_up);
 
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
@@ -32,7 +32,7 @@ namespace scene {
 		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
-	//!
+	//! Initializing Constructor
 	/*!
 	 *
 	 * @param lookAtVec
@@ -40,11 +40,11 @@ namespace scene {
 	 */
 	Camera::Camera(glm::vec3 positionVec, glm::vec3 lookAtVec, glm::vec3 upVec)
 	{
-		m_speed = 0.005;
-
 		m_position = positionVec;
 		m_lookAt = lookAtVec;
 		m_up = upVec;
+		glm::vec3 lookVec = m_lookAt - m_position;
+		m_side = glm::cross(lookVec, m_up);
 
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
@@ -52,22 +52,20 @@ namespace scene {
 		m_farPlane = 100.f;
 
 		m_translationMatrix = glm::mat4(1.0f);
-		m_rotationMatrix = glm::mat4(1.0f);
+		m_qOrientation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
+		m_rotationMatrix = glm::toMat4(m_qOrientation);
 
 		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
 		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 
-	//!
-	/*!
-	 *
-	 */
+	//! Destructor
 	Camera::~Camera() {
 		// TODO Auto-generated destructor stub
 	}
 
-	//!
+	//! Returns the aspect ratio of the camera
 	/*!
 	 *
 	 * @return
@@ -82,6 +80,37 @@ namespace scene {
 	//!
 	/*!
 	 *
+	 */
+	void Camera::UpdateViewMatrix(void)
+	{
+	}
+
+	//void UpdateProjectionMatrix(void);
+
+/* GETTER ***********************************************************/
+	//! Returns the field of view
+	/*!
+	 * @return
+	 */
+	float Camera::GetFieldOfView(void)
+	{
+		return m_fieldOfView;
+	}
+
+	//! Returns the near plane
+	float Camera::GetNearPlane(void)
+	{
+		return m_nearPlane;
+	}
+
+	//! Returns the far plane
+	float Camera::GetFarPlane(void)
+	{
+		return m_farPlane;
+	}
+
+	//! Returns the view matrix
+	/*!
 	 * @return
 	 */
 	glm::mat4 Camera::GetViewMatrix(void)
@@ -90,14 +119,99 @@ namespace scene {
 	}
 
 
-	//!
+	//! Returns the projection matrix
 	/*!
-	 *
 	 * @return
 	 */
 	glm::mat4 Camera::GetProjectionMatrix(void)
 	{
+
+
 		return m_projectionMatrix;
+	}
+
+
+/* SETTER ***********************************************************/
+	//! Sets the field of view
+	/*!
+	 * @param angle
+	 */
+	void Camera::SetFielOfView(float angle)
+	{
+		m_fieldOfView = angle;
+	}
+
+	//! Sets the field of view
+	/*!
+	 * @param near
+	 */
+	void Camera::SetNearPlane(float near)
+	{
+		m_nearPlane = near;
+	}
+
+	//! Sets the field of view
+	/*!
+	 * @param near
+	 */
+	void Camera::SetFarPlane(float far)
+	{
+		m_farPlane = far;
+	}
+
+/* MOVEMENT ***********************************************************/
+	//!
+	void Camera::Move(float x, float y, float z)
+	{
+		m_position += glm::vec3(x, y, z);
+		m_lookAt += glm::vec3(x, y, z);
+
+		//! TODO movement of camera
+		m_translationMatrix = m_rotationMatrix * glm::translate(m_position);
+	}
+
+	//! Yaw is rotation around up vector
+	void Camera::Yaw(float angle)
+	{
+		if(angle <= 180.0f && angle >= -180.0f)
+		{
+			float radAngle = cosf(angle/2.0f);
+
+			glm::vec3 qAxis = glm::normalize(m_up);
+			qAxis = qAxis * (sinf(angle/2.0f));
+
+			m_qOrientation = glm::quat(radAngle, qAxis);
+			m_rotationMatrix = glm::toMat4(m_qOrientation);
+
+			m_viewMatrix = m_viewMatrix * m_rotationMatrix;
+		}
+	}
+
+	//! Pitch is rotation around side vector
+	void Camera::Pitch(float angle)
+	{
+		if(angle <= 180.0f && angle >= -180.0f)
+		{
+			float radAngle = cosf(angle/2.0f);
+
+			glm::vec3 qAxis = glm::normalize(m_side);
+			qAxis = qAxis * (sinf(angle/2.0f));
+
+			m_qOrientation = glm::quat(radAngle, qAxis);
+			m_rotationMatrix = glm::toMat4(m_qOrientation);
+
+			m_viewMatrix = m_viewMatrix * m_rotationMatrix;
+		}
+	}
+
+	//! Resets the camera to an inital position
+	void Camera::Reset(void)
+	{
+		m_position = glm::vec3(0.0f, 5.0f, 10.0f);
+		m_lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
+		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
+
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
 	}
 
 } //! namespace scene

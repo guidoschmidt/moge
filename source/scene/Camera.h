@@ -13,6 +13,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/core/type_gentype.hpp>
 #include <glm/gtx/quaternion.hpp>
 //! Local includes
 #include "Node.h"
@@ -25,16 +26,18 @@ namespace scene {
 	class Camera: public scene::Node {
 
 		private:
-			double m_speed;
 			//! View
+			glm::vec3 m_lookVec;
 			glm::vec3 m_lookAt;
 			glm::vec3 m_up;
+			glm::vec3 m_side;
 			//! Perspective
 			float m_fieldOfView;
 			float m_aspect;
 			float m_farPlane, m_nearPlane;
 			//! Matrices
 			glm::mat4 m_viewMatrix, m_projectionMatrix;
+			glm::quat m_qOrientation;
 			glm::mat4 m_rotationMatrix, m_translationMatrix;
 
 		protected:
@@ -51,7 +54,6 @@ namespace scene {
 			float GetFieldOfView(void);
 			float GetNearPlane(void);
 			float GetFarPlane(void);
-			glm::vec3 GetPosition(void);
 			glm::mat4 GetViewMatrix(void);
 			glm::mat4 GetProjectionMatrix(void);
 
@@ -61,6 +63,10 @@ namespace scene {
 			void SetFarPlane(float far);
 
 			//! Movement
+			void Move(float x, float y, float z);
+			void Yaw(float angle);
+			void Pitch(float angle);
+			void Reset(void);
 	};
 
 } //! namespace scene

@@ -291,23 +291,6 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
  */
 void Renderer::KeyboardFunction(void)
 {
-	//! Camera
-	if(glfwGetKey('W')) //! Forwards
-	{
-		//scenegraph_ptr->GetActiveCamera()->Translate(0, 0, m_speed);
-	}
-	if(glfwGetKey('S')) //! Backwards
-	{
-		//scenegraph_ptr->GetActiveCamera()->Translate(0, 0, -m_speed);
-	}
-	if(glfwGetKey('A')) //! Left
-	{
-		//scenegraph_ptr->GetActiveCamera()->Translate(m_speed, 0, 0);
-	}
-	if(glfwGetKey('D')) //! Right
-	{
-		//scenegraph_ptr->GetActiveCamera()->Translate(-m_speed, 0, 0);
-	}
 	//! Reload shader code
 	if(glfwGetKey('1'))
 	{
@@ -328,25 +311,47 @@ void Renderer::CameraMovement()
 {
 	//! Mouse position
 	glfwGetMousePos(&x_pos, &y_pos);
-
 	correct_x_pos = x_pos - context_ptr->GetWidth()/2;
 	correct_y_pos = y_pos - context_ptr->GetHeight()/2;
 
-	//! Zoom
+	/* Zoom *************************************************/
 	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
 	m_fieldOfView = 50.0f - x;
 
-	//!
+	/* Orientation *************************************************/
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		//! Calculate angles
-		phi += correct_y_pos * (m_speed/10.0f);
-		theta += correct_x_pos * (m_speed/10.0f);
+		phi = correct_y_pos * 0.00001f;
+		theta = correct_x_pos * 0.00001f;
 
-		//! Reset for next click
-		theta = 0.0f;
-		phi = 0.0f;
+		scenegraph_ptr->GetActiveCamera()->Pitch(phi);
+		scenegraph_ptr->GetActiveCamera()->Yaw(theta);
+	}
+
+	/* Translation *************************************************/
+	if(glfwGetKey('W')) //! Forwards
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(0, 0, m_speed);
+	}
+	if(glfwGetKey('S')) //! Backwards
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(0, 0, -m_speed);
+	}
+	if(glfwGetKey('A')) //! Left
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(m_speed, 0, 0);
+	}
+	if(glfwGetKey('D')) //! Right
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(-m_speed, 0, 0);
+	}
+
+	/* Reset *************************************************/
+	if(glfwGetKey('E'))
+	{
+		scenegraph_ptr->GetActiveCamera()->Reset();
 	}
 }
 
@@ -394,15 +399,16 @@ void Renderer::RenderLoop(void){
 		CalculateFPS(0.5, false);
 		KeyboardFunction();
 
-		//! Modelmatrix
+		/***************************************/
+		//! Manipulating the model matrix
 		if(tw_rotation)
 			m_angle += tw_rotSpeed;
 		glm::vec3 RotationAxis(0, 1, 0);
 		glm::mat4 RotationMatrix = glm::rotate(m_angle, RotationAxis);
 
+		/***************************************/
 		//! Camera
 		CameraMovement();
-		scenegraph_ptr->GetActiveCamera()->SetFielOfView(m_fieldOfView);
 		//! Viewmatrix
 		ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
 		//! Projectionmatrixs

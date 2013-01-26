@@ -211,22 +211,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 9037,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
-			"settings":
-			{
-				"buffer_size": 4299,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -284,11 +268,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
@@ -401,63 +385,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 9037,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1807,
-								1807
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 838.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
-					"settings":
-					{
-						"buffer_size": 4299,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								350,
-								350
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 566.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -533,6 +462,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 101.0,
+	"side_bar_width": 256.0,
 	"status_bar_visible": true
 }
