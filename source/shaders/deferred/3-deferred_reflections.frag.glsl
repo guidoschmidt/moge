@@ -37,6 +37,7 @@ uniform int textureID;
 uniform bool SSR;
 uniform bool blur;
 uniform bool compareDepth;
+uniform bool showReflVecs;
 
 uniform float deltaDepth;
 	
@@ -100,20 +101,15 @@ vec4 newSSR()
 	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
 	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
 
-	// Raytracing while in screen space
-	while(
-		samplingPosition.x >= 0.0f || samplingPosition.x <= 1.0f ||
-		samplingPosition.y >= 0.0f || samplingPosition.y <= 1.0f)
+	// Ray tracing while in screen space
+	while(	samplingPosition.x > 0.0f && samplingPosition.x < 1.0f &&
+			samplingPosition.y > 0.0f && samplingPosition.y < 1.0f)
 	{
+		// Update sampling position and depth values
 		samplingPosition = fragment + tracedRay.xy;
 		sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
 		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
-		
-		if(	samplingPosition.x < -1.0f || samplingPosition.x > 1.0f ||
-			samplingPosition.y < -1.0f || samplingPosition.y > 1.0f)
-		{
-			break;
-		}
+				
 
 		if(rayDepth > sampledDepth)
 		{
@@ -140,6 +136,7 @@ vec4 newSSR()
 					fragmentColor = texture(deferredDiffuseTex, samplingPosition);	
 				}
 			}
+			// Ray tracing termination
 			break;
 		}
 		else
@@ -149,9 +146,11 @@ vec4 newSSR()
 		tracedRay += (tracedRay * stepSize);
 	}
 
+	// Variables for displaying 2 textures with divider on screen 
 	float divider = Mouse.X/Screen.Width;
 	float offset = 0.0009f;
 	
+	// Debugging depths
 	if(compareDepth)
 	{
 		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
@@ -161,16 +160,16 @@ vec4 newSSR()
 		else
 			fragmentColor = vec4(rayDepth, rayDepth, rayDepth, 1.0f);	
 	}
-	/*else
+	// Debugging reflection vectors
+	if(showReflVecs)
 	{
 		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
-			fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
 		else if(fragment.x > (divider + offset))
 			fragmentColor = vec4(vsNormal, 1.0f);
 		else
 			fragmentColor = vec4(tracedRay, 1.0f);	
-	}*/
-
+	}
 
 	// Return color from sampled fragment
 	return fragmentColor;

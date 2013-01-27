@@ -42,6 +42,8 @@ Renderer::Renderer(int width, int height)
 	tw_mouseLight = false;
 	tw_deltaDepth = 0.0125f;
 	tw_SSR = false;
+	tw_compareDepth = false;
+	tw_reflvec = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -112,12 +114,13 @@ void Renderer::Initialize(int width, int height)
 	//! Mouse
 	TwAddVarRO(context_ptr->GetBar(), "mousex", TW_TYPE_INT16, &correct_x_pos, "group='Mouse' label='X'");
 	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
-	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOL16, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
+	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOLCPP, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 	//! SSR parameters
-	TwAddVarRW(context_ptr->GetBar(), "ssrdeltaDepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.0001' group='SSR' label='Depth delta'");
-	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOL16, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOL16, &tw_blur, "group='SSR' label='Blur'");
-	TwAddVarRW(context_ptr->GetBar(), "compareDepth", TW_TYPE_BOOL16, &tw_compareDepth, "group='SSR' label='Compare dephts'");
+	TwAddVarRW(context_ptr->GetBar(), "ssrdeltadepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.0001' group='SSR' label='Depth delta'");
+	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
+	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
+	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug dephts'");
+	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vectors'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -304,12 +307,6 @@ void Renderer::KeyboardFunction(void)
 	if(glfwGetKey('3'))
 	{
 		deferredProgram_Pass3_ptr->ReloadAllShaders();
-	}
-
-	//! Compare SSR depths
-	if(glfwGetKey('C'))
-	{
-		tw_compareDepth = !tw_compareDepth;
 	}
 }
 
@@ -524,6 +521,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
 			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
+			deferredProgram_Pass3_ptr->SetUniform("showReflVecs", tw_reflvec);
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
