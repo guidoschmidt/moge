@@ -54,6 +54,7 @@ namespace scene {
 			float GetFieldOfView(void);
 			float GetNearPlane(void);
 			float GetFarPlane(void);
+			glm::vec3 GetPosition(void);
 			glm::mat4 GetViewMatrix(void);
 			glm::mat4 GetProjectionMatrix(void);
 

@@ -8,6 +8,8 @@
 
 namespace scene {
 
+	bool written = false;
+
 	//! Empty constructor
 	/*!
 	 *
@@ -109,6 +111,12 @@ namespace scene {
 		return m_farPlane;
 	}
 
+	//!
+	glm::vec3 Camera::GetPosition(void)
+	{
+		return m_position;
+	}
+
 	//! Returns the view matrix
 	/*!
 	 * @return
@@ -125,11 +133,8 @@ namespace scene {
 	 */
 	glm::mat4 Camera::GetProjectionMatrix(void)
 	{
-
-
 		return m_projectionMatrix;
 	}
-
 
 /* SETTER ***********************************************************/
 	//! Sets the field of view
@@ -167,7 +172,8 @@ namespace scene {
 		m_lookAt += glm::vec3(x, y, z);
 
 		//! TODO movement of camera
-		m_translationMatrix = m_rotationMatrix * glm::translate(m_position);
+		//m_translationMatrix = glm::translate(m_position);
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
 	}
 
 	//! Yaw is rotation around up vector
@@ -183,7 +189,7 @@ namespace scene {
 			m_qOrientation = glm::quat(radAngle, qAxis);
 			m_rotationMatrix = glm::toMat4(m_qOrientation);
 
-			m_viewMatrix = m_viewMatrix * m_rotationMatrix;
+			//m_viewMatrix = m_viewMatrix * m_rotationMatrix;
 		}
 	}
 
@@ -200,7 +206,7 @@ namespace scene {
 			m_qOrientation = glm::quat(radAngle, qAxis);
 			m_rotationMatrix = glm::toMat4(m_qOrientation);
 
-			m_viewMatrix = m_viewMatrix * m_rotationMatrix;
+			//m_viewMatrix = m_viewMatrix * m_rotationMatrix;
 		}
 	}
 

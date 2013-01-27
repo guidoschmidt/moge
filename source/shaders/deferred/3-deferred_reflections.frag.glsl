@@ -9,6 +9,12 @@ struct CameraInfo
 	float FarPlane;
 };
 
+struct MouseInfo
+{
+	float X;
+	float Y;
+};
+
 struct ScreenInfo
 {
 	float Width;
@@ -24,11 +30,13 @@ out vec4 FragColor;
 /*** Uniforms *****************************************************************/
 uniform CameraInfo Camera;
 uniform ScreenInfo Screen;
+uniform MouseInfo Mouse;
 
 uniform int textureID;
 
 uniform bool SSR;
 uniform bool blur;
+uniform bool compareDepth;
 
 uniform float deltaDepth;
 	
@@ -51,23 +59,117 @@ float linearizeDepth(float depth)
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
+vec3 VSToSS(vec4 vsVector)
+{
+	vec4 projection = ProjectionMatrix * vsVector;
+	vec3 ndcsVector = projection.xyz / projection.w;
+	vec3 ssVector = 0.5f * ndcsVector + 0.5f;
+
+	return ssVector;
+}
+
 vec4 newSSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
+	float initalStep = 0.01f;
+	float stepSize = 0.0125f;
+	float blurSize = 1.0f;
 
-	// Texture information
-	vec3 wsCameraPosition = Camera.Position;
-	vec3 vsNormal = texture(deferredNormalTex, vert_UV).xyz;
-	vec3 vsPosition = texture(deferredPositionTex, vert_UV).xyz;
+	// Current fragment
+	vec2 fragment = gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
 
-	vec4 vsViewVector = normalize(vec4(vsPosition, 1.0f) - vec4(wsCameraPosition, 1.0f));
-	vsViewVector = vsViewVector + vec4(wsCameraPosition, 1.0f);
-	vec4 vsReflectionVector = normalize(reflect(vsViewVector, vec4(vsNormal, 0.0f)));
+	// Normal & position
+	vec3 vsNormal = texture(deferredNormalTex, fragment).xyz;
+	vec3 vsPosition = texture(deferredPositionTex, fragment).xyz;
+	vec3 ssPosition = (vec4(vsPosition, 1.0f) * ProjectionMatrix).xyz;
 	
-	vec3 ssReflectionVector = (vsReflectionVector).xyz;
+	// View vector
+	vec3 vsViewVec = normalize(vsPosition - Camera.Position);
 
-	fragmentColor = vec4(ssReflectionVector, 1.0f);
+	// Reflection vector
+	vec3 vsReflectVec = reflect(normalize(vsViewVec), normalize(vsNormal));
+	vec3 ssReflectVec = (vec4(vsReflectVec, 0.0f) * ProjectionMatrix).xyz; // / vsReflectVec.z;
+
+	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)
+	//ssReflectVec.z *= -1;
+
+	// Initialze traced ray
+	vec3 initialRay = ssReflectVec * initalStep; 
+	vec3 tracedRay = initialRay;
+	// Get depth informations
+	float fragmentDepth = linearizeDepth(texture(deferredDepthTex, fragment)); 
+	vec2 samplingPosition = fragment + tracedRay.xy;
+	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
+	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
+
+	while(	samplingPosition.x > 0.0f || samplingPosition.x < 1.0f ||
+			samplingPosition.y > 0.0f || samplingPosition.y < 1.0f)
+	{
+		samplingPosition = fragment + tracedRay.xy;
+		sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
+		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
+		
+		if(	samplingPosition.x < -1.0f || samplingPosition.x > 1.0f ||
+			samplingPosition.y < -1.0f || samplingPosition.y > 1.0f)
+		{
+			break;
+		}
+
+		if(rayDepth >= sampledDepth)
+		{
+			if(abs(rayDepth - sampledDepth) < 0.005f)
+				// Blur implemented as simple averaging along x and y axis
+				if(blur)
+				{
+					// @TODO Jittering, blur in negative & positive x,y-axis
+					vec3 sum = vec3(0.0f);
+					float size = blurSize/100.0f;
+					for(float i = -0.01f; i < size; i+=0.001)
+					{
+						vec2 pos = samplingPosition;
+						pos += i;
+						sum += vec3(texture(deferredDiffuseTex, pos));
+					}
+					sum /= (2 * size) * 1000;
+					
+					fragmentColor = vec4(sum, 1.0f);
+				}
+				// No blur
+				else{
+					fragmentColor = texture(deferredDiffuseTex, samplingPosition);	
+				}
+			break;
+		}
+		else
+			fragmentColor = texture(deferredDiffuseTex, fragment);
+
+
+		tracedRay += (tracedRay * stepSize);
+	}
+
+	float divider = Mouse.X/Screen.Width;
+	float offset = 0.0009f;
+	
+	if(compareDepth)
+	{
+		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
+			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
+		else if(fragment.x > (divider + offset))
+			fragmentColor = vec4(sampledDepth, sampledDepth, sampledDepth, 1.0f);
+		else
+			fragmentColor = vec4(rayDepth, rayDepth, rayDepth, 1.0f);	
+	}
+	/*else
+	{
+		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
+			fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.5f);
+		else if(fragment.x > (divider + offset))
+			fragmentColor = vec4(vsNormal, 1.0f);
+		else
+			fragmentColor = vec4(tracedRay, 1.0f);	
+	}*/
+
 
 	// Return color from sampled fragment
 	return fragmentColor;
@@ -113,7 +215,7 @@ vec4 reflectShading()
 	// Depth at sampled position
 	float sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 	// Depth at ray position
-	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z);
+	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
 	
 	// Raytrace while ray is inside of screen space
 	while(	sampledPosition.x <= 1.0f && sampledPosition.x >= 0.0f &&
@@ -126,7 +228,7 @@ vec4 reflectShading()
 		// Sampled depth
 		sampledDepth = linearizeDepth(float(texture(deferredDepthTex, sampledPosition)));
 		// Ray depth
-		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z);
+		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
 		
 		//! If ray depth gets bigger than sampled depth at the current
 		//! intersection fragment of screen space
@@ -261,10 +363,11 @@ void main(void)
 				// Working SSR
 				//FragColor = reflectionPass();
 				// 2nd (new) Attempt SSR
-				FragColor = reflectance * reflectShading() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
+				//FragColor = reflectance * reflectShading() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
+				FragColor = reflectance * newSSR(); // + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
 			}
 		}
-		FragColor = newSSR();
+		//FragColor = newSSR();
 	}
 	// Positions
 	else if(textureID == 0)

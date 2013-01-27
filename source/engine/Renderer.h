@@ -75,6 +75,7 @@ class Renderer
 		float tw_deltaDepth;
 		bool tw_SSR;
 		bool tw_blur;
+		bool tw_compareDepth;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

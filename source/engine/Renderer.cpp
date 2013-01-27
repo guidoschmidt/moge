@@ -117,6 +117,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "ssrdeltaDepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.0001' group='SSR' label='Depth delta'");
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOL16, &tw_SSR, "group='SSR' label='Switch SSR'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOL16, &tw_blur, "group='SSR' label='Blur'");
+	TwAddVarRW(context_ptr->GetBar(), "compareDepth", TW_TYPE_BOOL16, &tw_compareDepth, "group='SSR' label='Compare dephts'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -304,6 +305,12 @@ void Renderer::KeyboardFunction(void)
 	{
 		deferredProgram_Pass3_ptr->ReloadAllShaders();
 	}
+
+	//! Compare SSR depths
+	if(glfwGetKey('C'))
+	{
+		tw_compareDepth = !tw_compareDepth;
+	}
 }
 
 
@@ -346,6 +353,14 @@ void Renderer::CameraMovement()
 	if(glfwGetKey('D')) //! Right
 	{
 		scenegraph_ptr->GetActiveCamera()->Move(-m_speed, 0, 0);
+	}
+	if(glfwGetKey('U')) //! Up
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(0, m_speed, 0);
+	}
+	if(glfwGetKey('J')) //! Down
+	{
+		scenegraph_ptr->GetActiveCamera()->Move(0, -m_speed, 0);
 	}
 
 	/* Reset *************************************************/
@@ -508,6 +523,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("deltaDepth", tw_deltaDepth);
 			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
+			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
@@ -515,6 +531,9 @@ void Renderer::RenderLoop(void){
 			//! Matrix uniforms
 			deferredProgram_Pass3_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
 			deferredProgram_Pass3_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
+			//! Mouse uniforms
+			deferredProgram_Pass3_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
+			deferredProgram_Pass3_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
 			//! Window uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
