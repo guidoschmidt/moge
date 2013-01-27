@@ -77,6 +77,7 @@ class Renderer
 		bool tw_blur;
 		bool tw_compareDepth;
 		bool tw_reflvec;
+		bool tw_jittering;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

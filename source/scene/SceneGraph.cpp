@@ -149,7 +149,7 @@ namespace scene {
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.95f);
 			}
 			else
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.45f);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.00f);
 		}
 
 		//! Meshes

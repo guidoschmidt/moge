@@ -44,6 +44,7 @@ Renderer::Renderer(int width, int height)
 	tw_SSR = false;
 	tw_compareDepth = false;
 	tw_reflvec = false;
+	tw_jittering = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -119,6 +120,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "ssrdeltadepth", TW_TYPE_FLOAT, &tw_deltaDepth, "step='0.0001' group='SSR' label='Depth delta'");
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
+	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug dephts'");
 	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vectors'");
 
@@ -520,6 +522,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("deltaDepth", tw_deltaDepth);
 			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
+			deferredProgram_Pass3_ptr->SetUniform("jittering", tw_jittering);
 			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
 			deferredProgram_Pass3_ptr->SetUniform("showReflVecs", tw_reflvec);
 			//! Camera uniforms
