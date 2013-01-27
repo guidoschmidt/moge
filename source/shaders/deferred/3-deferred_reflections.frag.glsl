@@ -59,15 +59,12 @@ float linearizeDepth(float depth)
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-vec3 VSToSS(vec4 vsVector)
-{
-	vec4 projection = ProjectionMatrix * vsVector;
-	vec3 ndcsVector = projection.xyz / projection.w;
-	vec3 ssVector = 0.5f * ndcsVector + 0.5f;
-
-	return ssVector;
-}
-
+/******************************************************************************/
+// LATEST
+/* SSR (screen space reflections)
+ * @date 	27.01.13
+ * @author	Guido Schmidt
+ ******************************************************************************/
 vec4 newSSR()
 {
 	// Variables
@@ -103,8 +100,10 @@ vec4 newSSR()
 	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
 	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
 
-	while(	samplingPosition.x > 0.0f || samplingPosition.x < 1.0f ||
-			samplingPosition.y > 0.0f || samplingPosition.y < 1.0f)
+	// Raytracing while in screen space
+	while(
+		samplingPosition.x >= 0.0f || samplingPosition.x <= 1.0f ||
+		samplingPosition.y >= 0.0f || samplingPosition.y <= 1.0f)
 	{
 		samplingPosition = fragment + tracedRay.xy;
 		sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
@@ -116,9 +115,10 @@ vec4 newSSR()
 			break;
 		}
 
-		if(rayDepth >= sampledDepth)
+		if(rayDepth > sampledDepth)
 		{
 			if(abs(rayDepth - sampledDepth) < 0.01f)
+			{
 				// Blur implemented as simple averaging along x and y axis
 				if(blur)
 				{
@@ -139,6 +139,7 @@ vec4 newSSR()
 				else{
 					fragmentColor = texture(deferredDiffuseTex, samplingPosition);	
 				}
+			}
 			break;
 		}
 		else
