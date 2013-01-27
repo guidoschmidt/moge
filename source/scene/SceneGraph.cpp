@@ -146,10 +146,10 @@ namespace scene {
 
 			if(tex_name == "Wood.png")
 			{
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.65f);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.95f);
 			}
 			else
-				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.0f);
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.45f);
 		}
 
 		//! Meshes

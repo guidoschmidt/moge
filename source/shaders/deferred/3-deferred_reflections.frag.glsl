@@ -72,8 +72,8 @@ vec4 newSSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float initalStep = 0.01f;
-	float stepSize = 0.0125f;
+	float initalStep = 0.0015f;
+	float stepSize = 0.015f;
 	float blurSize = 1.0f;
 
 	// Current fragment
@@ -118,7 +118,7 @@ vec4 newSSR()
 
 		if(rayDepth >= sampledDepth)
 		{
-			if(abs(rayDepth - sampledDepth) < 0.005f)
+			if(abs(rayDepth - sampledDepth) < 0.01f)
 				// Blur implemented as simple averaging along x and y axis
 				if(blur)
 				{
@@ -355,19 +355,13 @@ void main(void)
 		// Diffuse shading
 		FragColor = texture(deferredDiffuseTex, vert_UV);
 		// Reflections
-		if(SSR)
+		if(SSR) // Screen space reflections
 		{
 			if(reflectance > 0.0f)
 			{
-				//vec4 reflShaded = reflectionPass(); // + (1 - reflectance) * texture(deferredDiffuseTex, vert_UV);
-				// Working SSR
-				//FragColor = reflectionPass();
-				// 2nd (new) Attempt SSR
-				//FragColor = reflectance * reflectShading() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
-				FragColor = reflectance * newSSR(); // + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
+				FragColor = reflectance * newSSR() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
 			}
 		}
-		//FragColor = newSSR();
 	}
 	// Positions
 	else if(textureID == 0)
