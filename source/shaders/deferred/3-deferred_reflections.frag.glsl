@@ -34,7 +34,7 @@ uniform MouseInfo Mouse;
 
 uniform int textureID;
 
-uniform bool SSR;
+uniform bool toggleSSR;
 uniform bool blur;
 uniform bool compareDepth;
 uniform bool showReflVecs;
@@ -71,7 +71,7 @@ float rand(vec2 co)
  * @date 	27.01.13
  * @author	Guido Schmidt
  ******************************************************************************/
-vec4 newSSR()
+vec4 SSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -211,11 +211,11 @@ void main(void)
 		// Diffuse shading
 		FragColor = texture(deferredDiffuseTex, vert_UV);
 		// Reflections
-		if(SSR) // Screen space reflections
+		if(toggleSSR) // Screen space reflections
 		{
 			if(reflectance > 0.0f)
 			{
-				FragColor = newSSR() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
+				FragColor = SSR() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
 			}
 		}
 	}

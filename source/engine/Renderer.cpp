@@ -80,7 +80,7 @@ void Renderer::InitGLEW(void){
  */
 void Renderer::Initialize(int width, int height)
 {
-	context_ptr->OpenWindow(width, height, "Render Window", 4, 2);
+	context_ptr->OpenWindow(width, height, "moge", 4, 2);
 	context_ptr->AddAntTweakBar();
 
 	WriteLog(CONSOLE);
@@ -126,34 +126,46 @@ void Renderer::Initialize(int width, int height)
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
+	materialman_ptr = Singleton<scene::MaterialManager>::Instance();
 
 	/*! Init forward rendering
 	 **************************/
 		forwardProgram_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/forward/forward.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/forward/forward.frag.glsl"
+				GLSL::VERTEX, "./source/shaders/forward/cm_forward.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/forward/cm_forward.frag.glsl"
 		);
 
 	/*! Init deferred rendering
 	 * *************************/
-		//! Inits for 1st pass
+		/*! Initialization of 1st pass
+		 * 	G-Buffer creation
+		 */
 		deferredProgram_Pass1_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/1-pass_one.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/1-pass_one.frag.glsl"
 		);
 		gBuffer_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
-		//! Inits for 2nd pass
+		/*! Initialization of 2nd pass
+		 *  Deferred Lighting and Shading
+		 */
 		deferredProgram_Pass2_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/2-deferred_lighting.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/2-deferred_lighting.frag.glsl"
 		);
 		fbo_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
-		//! Inits for 3nd pass
+		/*! Initialization of 3nd pass
+		 * 	SSR pass (screen space reflections)
+		 */
 		deferredProgram_Pass3_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/3-deferred_reflections.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/3-deferred_reflections.frag.glsl"
 		);
-		//! Fullscreen quad init
+		//! Initialization of 4th pass
+		deferredProgram_Pass4_ptr = new ShaderProgram(
+				GLSL::VERTEX, "./source/shaders/ms/4-ms.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/ms/4-ms.frag.glsl"
+		);
+		//! Fullscreen quad initialization
 		fsq_ptr->CreateFSQ();
 
 	InitializeMatrices();
@@ -520,7 +532,7 @@ void Renderer::RenderLoop(void){
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//! Raytrace uniform parameters
 			deferredProgram_Pass3_ptr->SetUniform("deltaDepth", tw_deltaDepth);
-			deferredProgram_Pass3_ptr->SetUniform("SSR", tw_SSR);
+			deferredProgram_Pass3_ptr->SetUniform("toggleSSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
 			deferredProgram_Pass3_ptr->SetUniform("jittering", tw_jittering);
 			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
@@ -566,6 +578,11 @@ void Renderer::RenderLoop(void){
 			forwardProgram_ptr->SetUniform("Light.Ambient", LightAmbient);
 			forwardProgram_ptr->SetUniform("Light.Diffuse", LightDiffuse);
 			forwardProgram_ptr->SetUniform("Light.Specular", LightSpecular);
+			//! Camera uniforms
+			forwardProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			//! Cubemap uniforms
+			forwardProgram_ptr->SetUniform("drawSkyBox", true);
+			forwardProgram_ptr->SetUniformSampler("cubeMapTex", materialman_ptr->GetCubeMap(0), 8);
 			//! Material uniforms
 			forwardProgram_ptr->SetUniform("Shininess", m_shininess);
 			//! Mouse uniforms

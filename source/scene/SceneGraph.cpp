@@ -67,7 +67,7 @@ namespace scene {
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
-			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_FlipUVs);
+			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials | aiProcess_FlipUVs);
 			if(!scene)
 			{
 				logfile << "ERROR | assimp: could not import " << filename << std::endl;
@@ -121,6 +121,8 @@ namespace scene {
 
 			}
 		}*/
+
+		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
 		glm::vec3 position(0.0f, 5.0f, 10.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
@@ -129,6 +131,7 @@ namespace scene {
 		activeCamera = camera;
 		root.AddChild(camera);
 
+		/* MATERIALS ****************************************************************/
 		//! Materials
 		for(unsigned int mat = 0; mat < scene->mNumMaterials; mat++)
 		{
@@ -151,7 +154,9 @@ namespace scene {
 			else
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.00f);
 		}
+		materialman->AddCubeMap("./assets/texture/cubemaps/skybox");
 
+		/* MESHES ****************************************************************/
 		//! Meshes
 		logfile << "#Meshes: " << scene->mNumMeshes << std::endl;
 		for(unsigned int c = 0; c < scene->mRootNode->mNumChildren; c++)

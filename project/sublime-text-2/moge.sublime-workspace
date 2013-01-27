@@ -4,8 +4,28 @@
 		"selected_items":
 		[
 			[
+				"cube",
+				"cubeMapColor"
+			],
+			[
+				"world",
+				"worldNormal"
+			],
+			[
+				"wol",
+				"worldPos"
+			],
+			[
 				"no",
-				"normalize"
+				"normal"
+			],
+			[
+				"vs",
+				"vsNormal"
+			],
+			[
+				"SSR",
+				"SSR"
 			],
 			[
 				"ref",
@@ -46,10 +66,6 @@
 			[
 				"ssSh",
 				"ssShadedPosition"
-			],
-			[
-				"vs",
-				"vsReflectionVector"
 			],
 			[
 				"Ca",
@@ -211,6 +227,30 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+			"settings":
+			{
+				"buffer_size": 23890,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
+			"settings":
+			{
+				"buffer_size": 1202,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
+			"settings":
+			{
+				"buffer_size": 2140,
+				"line_ending": "Windows"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -268,8 +308,10 @@
 	},
 	"file_history":
 	[
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
+		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
@@ -348,6 +390,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"SSR",
+			"newSSR",
+			"Window",
+			"Render",
 			" (",
 			";\n",
 			"return",
@@ -385,8 +431,89 @@
 	"groups":
 	[
 		{
+			"selected": 2,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+					"settings":
+					{
+						"buffer_size": 23890,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1709,
+								1709
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1451.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
+					"settings":
+					{
+						"buffer_size": 1202,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1153,
+								1153
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 269.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
+					"settings":
+					{
+						"buffer_size": 2140,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								751,
+								751
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 615.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],

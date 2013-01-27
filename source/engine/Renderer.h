@@ -39,6 +39,7 @@ class Renderer
 	private:
 		//! Singleton instances
 		scene::SceneGraph* scenegraph_ptr;
+		scene::MaterialManager* materialman_ptr;
 		std::vector<scene::Node*>* renderQ_ptr;
 
 		//! OpenGL Info
@@ -52,7 +53,11 @@ class Renderer
 		GLboolean m_running;
 		Context* context_ptr;
 		FSQ* fsq_ptr;
-		ShaderProgram* forwardProgram_ptr, *deferredProgram_Pass1_ptr, *deferredProgram_Pass2_ptr, *deferredProgram_Pass3_ptr;
+		ShaderProgram 	*forwardProgram_ptr,
+						*deferredProgram_Pass1_ptr,
+						*deferredProgram_Pass2_ptr,
+						*deferredProgram_Pass3_ptr,
+						*deferredProgram_Pass4_ptr;
 		FrameBufferObject* gBuffer_ptr, *fbo_ptr;
 		float m_angle;
 		float m_fieldOfView;
