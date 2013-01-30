@@ -25,20 +25,12 @@ uniform mat4 MVPMatrix;
 /*** Main *********************************************************************/
 void main(void)
 {	
-	if(drawSkyBox)
-	{
-		ReflectDir = vertex;
-	}
-	else
-	{
-		vec3 worldPos = vec3(ModelMatrix * vec4(vertex, 1.0f));
-		vec3 worldNormal = vec3(ModelMatrix * vec4(normal, 0.0f));
-		vec3 worldView = normalize(CameraPosition - worldPos);
-		ReflectDir = reflect(-worldView, worldNormal);
-	}
 
-	//vert_Position = ModelMatrix * vec4(vertex, 1.0f);
-	//vert_Normal = normalize(NormalMatrix * vec4(normal, 0.0f));
-	//vert_UV = uv;
-	gl_Position = MVPMatrix * vec4(vertex, 1.0f);
+	// Compute the reflected direction in world coords.
+	vec3 worldPos = vec3(ModelMatrix *  vec4(vertex, 1.0));
+	vec3 worldNorm = vec3(NormalMatrix * vec4(normal, 0.0));
+	vec3 worldView = normalize(CameraPosition - worldPos);
+	ReflectDir = reflect(-worldView, worldNorm);
+
+	gl_Position = MVPMatrix * vec4(vertex,1.0);
 }

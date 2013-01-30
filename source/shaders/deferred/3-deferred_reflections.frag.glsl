@@ -91,7 +91,7 @@ vec4 SSR()
 	vec3 vsViewVec = normalize(vsPosition - Camera.Position);
 
 	// Reflection vector
-	vec3 vsReflectVec = reflect(normalize(vsViewVec), normalize(vsNormal));
+	vec3 vsReflectVec = reflect(normalize(vsViewVec), vsNormal);
 	vec3 ssReflectVec = (vec4(vsReflectVec, 0.0f) * ProjectionMatrix).xyz; // / vsReflectVec.z;
 
 	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)
@@ -207,15 +207,20 @@ void main(void)
 	// Compositing
 	if(textureID == -1)
 	{
-		float reflectance = float(texture(deferredReflectanceTex, vert_UV));
+		// Reflection properties
+		float reflectance = texture(deferredReflectanceTex, vert_UV).a;
+		// Cubemap shading
+		vec3 cubemapColor = texture(deferredReflectanceTex, vert_UV).rgb;
 		// Diffuse shading
-		FragColor = texture(deferredDiffuseTex, vert_UV);
+		vec4 shaded = texture(deferredDiffuseTex, vert_UV);
+		
 		// Reflections
+		FragColor = shaded;
 		if(toggleSSR) // Screen space reflections
 		{
 			if(reflectance > 0.0f)
 			{
-				FragColor = SSR() + (1.0f - reflectance) * texture(deferredDiffuseTex, vert_UV);
+				FragColor = reflectance * (0.8f * SSR() + (1 - 0.8f) * vec4(cubemapColor, 1.0f)) + (1.0f - reflectance) * shaded;
 			}
 		}
 	}

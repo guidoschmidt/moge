@@ -34,6 +34,7 @@ namespace scene {
 			//! Material
 			std::vector<Material*> materials;
 			std::vector<GLuint> textures;
+			std::vector<GLuint> normalmaps;
 			std::vector<GLuint> cubemaps;
 			unsigned int textureCounter;
 			unsigned int cubemapCounter;
@@ -44,7 +45,6 @@ namespace scene {
 			ILuint Image_id;
 
 		protected:
-			GLuint LoadTexture(std::string filename);
 			void LoadCubeMap(std::string filename);
 
 		public:
@@ -53,17 +53,19 @@ namespace scene {
 
 			//! Material
 			void AddMaterial(std::string name, std::string texturefile, float reflectivity);
+			void AddMaterial(std::string name, std::string texturefile, std::string normalmap, float reflectivity);
 			void AddMaterial(std::string name);
 			Material* GetMaterial(std::string searchname);
 			Material* GetMaterial(unsigned int index);
 			unsigned int MaterialCount(void);
 
 			//! Texture
+			GLuint LoadTexture(std::string filename);
 			GLuint* GetTexture(int i);
 
 			//! Cubemap
 			void AddCubeMap(std::string filename);
-			GLuint GetCubeMap(int i);
+			GLuint* GetCubeMap(int i);
 	};
 
 

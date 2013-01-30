@@ -58,20 +58,6 @@ uniform sampler2D deferredReflectanceTex;
 uniform sampler2D deferredDepthTex;
 
 /*** Functions ****************************************************************/
-vec3 viewSpaceToScreenSpace(vec3 vector)
-{
-	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);
-	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;
-	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;
-	
-	return screenSpace;
-}
-
-vec3 reflectionShading()
-{
-	return vec3(texture(deferredColorTex, 1.0f - vert_UV));
-}
-
 vec3 diffuseShading(vec3 position, vec3 normal, vec3 diffuseColor, vec4 lightPos)
 {
 	vec3 lightVector = normalize(vec3(lightPos) - position);
@@ -98,15 +84,12 @@ void main(void)
 		lightPosition.z += 20.0f * mouseY;
 	}
 	
-
-	
 	// Gather G-Buffer information from textures
 	vec3 position = vec3(texture(deferredPositionTex, vert_UV));
 	vec3 normal = vec3(texture(deferredNormalTex, vert_UV));
 	vec3 diffuseColor = vec3(texture(deferredColorTex, vert_UV));
-	float reflectance = float(texture(deferredReflectanceTex,vert_UV));
 	float depth = float(texture(deferredDepthTex,vert_UV));
-	
+
 	// Shading
 	// Diffuse
 	FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightPosition), 1.0f);

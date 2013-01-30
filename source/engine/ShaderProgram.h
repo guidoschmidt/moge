@@ -80,7 +80,7 @@ class ShaderProgram
 		void SetUniform(const std::string name, int val);
 
 		void SetUniformSampler(const std::string name, GLuint texture, int textureUnit);
-		void SetUniformSamplerNoTextureBind(const std::string name, GLuint tetxure, int textureUnit);
+		void SetUniformCubemap(const std::string name, GLuint texture, int textureUnit);
 
 		void PrintActiveUniforms(void);
 		void PrintActiveAttributes(void);

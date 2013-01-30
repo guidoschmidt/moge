@@ -10,7 +10,7 @@
 /*********************************************************************/
 //! GLFW keyboard function
 /*!
- *
+ * Handles keyboard input
  */
 void GLFWCALL KeyboardFunction(int key, int action)
 {
@@ -38,7 +38,7 @@ void GLFWCALL ResizeFunction(int width, int height)
 
 //! GLFW mouse function
 /*!
- *
+ * Handles mosue input
  */
 void GLFWCALL MousePositionFunction(int mouseX, int mouseY)
 {
@@ -64,9 +64,6 @@ Context::Context(int height, int width)
 
 
 //! Destructor
-/*!
- *
- */
 Context::~Context()
 {
 	glfwTerminate();
@@ -143,7 +140,6 @@ void Context::SwapBuffers(void)
 
 //! Checks the context's existance
 /*!
- *
  * @return the context's existance
  */
 bool Context::IsExiting(void)
@@ -157,7 +153,6 @@ bool Context::IsExiting(void)
 
 //! Returns the window title
 /*!
- *
  * @return context's window title
  */
 std::string* Context::GetTitle(void)
@@ -167,7 +162,6 @@ std::string* Context::GetTitle(void)
 
 //! Returns the AntTweakBar bar used in this context
 /*!
- *
  * @return context's TwBar
  */
 TwBar* Context::GetBar()
@@ -178,7 +172,6 @@ TwBar* Context::GetBar()
 
 //! Returns the context's width
 /*!
- *
  * @return context's Width
  */
 int Context::GetWidth()
@@ -189,7 +182,6 @@ int Context::GetWidth()
 
 //! Returns the context's height
 /*!
- *
  * @return context's height
  */
 int Context::GetHeight()

@@ -8,7 +8,6 @@
 
 //! Constructor
 /*!
- *
  * @param width
  * @param height
  */
@@ -26,9 +25,6 @@ FrameBufferObject::FrameBufferObject(int width, int height)
 
 
 //! Destructor
-/*!
- *
- */
 FrameBufferObject::~FrameBufferObject()
 {
 }
@@ -142,7 +138,6 @@ void FrameBufferObject::Unuse(void)
 
 //! Returns a render target texture
 /*!
- *
  * @param index
  * @return a render target texture
  */

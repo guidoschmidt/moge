@@ -83,6 +83,8 @@ class Renderer
 		bool tw_compareDepth;
 		bool tw_reflvec;
 		bool tw_jittering;
+		bool tw_drawSkyBox;
+		bool tw_boundingbox;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

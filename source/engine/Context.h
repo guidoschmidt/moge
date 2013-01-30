@@ -47,6 +47,7 @@ class Context
 		int GetWidth();
 		int GetHeight();
 
+		//! Setter
 		void SetSize(int width, int height);
 };
 

@@ -307,6 +307,23 @@ void ShaderProgram::SetUniformSampler(std::string name, GLuint texture, GLint te
 	glUniform1i(loc, textureUnit);
 }
 
+
+//! Set a uniform texture
+/*!
+ * Set a texture to the shader program as a uniform.
+ *
+ * @param name uniform's name
+ * @param texture texture to bind
+ * @param textureUnit texture unit to read from
+ */
+void ShaderProgram::SetUniformCubemap(std::string name, GLuint texture, GLint textureUnit)
+{
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+	int loc = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
+	glUniform1i(loc, textureUnit);
+}
+
 //!
 /*!
  *

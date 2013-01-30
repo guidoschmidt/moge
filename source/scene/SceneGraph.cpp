@@ -147,14 +147,20 @@ namespace scene {
 			size_t found = tex_path.find_last_of("/");
 			std::string tex_name = tex_path.substr(found+1);
 
-			if(tex_name == "Wood.png")
+			if(tex_name == "Wood.png" || tex_name == "BrushedMetal.png")
 			{
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.95f);
 			}
+			else if(tex_name == "Cobblestone.png")
+			{
+				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/Cobblestone.png", "./assets/texture/png/Cobblestone_normal.png", 0.95f);
+			}
 			else
 				materialman->AddMaterial(mat_name.C_Str(), "./assets/texture/png/" + tex_name, 0.00f);
+
+
 		}
-		materialman->AddCubeMap("./assets/texture/cubemaps/skybox");
+		materialman->AddCubeMap("./assets/texture/cubemaps/stockholm");
 
 		/* MESHES ****************************************************************/
 		//! Meshes

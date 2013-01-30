@@ -45,6 +45,7 @@ Renderer::Renderer(int width, int height)
 	tw_compareDepth = false;
 	tw_reflvec = false;
 	tw_jittering = false;
+	tw_boundingbox = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -123,6 +124,11 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug dephts'");
 	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vectors'");
+	//! Environment mapping
+	TwAddVarRW(context_ptr->GetBar(), "drawskybox", TW_TYPE_BOOLCPP, &tw_drawSkyBox, "group='Forward Shading' label='Draw skybox'");
+	//! Draw modes
+	TwAddVarRW(context_ptr->GetBar(), "drawboundingbox", TW_TYPE_BOOLCPP, &tw_boundingbox, "group='Rendering' label='Show bounding boxes'");
+
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -162,8 +168,8 @@ void Renderer::Initialize(int width, int height)
 		);
 		//! Initialization of 4th pass
 		deferredProgram_Pass4_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/ms/4-ms.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/ms/4-ms.frag.glsl"
+				GLSL::VERTEX, "./source/shaders/deferred/4-bb.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/deferred/4-bb.frag.glsl"
 		);
 		//! Fullscreen quad initialization
 		fsq_ptr->CreateFSQ();
@@ -310,6 +316,10 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 void Renderer::KeyboardFunction(void)
 {
 	//! Reload shader code
+	if(glfwGetKey('0'))
+	{
+		forwardProgram_ptr->ReloadAllShaders();
+	}
 	if(glfwGetKey('1'))
 	{
 		deferredProgram_Pass1_ptr->ReloadAllShaders();
@@ -321,6 +331,10 @@ void Renderer::KeyboardFunction(void)
 	if(glfwGetKey('3'))
 	{
 		deferredProgram_Pass3_ptr->ReloadAllShaders();
+	}
+	if(glfwGetKey('4'))
+	{
+		deferredProgram_Pass4_ptr->ReloadAllShaders();
 	}
 }
 
@@ -351,19 +365,19 @@ void Renderer::CameraMovement()
 	/* Translation *************************************************/
 	if(glfwGetKey('W')) //! Forwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Move(0, 0, m_speed);
+		scenegraph_ptr->GetActiveCamera()->Move(0, 0, -m_speed);
 	}
 	if(glfwGetKey('S')) //! Backwards
 	{
-		scenegraph_ptr->GetActiveCamera()->Move(0, 0, -m_speed);
+		scenegraph_ptr->GetActiveCamera()->Move(0, 0, m_speed);
 	}
 	if(glfwGetKey('A')) //! Left
 	{
-		scenegraph_ptr->GetActiveCamera()->Move(m_speed, 0, 0);
+		scenegraph_ptr->GetActiveCamera()->Move(-m_speed, 0, 0);
 	}
 	if(glfwGetKey('D')) //! Right
 	{
-		scenegraph_ptr->GetActiveCamera()->Move(-m_speed, 0, 0);
+		scenegraph_ptr->GetActiveCamera()->Move(m_speed, 0, 0);
 	}
 	if(glfwGetKey('U')) //! Up
 	{
@@ -387,6 +401,11 @@ void Renderer::CameraMovement()
  * While variabke RUNNING is true, the renderer loops through this function.
  */
 void Renderer::RenderLoop(void){
+	//! Single called Open GL calls
+	glLineWidth(1.0f);
+	glEnable(GL_LINE_SMOOTH);
+
+	//! Draw loop
 	while(m_running){
 		//! Time calculations
 		timedif = time2 - time1;
@@ -455,6 +474,10 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass1_ptr->Use();
 
 			//! Drawing
+			//! Cubemap uniforms
+			deferredProgram_Pass1_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
+			deferredProgram_Pass1_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
+
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
 				if(static_cast<scene::Mesh*>((*renderQ_ptr)[n]))
@@ -478,11 +501,18 @@ void Renderer::RenderLoop(void){
 						deferredProgram_Pass1_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
 					}
 					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
+
+					//! Draws the bounding boxes
+					if(tw_boundingbox)
+					{
+						static_cast<scene::Mesh*>((*renderQ_ptr)[n])->DrawBoundingBox();
+					}
 				}
 			}
 
 			gBuffer_ptr->Unuse();
 			deferredProgram_Pass1_ptr->Unuse();
+
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
 			 *		2ND RENDER PASS		   *
@@ -524,6 +554,7 @@ void Renderer::RenderLoop(void){
 
 			fbo_ptr->Unuse();
 			deferredProgram_Pass2_ptr->Unuse();
+
 			/*!* * * * * * * * * * * * * * *
 			 *		DEFERRED RENDERING	   *
 			 *		3RD RENDER PASS		   *
@@ -565,6 +596,50 @@ void Renderer::RenderLoop(void){
 			fsq_ptr->Draw();
 
 			deferredProgram_Pass3_ptr->Unuse();
+
+			/*!* * * * * * * * * * * * * * *
+			 *		DEFERRED RENDERING	   *
+			 *		4TH RENDER PASS		   *
+			 * * * * * * * * * * * * * * * */
+			/*
+			deferredProgram_Pass4_ptr->Use();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//! Raytrace uniform parameters
+			deferredProgram_Pass4_ptr->SetUniform("deltaDepth", tw_deltaDepth);
+			deferredProgram_Pass4_ptr->SetUniform("toggleSSR", tw_SSR);
+			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
+			deferredProgram_Pass4_ptr->SetUniform("jittering", tw_jittering);
+			deferredProgram_Pass4_ptr->SetUniform("compareDepth", tw_compareDepth);
+			deferredProgram_Pass4_ptr->SetUniform("showReflVecs", tw_reflvec);
+			//! Camera uniforms
+			deferredProgram_Pass4_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			deferredProgram_Pass4_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
+			deferredProgram_Pass4_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
+			//! Matrix uniforms
+			deferredProgram_Pass4_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
+			deferredProgram_Pass4_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
+			//! Mouse uniforms
+			deferredProgram_Pass4_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
+			deferredProgram_Pass4_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
+			//! Window uniforms
+			deferredProgram_Pass4_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			deferredProgram_Pass4_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
+			//! ColorattachmentID to choose which attachment is displayed
+			deferredProgram_Pass4_ptr->SetUniform("textureID", tw_currentDeferredTex);
+			//! Colorattachments
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 6);
+
+			//! Drawing
+			fsq_ptr->Draw();
+
+			deferredProgram_Pass4_ptr->Unuse();
+			*/
 		}
 		else{
 			/*!* * * * * * * * * * * * * * *
@@ -581,8 +656,8 @@ void Renderer::RenderLoop(void){
 			//! Camera uniforms
 			forwardProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			//! Cubemap uniforms
-			forwardProgram_ptr->SetUniform("drawSkyBox", true);
-			forwardProgram_ptr->SetUniformSampler("cubeMapTex", materialman_ptr->GetCubeMap(0), 8);
+			forwardProgram_ptr->SetUniform("drawSkyBox", tw_drawSkyBox);
+			forwardProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
 			//! Material uniforms
 			forwardProgram_ptr->SetUniform("Shininess", m_shininess);
 			//! Mouse uniforms
@@ -615,6 +690,12 @@ void Renderer::RenderLoop(void){
 						forwardProgram_ptr->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_tex_id)), 5);
 					}
 					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
+
+					//! Draws the bounding boxes
+					if(tw_boundingbox)
+					{
+						static_cast<scene::Mesh*>((*renderQ_ptr)[n])->DrawBoundingBox();
+					}
 				}
 			}
 

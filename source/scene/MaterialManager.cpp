@@ -32,7 +32,6 @@ namespace scene {
 		// TODO Auto-generated destructor stub
 	}
 
-
 	//! Adds a new material to the material-stock
 	/*!
 	 *
@@ -46,6 +45,21 @@ namespace scene {
 		materials[materialCounter]->SetReflectivity(reflectivity);
 		materialCounter++;
 		textureCounter++;
+	}
+
+	//! Adds a new material to the material-stock
+	/*!
+	 *
+	 * @param name
+	 * @param texturefile
+	 */
+	void MaterialManager::AddMaterial(std::string name, std::string texturefile, std::string normalmap, float reflectivity)
+	{
+		GLuint textureID = LoadTexture(texturefile);
+		GLuint normalmapID = LoadTexture(normalmap);
+		materials.push_back(new Material(materialCounter, name, textureCounter, &textureID, textureCounter++, &normalmapID));
+		materials[materialCounter]->SetReflectivity(reflectivity);
+		materialCounter++;
 	}
 
 
@@ -134,7 +148,7 @@ namespace scene {
 		glGenTextures(1, &cubemaps[cubemapCounter]);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemaps[cubemapCounter]);
 
-		std::string suffixes[] = {"r", "l", "u", "d", "f", "b"};
+		std::string suffixes[] = {"posx", "negx", "posy", "negy", "posz", "negz"};
 
 		GLuint cubemap_targets[] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X,
@@ -152,11 +166,11 @@ namespace scene {
 			loadSuccess = ilLoadImage(m_filename .c_str());
 			glTexImage2D(	cubemap_targets[i],
 							0,
-							GL_RGBA,
-							IL_IMAGE_WIDTH,
-							IL_IMAGE_HEIGHT,
+							ilGetInteger(IL_IMAGE_BPP),
+							ilGetInteger(IL_IMAGE_WIDTH),
+							ilGetInteger(IL_IMAGE_HEIGHT),
 							0,
-							GL_RGBA,
+							ilGetInteger(IL_IMAGE_FORMAT),
 							GL_UNSIGNED_BYTE,
 							ilGetData());
 			if(!loadSuccess)
@@ -221,13 +235,14 @@ namespace scene {
 		return &textures[i];
 	}
 
+
 	//!
 	/*!
 	 *
 	 */
-	GLuint MaterialManager::GetCubeMap(int i)
+	GLuint* MaterialManager::GetCubeMap(int i)
 	{
-		return cubemaps[i];
+		return &cubemaps[i];
 	}
 
 } //! namespace scene

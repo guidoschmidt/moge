@@ -15,6 +15,7 @@ namespace scene {
 		id = mat_id;
 		name = mat_name;
 		m_texture_id = -1;
+		m_normalmap_id = -1;
 
 		//! Material properties
 		m_reflectivity = 0.0f;
@@ -22,6 +23,7 @@ namespace scene {
 		glm::vec4 specularColor(0.8f);
 
 		texture_ptr = 0;
+		normal_ptr = 0;
 	}
 
 	//!
@@ -34,6 +36,7 @@ namespace scene {
 		id = mat_id;
 		name = mat_name;
 		m_texture_id = tex_id;
+		m_normalmap_id = -1;
 
 		//! Material properties
 		m_reflectivity = 0;
@@ -42,6 +45,30 @@ namespace scene {
 
 		//! Texture properties
 		texture_ptr = texture;
+		normal_ptr = NULL;
+	}
+
+
+	//!
+	/*!
+	 *
+	 */
+	Material::Material(int mat_id, std::string mat_name, int tex_id, GLuint* texture, int nmap_id, GLuint* normalmap)
+	{
+		//! Identification
+		id = mat_id;
+		name = mat_name;
+		m_texture_id = tex_id;
+		m_normalmap_id = nmap_id;
+
+		//! Material properties
+		m_reflectivity = 0;
+		glm::vec4 diffuseColor(0.8f);
+		glm::vec4 specularColor(0.8f);
+
+		//! Texture properties
+		texture_ptr = texture;
+		normal_ptr = normalmap;
 	}
 
 
@@ -98,9 +125,21 @@ namespace scene {
 	/*!
 	 *
 	 */
-	void Material::SetTexturePointer(GLuint* texture)
+	void Material::SetTexture(GLuint* texture)
 	{
 		texture_ptr = texture;
+	}
+
+
+	//! Sets the material's normal map
+	/*!
+	 *
+	 * @param texture
+	 */
+	void Material::SetNormalMap(GLuint* normaltex)
+	{
+		normal_ptr = normaltex;
+		std::cout << "Normalmap set: " << &normal_ptr << std::endl;
 	}
 
 

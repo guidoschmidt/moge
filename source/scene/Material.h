@@ -30,7 +30,9 @@ namespace scene {
 
 			//! Texture
 			GLuint* texture_ptr;
+			GLuint* normal_ptr;
 			int m_texture_id;
+			int m_normalmap_id;
 
 			//! Material properties
 			glm::vec4 m_diffuseColor;
@@ -40,6 +42,7 @@ namespace scene {
 		public:
 			Material(int mat_id, std::string);
 			Material(int mat_id, std::string mat_name, int tex_id, GLuint* texture);
+			Material(int mat_id, std::string mat_name, int tex_id, GLuint* texture, int nmap_id, GLuint* normalmap);
 			virtual ~Material();
 
 			//! Material
@@ -62,7 +65,8 @@ namespace scene {
 			int GetTextureID(void);
 
 			// Setter
-			void SetTexturePointer(GLuint* texture);
+			void SetTexture(GLuint* texture);
+			void SetNormalMap(GLuint* texture);
 			void SetTextureID(int tex_id);
 			// Check texture
 			bool HasTexture(void);

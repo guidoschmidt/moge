@@ -1,4 +1,4 @@
-#version 400
+ #version 400
 
 /*** Uniform block definitions ************************************************/
 struct LightInfo
@@ -28,7 +28,7 @@ in vec2 vert_UV;
 in vec3 ReflectDir;
 
 /*** Output *******************************************************************/
-out vec4 FragColor;
+layout( location = 0 ) out vec4 FragColor;
 
 /*** Uniforms *****************************************************************/
 uniform LightInfo Light;
@@ -38,6 +38,7 @@ uniform ScreenInfo Screen;
 uniform float Shininess;
 
 uniform bool mouseLight;
+uniform bool boundingboxes;
 
 uniform mat4 ModelMatrix;
 uniform mat4 NormalMatrix;
@@ -63,9 +64,8 @@ vec3 diffuseShading(vec4 position, vec4 normal, vec4 lightPosition, vec3 diffuse
 void main(void)
 {
 	vec4 lightPosition = ProjectionMatrix * ViewMatrix * Light.Position;
-	vec3 diffuseColor = texture(colorTex, vert_UV).rgb; 
+	vec3 diffuseColor = texture(colorTex, vert_UV).rgb; 	
 	
-	/*
 	if(mouseLight)
 	{
 		float mouseX = Mouse.X/Screen.Width;
@@ -77,14 +77,8 @@ void main(void)
 		lightPosition.z += 20.0f * mouseY;
 	}
 	
-	FragColor = vec4(diffuseShading(vert_Position, vert_Normal, lightPosition, diffuseColor).rgb, 1.0f);
-	*/
-
+	vec4 diffuseShaded = vec4(diffuseShading(vert_Position, vert_Normal, lightPosition, diffuseColor).rgb, 1.0f);
 	vec4 cubeMapColor = texture(cubeMapTex, ReflectDir);
-	if(drawSkyBox)
-	{
-		FragColor = cubeMapColor;
-	}
-	else
-		FragColor = mix(diffuseColor, cubeMapColor, 0.5f);
+	
+	FragColor = cubeMapColor;
 }

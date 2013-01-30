@@ -6,10 +6,7 @@
 
 #include "FSQ.h"
 
-//!
-/*!
- *
- */
+//! Constructor
 FSQ::FSQ()
 {
 	m_VAO_ID = 0;
@@ -19,19 +16,16 @@ FSQ::FSQ()
 }
 
 
-//!
-/*!
- *
- */
+//! Destructor
 FSQ::~FSQ()
 {
 	DeleteBuffers();
 }
 
 
-//!
+//! Creates buffers for a fullscreen quad
 /*!
- *
+ * Creates buffers storing information for a fullscreen quad from -1 to 1
  */
 void FSQ::CreateBuffers(void)
 {
@@ -73,9 +67,9 @@ void FSQ::CreateBuffers(void)
 }
 
 
-//!
+//! Deletes the buffers
 /*!
- *
+ * Deletes all buffers that store the fullscreen quad informations 
  */
 void FSQ::DeleteBuffers(void)
 {
@@ -84,9 +78,9 @@ void FSQ::DeleteBuffers(void)
 }
 
 
-//!
+//! Creates a fullscreen quad
 /*!
- *
+ * Calls CreateBuffers to create a fullscreen quad
  */
 void FSQ::CreateFSQ(void)
 {
@@ -94,9 +88,9 @@ void FSQ::CreateFSQ(void)
 }
 
 
-//!
+//! Draws the fullscreen quad
 /*!
- *
+ * Draws a fullscreen quad onto screen
  */
 void FSQ::Draw(void)
 {
