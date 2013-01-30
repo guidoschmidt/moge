@@ -210,7 +210,7 @@ void main(void)
 		// Reflection properties
 		float reflectance = texture(deferredReflectanceTex, vert_UV).a;
 		// Cubemap shading
-		vec3 cubemapColor = texture(deferredReflectanceTex, vert_UV).rgb;
+		//vec3 cubemapColor = texture(deferredReflectanceTex, vert_UV).rgb;
 		// Diffuse shading
 		vec4 shaded = texture(deferredDiffuseTex, vert_UV);
 		
@@ -220,7 +220,7 @@ void main(void)
 		{
 			if(reflectance > 0.0f)
 			{
-				FragColor = reflectance * (0.8f * SSR() + (1 - 0.8f) * vec4(cubemapColor, 1.0f)) + (1.0f - reflectance) * shaded;
+				FragColor = reflectance * SSR() + (1.0f - reflectance) * shaded;
 			}
 		}
 	}

@@ -80,5 +80,5 @@ void main(void)
 	vec4 diffuseShaded = vec4(diffuseShading(vert_Position, vert_Normal, lightPosition, diffuseColor).rgb, 1.0f);
 	vec4 cubeMapColor = texture(cubeMapTex, ReflectDir);
 	
-	FragColor = cubeMapColor;
+	FragColor = diffuseShaded;
 }

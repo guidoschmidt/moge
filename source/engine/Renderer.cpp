@@ -6,7 +6,6 @@
 
 #include "Renderer.h"
 
-
 //! ANTTWEAKBAR CALLBACKS BEGIN
 /*! Variables and button callbacks */
 bool tw_deferred;
@@ -150,7 +149,7 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/1-pass_one.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/1-pass_one.frag.glsl"
 		);
-		gBuffer_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
+		gBuffer_ptr = new FrameBufferObject();
 		/*! Initialization of 2nd pass
 		 *  Deferred Lighting and Shading
 		 */
@@ -158,7 +157,7 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/2-deferred_lighting.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/2-deferred_lighting.frag.glsl"
 		);
-		fbo_ptr = new FrameBufferObject(context_ptr->GetWidth(), context_ptr->GetHeight());
+		fbo_ptr = new FrameBufferObject();
 		/*! Initialization of 3nd pass
 		 * 	SSR pass (screen space reflections)
 		 */
@@ -432,7 +431,7 @@ void Renderer::RenderLoop(void){
 					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/blend/Head.blend");
 					break;
 			}
-			renderQ_ptr = Singleton<scene::SceneOrganizer>::Instance()->OrganizeScene();
+			renderQ_ptr = Singleton<scene::SceneOrganizer>::Instance()->OrganizeByMaterial();
 			std::cout << "RenderQ has size: " << renderQ_ptr->size() << std::endl;
 			loaded = true;
 		}
@@ -475,7 +474,7 @@ void Renderer::RenderLoop(void){
 
 			//! Drawing
 			//! Cubemap uniforms
-			deferredProgram_Pass1_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
+			//deferredProgram_Pass1_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
 			deferredProgram_Pass1_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
@@ -495,9 +494,9 @@ void Renderer::RenderLoop(void){
 					deferredProgram_Pass1_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						int current_mat_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
-						deferredProgram_Pass1_ptr->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_mat_id)), 5);
-						deferredProgram_Pass1_ptr->SetUniform("Material.id", current_mat_id);
+						deferredProgram_Pass1_ptr->SetUniformSampler("colorTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
+						deferredProgram_Pass1_ptr->SetUniformSampler("normalTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
+						deferredProgram_Pass1_ptr->SetUniform("Material.id", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID());
 						deferredProgram_Pass1_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
 					}
 					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
@@ -657,7 +656,7 @@ void Renderer::RenderLoop(void){
 			forwardProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			//! Cubemap uniforms
 			forwardProgram_ptr->SetUniform("drawSkyBox", tw_drawSkyBox);
-			forwardProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
+			//forwardProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
 			//! Material uniforms
 			forwardProgram_ptr->SetUniform("Shininess", m_shininess);
 			//! Mouse uniforms
@@ -686,8 +685,7 @@ void Renderer::RenderLoop(void){
 					forwardProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						int current_tex_id = dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetID();
-						forwardProgram_ptr->SetUniformSampler("colorTex", *(Singleton<scene::MaterialManager>::Instance()->GetTexture(current_tex_id)), 5);
+						forwardProgram_ptr->SetUniformSampler("colorTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
 					}
 					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
 

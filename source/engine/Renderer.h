@@ -24,15 +24,16 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 //! Local includes
+#include "../utilities/Singleton.h"
+#include "../scene/scenegraph/Node.h"
+#include "../scene/scenegraph/Material.h"
+#include "../scene/scenegraph/SceneGraph.h"
+#include "../scene/MaterialManager.h"
+#include "../scene/SceneOrganizer.h"
 #include "Context.h"
 #include "ShaderProgram.h"
 #include "FSQ.h"
 #include "FrameBufferObject.h"
-#include "../utilities/Singleton.h"
-#include "../scene/Node.h"
-#include "../scene/SceneGraph.h"
-#include "../scene/MaterialManager.h"
-#include "../scene/SceneOrganizer.h"
 
 class Renderer
 {
@@ -49,7 +50,7 @@ class Renderer
 		const GLubyte* glinfo_glslVersion_ptr;
 		GLint glinfo_major, glinfo_minor;
 
-		typedef enum{FILE=0, CONSOLE=1} log;
+		typedef enum{FILE = 0, CONSOLE = 1} log;
 		GLboolean m_running;
 		Context* context_ptr;
 		FSQ* fsq_ptr;

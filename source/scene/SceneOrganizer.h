@@ -1,9 +1,7 @@
-//!
+//! SceneOrganizer.h
 /*!
- * SceneOrganizer.h
- *
- *  Created on: 09.01.2013
- *      Author: guidoschmidt
+ * @date	09.01.2013
+ * @author	Guido Schmidt
  */
 
 #ifndef SCENEORGANIZER_H_
@@ -12,7 +10,7 @@
 //! C++ includes
 #include <vector>
 //! Local includes
-#include "SceneGraph.h"
+#include "./scenegraph/SceneGraph.h"
 #include "MaterialManager.h"
 #include "../utilities/Singleton.h"
 
@@ -21,9 +19,9 @@ namespace scene {
 	class SceneOrganizer {
 
 		private:
-			SceneGraph* scenegraph;
-			MaterialManager* materialman;
-			std::vector<Node*> oneMaterial;
+			SceneGraph* m_scenegraph_ptr;
+			MaterialManager* m_materialman_ptr;
+			std::vector<Node*> m_renderQ;
 
 		protected:
 
@@ -31,7 +29,7 @@ namespace scene {
 			SceneOrganizer();
 			virtual ~SceneOrganizer();
 
-			std::vector<Node*>* OrganizeScene(void);
+			std::vector<Node*>* OrganizeByMaterial(void);
 
 		};
 

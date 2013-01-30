@@ -22,29 +22,34 @@
 #include <IL/ilut.h>
 //! Local includes
 #include "../utilities/Singleton.h"
-#include "Material.h"
+#include "scenegraph/Material.h"
 
 //! TODO Helper class for tupel 'texture' (string filename, GLuint handler)
 
 namespace scene {
 
+	struct texture{
+		std::string m_filename;
+		texturetype m_type;
+		GLuint m_handle;
+	};
+
 	class MaterialManager {
 
 		private:
-			//! Material
-			std::vector<Material*> materials;
-			std::vector<GLuint> textures;
-			std::vector<GLuint> normalmaps;
-			std::vector<GLuint> cubemaps;
-			unsigned int textureCounter;
-			unsigned int cubemapCounter;
+			//! Materials
+			std::vector<Material*> m_materials;
 			unsigned int materialCounter;
 
-			//! Texture
+			//! Textures
 			ILenum ErrorCheckTexture;
 			ILuint Image_id;
+			std::vector<texture*> m_textures;
+
+			unsigned int textureCounter;
 
 		protected:
+			void LoadTexture(std::string filename);
 			void LoadCubeMap(std::string filename);
 
 		public:
@@ -52,20 +57,16 @@ namespace scene {
 			virtual ~MaterialManager();
 
 			//! Material
-			void AddMaterial(std::string name, std::string texturefile, float reflectivity);
-			void AddMaterial(std::string name, std::string texturefile, std::string normalmap, float reflectivity);
 			void AddMaterial(std::string name);
+			void AddMaterial(std::string name, float reflectivity, std::vector<texture> textures);
+			void AddCubeMap(std::string filename);
+
+			//! Getter
 			Material* GetMaterial(std::string searchname);
 			Material* GetMaterial(unsigned int index);
 			unsigned int MaterialCount(void);
+			GLuint* GetTextureByID(int i);
 
-			//! Texture
-			GLuint LoadTexture(std::string filename);
-			GLuint* GetTexture(int i);
-
-			//! Cubemap
-			void AddCubeMap(std::string filename);
-			GLuint* GetCubeMap(int i);
 	};
 
 

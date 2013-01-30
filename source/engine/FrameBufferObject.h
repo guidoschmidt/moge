@@ -29,7 +29,7 @@ class FrameBufferObject
 		std::vector<GLuint> m_renderTargets;
 
 	public:
-		FrameBufferObject(int width, int height);
+		FrameBufferObject();
 		~FrameBufferObject();
 
 		void AddColorAttachment(int textureUnit);

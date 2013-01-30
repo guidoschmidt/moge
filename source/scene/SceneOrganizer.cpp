@@ -9,21 +9,15 @@
 
 namespace scene {
 
-	//!
-	/*!
-	 *
-	 */
+	//! Constructor
 	SceneOrganizer::SceneOrganizer()
 	{
-		scenegraph = Singleton<SceneGraph>::Instance();
-		materialman = Singleton<MaterialManager>::Instance();
+		m_scenegraph_ptr = Singleton<SceneGraph>::Instance();
+		m_materialman_ptr = Singleton<MaterialManager>::Instance();
 	}
 
 
-	//!
-	/*!
-	 *
-	 */
+	//! Destructor
 	SceneOrganizer::~SceneOrganizer()
 	{
 	}
@@ -31,33 +25,33 @@ namespace scene {
 
 	//! Organizes the render queue
 	/*!
-	 *
+	 * Sorts the render queue by materials
 	 */
-	std::vector<Node*>* SceneOrganizer::OrganizeScene(void)
+	std::vector<Node*>* SceneOrganizer::OrganizeByMaterial(void)
 	{
 		std::cout << "Organizing Scene" << std::endl;
-		for(unsigned int m = 0; m < materialman->MaterialCount(); m++)
+		for(unsigned int m = 0; m < m_materialman_ptr->MaterialCount(); m++)
 		{
-			for(unsigned int i = 0; i < scenegraph->NodeCount(); i++)
+			for(unsigned int i = 0; i < m_scenegraph_ptr->NodeCount(); i++)
 			{
-				if(dynamic_cast<Mesh*>(scenegraph->GetNode(i)) != 0)
+				if(dynamic_cast<Mesh*>(m_scenegraph_ptr->GetNode(i)) != 0)
 				{
-					int node_mat_id = dynamic_cast<Mesh*>(scenegraph->GetNode(i))->GetMaterial()->GetID();
-					int sort_mat_id = materialman->GetMaterial(m)->GetID();
+					int node_mat_id = dynamic_cast<Mesh*>(m_scenegraph_ptr->GetNode(i))->GetMaterial()->GetMaterialID();
+					int sort_mat_id = m_materialman_ptr->GetMaterial(m)->GetMaterialID();
 					if(node_mat_id == sort_mat_id)
-						oneMaterial.push_back(scenegraph->GetNode(i));
+						m_renderQ.push_back(m_scenegraph_ptr->GetNode(i));
 				}
 			}
 		}
 
 		//! Put organized node-list onto console
 		std::cout << "Organized RenderQ (by material): ";
-		for(unsigned int x=0; x < oneMaterial.size(); x++)
+		for(unsigned int x=0; x < m_renderQ.size(); x++)
 		{
-			std::cout << "(" << x << ")" << static_cast<Mesh*>(oneMaterial[x])->GetMaterial()->GetName() << ", ";
+			std::cout << "(" << x << ")" << static_cast<Mesh*>(m_renderQ[x])->GetMaterial()->GetName() << ", ";
 		}
 
-		return &oneMaterial;
+		return &m_renderQ;
 	}
 
 

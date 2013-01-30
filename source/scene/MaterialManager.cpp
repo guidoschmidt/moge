@@ -14,9 +14,11 @@ namespace scene {
 	 */
 	MaterialManager::MaterialManager()
 	{
-		textureCounter = 0;
+		textureCounter = 0; //0 is black texture
+		m_textures.push_back(new texture());
+		LoadTexture("./assets/texture/Black.png");
+		textureCounter = 1;
 		materialCounter = 0;
-		cubemapCounter = 0;
 
 		ErrorCheckTexture = 0;
 		Image_id = 0;
@@ -38,42 +40,39 @@ namespace scene {
 	 * @param name
 	 * @param texturefile
 	 */
-	void MaterialManager::AddMaterial(std::string name, std::string texturefile, float reflectivity)
-	{
-		GLuint textureID = LoadTexture(texturefile);
-		materials.push_back(new Material(materialCounter, name, textureCounter, &textureID));
-		materials[materialCounter]->SetReflectivity(reflectivity);
-		materialCounter++;
-		textureCounter++;
-	}
-
-	//! Adds a new material to the material-stock
-	/*!
-	 *
-	 * @param name
-	 * @param texturefile
-	 */
-	void MaterialManager::AddMaterial(std::string name, std::string texturefile, std::string normalmap, float reflectivity)
-	{
-		GLuint textureID = LoadTexture(texturefile);
-		GLuint normalmapID = LoadTexture(normalmap);
-		materials.push_back(new Material(materialCounter, name, textureCounter, &textureID, textureCounter++, &normalmapID));
-		materials[materialCounter]->SetReflectivity(reflectivity);
-		materialCounter++;
-	}
-
-
-	//! Adds a new material to the material-stock
-	/*!
-	 *
-	 * @param name
-	 * @param texturefile
-	 */
 	void MaterialManager::AddMaterial(std::string name)
 	{
-		materials.push_back(new Material(materialCounter, name));
+		m_materials.push_back(new Material(materialCounter, name));
 		materialCounter++;
 	}
+
+
+	//! Adds a new material to the material-stock
+	/*!
+	 *
+	 * @param name
+	 * @param texturefile
+	 */
+	void MaterialManager::AddMaterial(std::string name, float reflectivity, std::vector<texture> textures)
+	{
+		m_materials.push_back(new Material(materialCounter, name));
+		for(unsigned int tex = 0; tex < textures.size(); tex++)
+		{
+			m_textures.push_back(new texture());
+			m_textures[textureCounter]->m_handle = textureCounter;
+			m_textures[textureCounter]->m_type = textures[tex].m_type;
+			m_textures[textureCounter]->m_filename = textures[tex].m_filename;
+			LoadTexture(m_textures[textureCounter]->m_filename);
+
+			textureRef texref(textureCounter, m_textures[textureCounter]->m_type);
+			m_materials[materialCounter]->AddTexture(texref);
+			m_materials[materialCounter]->SetReflectance(reflectivity);
+
+			textureCounter++;
+		}
+		materialCounter++;
+	}
+
 
 	//!
 	/*!
@@ -92,18 +91,15 @@ namespace scene {
 	 * @param filename
 	 * @return
 	 */
-	GLuint MaterialManager::LoadTexture(std::string filename)
+	void MaterialManager::LoadTexture(std::string filename)
 	{
-		GLuint texture_id;
-		textures.push_back(texture_id);
-
 		ILboolean loadSuccess = ilLoadImage(filename.c_str());
 
 		if(loadSuccess)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			glGenTextures(1, &textures[textureCounter]);
-			glBindTexture(GL_TEXTURE_2D, textures[textureCounter]);
+			glGenTextures(1, &(m_textures[textureCounter]->m_handle));
+			glBindTexture(GL_TEXTURE_2D, m_textures[textureCounter]->m_handle);
 			//! Set texture's clamping
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -129,9 +125,8 @@ namespace scene {
 			ErrorCheckTexture = ilGetError();
 			std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
 		}
-
-		return textures[textureCounter];
 	}
+
 
 	//!
 	/*!
@@ -140,13 +135,12 @@ namespace scene {
 	 */
 	void MaterialManager::LoadCubeMap(std::string filename)
 	{
-		GLuint cubemap_id;
 		ILboolean loadSuccess;
-		cubemaps.push_back(cubemap_id);
+		//cubemaps.push_back(cubemap_id);
 
 		glActiveTexture(GL_TEXTURE0);
-		glGenTextures(1, &cubemaps[cubemapCounter]);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemaps[cubemapCounter]);
+		//glGenTextures(1, &cubemaps[cubemapCounter]);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemaps[cubemapCounter]);
 
 		std::string suffixes[] = {"posx", "negx", "posy", "negy", "posz", "negz"};
 
@@ -198,10 +192,10 @@ namespace scene {
 	 */
 	Material* MaterialManager::GetMaterial(std::string searchname)
 	{
-		for(unsigned int i = 0; i < materials.size(); i++)
+		for(unsigned int i = 0; i < m_materials.size(); i++)
 		{
-			if(materials[i]->GetName() == searchname)
-				return materials[i];
+			if(m_materials[i]->GetName() == searchname)
+				return m_materials[i];
 		}
 		return 0;
 	}
@@ -214,15 +208,14 @@ namespace scene {
 	 */
 	Material* MaterialManager::GetMaterial(unsigned int index)
 	{
-		//std::cout << "GetMaterial counter = " << materialCounter << std::endl;
-		return materials[index];
+		return m_materials[index];
 	}
 
 
 	//!
 	unsigned int MaterialManager::MaterialCount(void)
 	{
-		return materials.size();
+		return m_materials.size();
 	}
 
 
@@ -230,19 +223,9 @@ namespace scene {
 	/*!
 	 *
 	 */
-	GLuint* MaterialManager::GetTexture(int i)
+	GLuint* MaterialManager::GetTextureByID(int i)
 	{
-		return &textures[i];
-	}
-
-
-	//!
-	/*!
-	 *
-	 */
-	GLuint* MaterialManager::GetCubeMap(int i)
-	{
-		return &cubemaps[i];
+		return &(m_textures[i]->m_handle);
 	}
 
 } //! namespace scene

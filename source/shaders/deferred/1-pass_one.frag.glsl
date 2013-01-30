@@ -33,6 +33,7 @@ void main(void)
 	Position = vert_Position;
 	Color = vec3(texture(colorTex, vert_UV));
 	Normal = vert_Normal;
+	//Normal = texture(NormalMapTex, vert_UV);
 	vec3 cubeMapColor = texture(cubeMapTex, vert_ReflectDirection).rgb;
 	Reflectance.rgb = cubeMapColor;
 	Reflectance.a = Material.reflectance;

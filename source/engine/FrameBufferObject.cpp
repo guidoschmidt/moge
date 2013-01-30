@@ -11,7 +11,7 @@
  * @param width
  * @param height
  */
-FrameBufferObject::FrameBufferObject(int width, int height)
+FrameBufferObject::FrameBufferObject()
 {
 	m_width = Singleton<Context>::Instance()->GetWidth();
 	m_height = Singleton<Context>::Instance()->GetHeight();

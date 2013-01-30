@@ -4,16 +4,32 @@
 		"selected_items":
 		[
 			[
+				"vert",
+				"vert_UV"
+			],
+			[
+				"refle",
+				"reflectance"
+			],
+			[
+				"ref",
+				"reflection"
+			],
+			[
+				"defe",
+				"deferredReflectanceTex"
+			],
+			[
+				"Refle",
+				"Reflection"
+			],
+			[
 				"wor",
 				"worldPos"
 			],
 			[
 				"ver",
 				"vertex"
-			],
-			[
-				"vert",
-				"vert_Position"
 			],
 			[
 				"Ref",
@@ -44,10 +60,6 @@
 				"SSR"
 			],
 			[
-				"ref",
-				"reflect"
-			],
-			[
 				"fra",
 				"fragmentColor"
 			],
@@ -60,20 +72,8 @@
 				"deferredNormalTex"
 			],
 			[
-				"Refle",
-				"Reflections"
-			],
-			[
-				"refle",
-				"reflection"
-			],
-			[
 				"sam",
 				"samplingPosition"
-			],
-			[
-				"defe",
-				"deferredDiffuseTex"
 			],
 			[
 				"ray",
@@ -240,18 +240,18 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 728,
+				"buffer_size": 1588,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 			"settings":
 			{
-				"buffer_size": 994,
+				"buffer_size": 1190,
 				"line_ending": "Windows"
 			}
 		}
@@ -259,7 +259,7 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 110.0,
+		"height": 210.0,
 		"selected_items":
 		[
 			[
@@ -312,20 +312,30 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
 		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
@@ -333,7 +343,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
 		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.vs",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.fs",
 		"/C/Users/guidoschmidt/Development/code/glsl/bilateral filter/bilateralFilter.frag.glsl",
@@ -345,7 +354,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Common.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kusntgeschichte 4.MD",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kunstgeschichte 4.MD",
@@ -359,15 +367,10 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
 		"/C/Windows/System32/drivers/etc/hosts",
 		"/D/Temp/CS6 Master Collection/KEYGEN-XFORCE [WIN OSX]/x-force.nfo",
@@ -399,6 +402,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"layout (location=0) in vec3 vertex;\nlayout (location=1) in vec3 normal;\nlayout (location=2) in vec2 uv;",
+			"else",
+			"deferredReflectanceTex",
+			"vec3 viewSpaceToScreenSpace(vec3 vector)\n{\n	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);\n	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;\n	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;\n	\n	return screenSpace;\n}",
+			"deferredReflectanceTex",
+			"reflectance",
+			"));\n",
+			"bool",
+			"*\n",
 			");\n",
 			"\n",
 			"SSR",
@@ -447,44 +459,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
-					"settings":
-					{
-						"buffer_size": 728,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								430,
-								430
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 994,
+						"buffer_size": 1588,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1026,
+								1026
 							]
 						],
 						"settings":
@@ -493,7 +479,33 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 330.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+					"settings":
+					{
+						"buffer_size": 1190,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								844,
+								844
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 198.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -573,6 +585,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 256.0,
+	"side_bar_width": 260.0,
 	"status_bar_visible": true
 }
