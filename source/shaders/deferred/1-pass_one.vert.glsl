@@ -12,6 +12,7 @@ out vec3 vert_Normal;
 out vec2 vert_UV;
 out vec3 vert_Camera;
 out vec3 vert_ReflectDirection;
+out vec3 vert_EyePosition;
 
 /*** Uniforms *****************************************************************/
 uniform vec3 CameraPosition;
@@ -29,6 +30,7 @@ void main(void)
 	// Normals are multiplied with transposed inverse model view matrix
 	vert_Normal = normalize(vec3(NormalMatrix * vec4(normal, 0.0f)));
 	vert_UV = uv;
+	vert_EyePosition = -vert_Position;
 
 	// Cubemap reflections
 	vec3 worldView = normalize(CameraPosition - vert_Position);

@@ -60,7 +60,7 @@ namespace scene {
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
-			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials | aiProcess_FlipUVs);
+			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials );
 			if(!scene)
 			{
 				logfile << "ERROR | assimp: could not import " << filename << std::endl;
@@ -138,22 +138,26 @@ namespace scene {
 			aiString ai_tex_path;
 			std::vector<texture> textures;
 			//! Diffuse
+			//! File-extension and folder of textures
+			std::string fileextension = "tga";
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path);
 			std::string diffuseTex_path = &(ai_tex_path.data[0]);
 			size_t foundname = diffuseTex_path.find_last_of("/");
 			std::string tex_name_temp = diffuseTex_path.substr(foundname+1);
-			unsigned ext = tex_name_temp.find(".png");
-			std::string tex_name = tex_name_temp.erase(ext);
+			unsigned extPos = tex_name_temp.find("." + fileextension);
+			std::string tex_name = tex_name_temp.erase(extPos);
+
+			std::cout << tex_name << std::endl;
 
 			texture diffuse;
-			diffuse.m_filename = "./assets/texture/png/" + tex_name + ".png";
+			diffuse.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
 			diffuse.m_type = DIFFUSE;
 			textures.push_back(diffuse);
 
-			if(mat_name == "Cobblestone")
+			if(mat_name == "Tiles" || mat_name == "Skin")
 			{
 				texture normal;
-				normal.m_filename = "./assets/texture/png/" + tex_name + "_normal.png";
+				normal.m_filename = "./assets/texture/" + fileextension + "/" + tex_name + "_normal." + fileextension;
 				normal.m_type = NORMAL;
 				textures.push_back(normal);
 			}

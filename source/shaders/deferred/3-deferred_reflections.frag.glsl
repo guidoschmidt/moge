@@ -60,6 +60,10 @@ float linearizeDepth(float depth)
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
+// Random float
+/*
+ * @source: http://web.archive.org/web/20080211204527/http://lumina.sourceforge.net/Tutorials/Noise.html
+ */
 float rand(vec2 co)
 {
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
@@ -161,9 +165,9 @@ vec4 SSR()
 		//Jitter the initial ray
 		if(jittering)
 		{
-			float randomOffset1 = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Width * 500f);
-			float randomOffset2 = clamp(rand(gl_FragCoord.xy), 0, 1)/(Screen.Height * 500f);
-			float randomOffset3 = clamp(rand(gl_FragCoord.zz), 0, 1)/(fragmentDepth * 5000f);
+			float randomOffset1 = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Width  * 15000f);
+			float randomOffset2 = clamp(rand(gl_FragCoord.xy), 0, 1)/(Screen.Height * 15000f);
+			float randomOffset3 = clamp(rand(gl_FragCoord.zz), 0, 1)/(fragmentDepth * 15000f);
 			tracedRay += vec3(randomOffset1, randomOffset2, 0);
 			stepSize += randomOffset3;
 		}
@@ -238,7 +242,7 @@ void main(void)
 		FragColor = texture(deferredMaterialIDTex, vert_UV);
 	// Reflectance
 	else if(textureID == 4)
-		FragColor = texture(deferredReflectanceTex, vert_UV);
+		FragColor = vec4(texture(deferredReflectanceTex, vert_UV).a);
 	// Depth
 	else if(textureID == 5)
 		FragColor = texture(deferredDepthTex, vert_UV);
