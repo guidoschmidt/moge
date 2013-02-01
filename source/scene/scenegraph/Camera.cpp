@@ -144,6 +144,7 @@ namespace scene {
 	void Camera::SetFielOfView(float angle)
 	{
 		m_fieldOfView = angle;
+		m_projectionMatrix = glm::perspective(m_fieldOfView, m_aspect, m_nearPlane, m_farPlane);
 	}
 
 	//! Sets the field of view
@@ -169,7 +170,7 @@ namespace scene {
 	void Camera::Move(float x, float y, float z)
 	{
 		m_position += glm::vec3(x, y, z);
-		m_lookAt += glm::vec3(x, y, z);
+		//m_lookAt += glm::vec3(x, y, z);
 
 		//! TODO movement of camera
 		//m_translationMatrix = glm::translate(m_position);

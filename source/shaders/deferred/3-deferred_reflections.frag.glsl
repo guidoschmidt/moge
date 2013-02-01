@@ -70,7 +70,7 @@ float rand(vec2 co)
 }
 
 /******************************************************************************/
-// LATEST
+// LATEST (working, with some perspective errors)
 /* SSR (screen space reflections)
  * @date 	27.01.13
  * @author	Guido Schmidt
@@ -79,37 +79,42 @@ vec4 SSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float initalStep = 0.0015f;
-	float stepSize = 0.015f;
+	float initalStep = 0.01f;
+	float stepSize = 0.025f;
 	float blurSize = 1.0f;
 
 	// Current fragment
 	vec2 fragment = gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
 
 	// Normal & position
-	vec3 vsNormal = texture(deferredNormalTex, fragment).xyz;
+	vec3 vsNormal = normalize(texture(deferredNormalTex, fragment).xyz);
 	vec3 vsPosition = texture(deferredPositionTex, fragment).xyz;
-	vec3 ssPosition = (vec4(vsPosition, 1.0f) * ProjectionMatrix).xyz;
+	vec3 ssPosition = (ProjectionMatrix * vec4(vsPosition, 1.0f)).xyz;
+	ssPosition = (0.5f * ssPosition) + 0.5f;
 	
 	// View vector
-	vec3 vsViewVec = normalize(vsPosition - Camera.Position);
+	vec3 vsViewVec = -ssPosition;
 
 	// Reflection vector
-	vec3 vsReflectVec = reflect(normalize(vsViewVec), vsNormal);
-	vec3 ssReflectVec = (vec4(vsReflectVec, 0.0f) * ProjectionMatrix).xyz; // / vsReflectVec.z;
+	vec3 vsReflectVec = reflect(normalize(vsViewVec), normalize(vsNormal));
+	vsReflectVec = normalize(vsReflectVec);
+	vsReflectVec += ssPosition;
+	vec3 ssReflectVec = (vec4(vsReflectVec, 0.0f) * ProjectionMatrix).xyz / vsReflectVec.z;
+	ssReflectVec = (0.5f * ssReflectVec) + 0.5f;
+	ssReflectVec -= ssPosition;
 
 	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)
 	//ssReflectVec.z *= -1;
 
 	// Initialze traced ray
-	vec3 initialRay = ssReflectVec * initalStep; 
+	vec3 initialRay = ssReflectVec * (initalStep); 
 
 	vec3 tracedRay = initialRay;
 	// Get depth informations
 	float fragmentDepth = linearizeDepth(texture(deferredDepthTex, fragment)); 
 	vec2 samplingPosition = fragment + tracedRay.xy;
 	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
-	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
+	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) / fragmentDepth;
 
 	// Ray tracing while in screen space
 	int count = 0;
@@ -124,7 +129,7 @@ vec4 SSR()
 		// intersection found
 		if(rayDepth > sampledDepth)
 		{
-			if(abs(rayDepth - sampledDepth) < 0.01f)
+			if(abs(rayDepth - sampledDepth) < 0.002f)
 			{
 				// Blur implemented as simple averaging along x and y axis
 				if(blur)
@@ -172,7 +177,7 @@ vec4 SSR()
 			stepSize += randomOffset3;
 		}
 
-		tracedRay += (tracedRay * stepSize);
+		tracedRay += tracedRay * stepSize;
 		count++;
 	}
 
@@ -242,8 +247,10 @@ void main(void)
 		FragColor = texture(deferredMaterialIDTex, vert_UV);
 	// Reflectance
 	else if(textureID == 4)
-		FragColor = vec4(texture(deferredReflectanceTex, vert_UV).a);
+	{
+		FragColor = vec4( texture(deferredReflectanceTex, vert_UV).a );
+	}
 	// Depth
 	else if(textureID == 5)
-		FragColor = texture(deferredDepthTex, vert_UV);
+		FragColor = vec4( linearizeDepth( float(texture(deferredDepthTex, vert_UV)) ) );
 }

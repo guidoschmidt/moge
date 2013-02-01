@@ -31,7 +31,7 @@ void GLFWCALL KeyboardFunction(int key, int action)
 void GLFWCALL ResizeFunction(int width, int height)
 {
 	Singleton<Context>::Instance()->SetSize(width, height);
-	glViewport(0, 0, width, height);
+//glViewport(0, 0, width, height);
 	TwWindowSize(width, height);
 }
 
@@ -93,7 +93,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 		glfwTerminate();
 	}
 
-	glViewport(0, 0, m_width, m_height);
+	//glViewport(0, 0, m_width, m_height);
 
 	glfwSetWindowPos(0, 0 );
 	glfwSetWindowTitle(m_title.c_str());

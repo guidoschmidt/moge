@@ -85,7 +85,7 @@ void FrameBufferObject::AddDepthAttachment_Buffer(void)
 	//! Create a depth buffer
 	glGenRenderbuffers(1, &m_depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, m_width, m_height);
 
 	//! Bind depth buffer to FBO
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);

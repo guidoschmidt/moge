@@ -39,14 +39,17 @@ namespace scene {
 		private:
 			//! Materials
 			std::vector<Material*> m_materials;
-			unsigned int materialCounter;
+			unsigned int m_materialCounter;
 
 			//! Textures
 			ILenum ErrorCheckTexture;
 			ILuint Image_id;
 			std::vector<texture*> m_textures;
+			unsigned int m_textureCounter;
 
-			unsigned int textureCounter;
+			//! Cubemaps
+			std::vector<GLuint> m_cubemaps;
+			unsigned int m_cubemapCounter;
 
 		protected:
 			void LoadTexture(std::string filename);
@@ -66,6 +69,7 @@ namespace scene {
 			Material* GetMaterial(unsigned int index);
 			unsigned int MaterialCount(void);
 			GLuint* GetTextureByID(int i);
+			GLuint* GetCubeMapByID(int i);
 
 	};
 

@@ -4,20 +4,168 @@
 		"selected_items":
 		[
 			[
-				"vert",
-				"vert_UV"
+				"sam",
+				"samlingPosition"
 			],
 			[
-				"refle",
-				"reflectance"
+				"fra",
+				"fragmentPosition"
 			],
 			[
-				"ref",
-				"reflection"
+				"line",
+				"linearizeDepth"
 			],
 			[
 				"defe",
-				"deferredReflectanceTex"
+				"deferredDepthTex"
+			],
+			[
+				"frag",
+				"fragement"
+			],
+			[
+				"vs",
+				"vsReflectVector"
+			],
+			[
+				"ss",
+				"ssReflectVector"
+			],
+			[
+				"def",
+				"deferredNormalTex"
+			],
+			[
+				"pro",
+				"ProjectionMatrix"
+			],
+			[
+				"vert",
+				"vert_EyePosition"
+			],
+			[
+				"ssVe",
+				"ssVecPos"
+			],
+			[
+				"de",
+				"deferredNormalTex"
+			],
+			[
+				"dee",
+				"deferredNormalTex"
+			],
+			[
+				"defer",
+				"deferredPositionTex"
+			],
+			[
+				"ssP",
+				"ssPosReflect"
+			],
+			[
+				"vsPos",
+				"vsPosReflect"
+			],
+			[
+				"vsReflectV",
+				"vsReflectVec"
+			],
+			[
+				"vec",
+				"vector"
+			],
+			[
+				"reflec",
+				"reflection"
+			],
+			[
+				"refle",
+				"reflection"
+			],
+			[
+				"dept",
+				"depthAtFragment"
+			],
+			[
+				"depth",
+				"depthAtFragment"
+			],
+			[
+				"samplin",
+				"samplingPosition"
+			],
+			[
+				"init",
+				"initialRay"
+			],
+			[
+				"dep",
+				"depthBudderDepth"
+			],
+			[
+				"ini",
+				"initalStep"
+			],
+			[
+				"sampling",
+				"samplingPosition"
+			],
+			[
+				"ref",
+				"reflect"
+			],
+			[
+				"ssPO",
+				"ssPosition3D"
+			],
+			[
+				"vsPo",
+				"vsPosition"
+			],
+			[
+				"co",
+				"count"
+			],
+			[
+				"View",
+				"ViewMatrix"
+			],
+			[
+				"ssPo",
+				"ssPosition2D"
+			],
+			[
+				"Ca",
+				"Camera"
+			],
+			[
+				"vie",
+				"vsViewVec"
+			],
+			[
+				"nor",
+				"normalmap"
+			],
+			[
+				"no",
+				"normalmap"
+			],
+			[
+				"nr",
+				"normalmap"
+			],
+			[
+				"ver",
+				"vert_UV"
+			],
+			[
+				"normal",
+				"normalTex"
+			],
+			[
+				"vert_",
+				"vert_EyePosition"
 			],
 			[
 				"Refle",
@@ -28,16 +176,8 @@
 				"worldPos"
 			],
 			[
-				"ver",
-				"vertex"
-			],
-			[
 				"Ref",
 				"ReflectDir"
-			],
-			[
-				"vs",
-				"vsNormal"
 			],
 			[
 				"cube",
@@ -52,28 +192,8 @@
 				"worldPos"
 			],
 			[
-				"no",
-				"normal"
-			],
-			[
 				"SSR",
 				"SSR"
-			],
-			[
-				"fra",
-				"fragmentColor"
-			],
-			[
-				"frag",
-				"fragmentColor"
-			],
-			[
-				"def",
-				"deferredNormalTex"
-			],
-			[
-				"sam",
-				"samplingPosition"
 			],
 			[
 				"ray",
@@ -82,10 +202,6 @@
 			[
 				"ssSh",
 				"ssShadedPosition"
-			],
-			[
-				"Ca",
-				"Calculate"
 			],
 			[
 				"vsS",
@@ -116,14 +232,6 @@
 				"newReflectionVector"
 			],
 			[
-				"vec",
-				"vec4"
-			],
-			[
-				"nor",
-				"normal"
-			],
-			[
 				"cam",
 				"Camera"
 			],
@@ -136,16 +244,8 @@
 				"xyz"
 			],
 			[
-				"nr",
-				"normal"
-			],
-			[
 				"n",
 				"normalize"
-			],
-			[
-				"defer",
-				"deferredNormalTex"
 			],
 			[
 				"deferreD",
@@ -166,10 +266,6 @@
 			[
 				"rec",
 				"reflectedColor"
-			],
-			[
-				"de",
-				"deferredDepthTex"
 			],
 			[
 				"trac",
@@ -240,26 +336,26 @@
 	"buffers":
 	[
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 1588,
+				"buffer_size": 5499,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 			"settings":
 			{
-				"buffer_size": 1190,
-				"line_ending": "Windows"
+				"buffer_size": 4940,
+				"line_ending": "Unix"
 			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 210.0,
+		"height": 110.0,
 		"selected_items":
 		[
 			[
@@ -312,14 +408,23 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
+		"/C/Temp/ssr.hlsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/Mesh.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/KoRE/demos/MainGLFW/CMakeLists.txt",
+		"/C/Users/guidoschmidt/Development/code/c++/KoRE/CMakeLists.txt",
+		"/C/Temp/test.html",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
@@ -329,17 +434,14 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.vert.glsl",
 		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
 		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
 		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
@@ -402,6 +504,17 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"ssReflectVector",
+			"0f",
+			"	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)\n	//ssReflectVec.z *= -1;",
+			"0",
+			");\n",
+			"vsReflectVec",
+			"cygwin",
+			";\n",
+			"&&)\n",
+			");\n",
+			"vec3 L = normalize(vert_LightDir.xyz);",
 			"layout (location=0) in vec3 vertex;\nlayout (location=1) in vec3 normal;\nlayout (location=2) in vec2 uv;",
 			"else",
 			"deferredReflectanceTex",
@@ -459,18 +572,18 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 1588,
+						"buffer_size": 5499,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1026,
-								1026
+								3439,
+								3439
 							]
 						],
 						"settings":
@@ -479,33 +592,34 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 330.0,
+						"translation.y": 1675.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 					"settings":
 					{
-						"buffer_size": 1190,
+						"buffer_size": 4940,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								844,
-								844
+								3046,
+								3006
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 198.0,
+						"translation.y": 1625.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -585,6 +699,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 260.0,
+	"side_bar_width": 198.0,
 	"status_bar_visible": true
 }

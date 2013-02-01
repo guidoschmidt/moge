@@ -117,7 +117,7 @@ namespace scene {
 
 		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
-		glm::vec3 position(0.0f, 10.0f, 20.0f);
+		glm::vec3 position(0.0f, 5.0f, 20.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		Camera* camera = new Camera(position, lookAt, up);
@@ -147,8 +147,6 @@ namespace scene {
 			unsigned extPos = tex_name_temp.find("." + fileextension);
 			std::string tex_name = tex_name_temp.erase(extPos);
 
-			std::cout << tex_name << std::endl;
-
 			texture diffuse;
 			diffuse.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
 			diffuse.m_type = DIFFUSE;
@@ -168,7 +166,9 @@ namespace scene {
 
 			materialman->AddMaterial(mat_name, reflectance, textures);
 		}
-		//materialman->AddCubeMap("./assets/texture/cubemaps/stockholm");
+
+		// Cubemaps
+		materialman->AddCubeMap("./assets/texture/cubemaps/stockholm");
 
 		/* MESHES ****************************************************************/
 		//! Meshes

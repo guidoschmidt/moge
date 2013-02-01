@@ -14,11 +14,11 @@ namespace scene {
 	 */
 	MaterialManager::MaterialManager()
 	{
-		textureCounter = 0; //0 is black texture
+		m_textureCounter = 0; //0 is black texture
 		m_textures.push_back(new texture());
 		LoadTexture("./assets/texture/Black.png");
-		textureCounter = 1;
-		materialCounter = 0;
+		m_textureCounter = 1;
+		m_materialCounter = 0;
 
 		ErrorCheckTexture = 0;
 		Image_id = 0;
@@ -42,8 +42,8 @@ namespace scene {
 	 */
 	void MaterialManager::AddMaterial(std::string name)
 	{
-		m_materials.push_back(new Material(materialCounter, name));
-		materialCounter++;
+		m_materials.push_back(new Material(m_materialCounter, name));
+		m_materialCounter++;
 	}
 
 
@@ -55,22 +55,22 @@ namespace scene {
 	 */
 	void MaterialManager::AddMaterial(std::string name, float reflectivity, std::vector<texture> textures)
 	{
-		m_materials.push_back(new Material(materialCounter, name));
+		m_materials.push_back(new Material(m_materialCounter, name));
 		for(unsigned int tex = 0; tex < textures.size(); tex++)
 		{
 			m_textures.push_back(new texture());
-			m_textures[textureCounter]->m_handle = textureCounter;
-			m_textures[textureCounter]->m_type = textures[tex].m_type;
-			m_textures[textureCounter]->m_filename = textures[tex].m_filename;
-			LoadTexture(m_textures[textureCounter]->m_filename);
+			m_textures[m_textureCounter]->m_handle = m_textureCounter;
+			m_textures[m_textureCounter]->m_type = textures[tex].m_type;
+			m_textures[m_textureCounter]->m_filename = textures[tex].m_filename;
+			LoadTexture(m_textures[m_textureCounter]->m_filename);
 
-			textureRef texref(textureCounter, m_textures[textureCounter]->m_type);
-			m_materials[materialCounter]->AddTexture(texref);
-			m_materials[materialCounter]->SetReflectance(reflectivity);
+			textureRef texref(m_textureCounter, m_textures[m_textureCounter]->m_type);
+			m_materials[m_materialCounter]->AddTexture(texref);
+			m_materials[m_materialCounter]->SetReflectance(reflectivity);
 
-			textureCounter++;
+			m_textureCounter++;
 		}
-		materialCounter++;
+		m_materialCounter++;
 	}
 
 
@@ -98,8 +98,8 @@ namespace scene {
 		if(loadSuccess)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			glGenTextures(1, &(m_textures[textureCounter]->m_handle));
-			glBindTexture(GL_TEXTURE_2D, m_textures[textureCounter]->m_handle);
+			glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
+			glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
 			//! Set texture's clamping
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
@@ -136,11 +136,12 @@ namespace scene {
 	void MaterialManager::LoadCubeMap(std::string filename)
 	{
 		ILboolean loadSuccess;
-		//cubemaps.push_back(cubemap_id);
+		GLuint cubemap_id;
+		m_cubemaps.push_back(cubemap_id);
 
 		glActiveTexture(GL_TEXTURE0);
-		//glGenTextures(1, &cubemaps[cubemapCounter]);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemaps[cubemapCounter]);
+		glGenTextures(1, &m_cubemaps[m_cubemapCounter]);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubemaps[m_cubemapCounter]);
 
 		std::string suffixes[] = {"posx", "negx", "posy", "negy", "posz", "negz"};
 
@@ -181,6 +182,8 @@ namespace scene {
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		m_cubemapCounter++;
 	}
 
 
@@ -226,6 +229,18 @@ namespace scene {
 	GLuint* MaterialManager::GetTextureByID(int i)
 	{
 		return &(m_textures[i]->m_handle);
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
+	GLuint* MaterialManager::GetCubeMapByID(int i)
+	{
+		return &m_cubemaps[i];
 	}
 
 } //! namespace scene

@@ -26,9 +26,9 @@ uniform mat4 MVPMatrix;
 /*** Main *********************************************************************/
 void main(void)
 {	
-	vert_Position = vec3(ViewMatrix * ModelMatrix * vec4(vertex, 1.0f));
+	vert_Position = ( ViewMatrix * ModelMatrix * vec4(vertex, 1.0f) ).xyz;
 	// Normals are multiplied with transposed inverse model view matrix
-	vert_Normal = normalize(vec3(NormalMatrix * vec4(normal, 0.0f)));
+	vert_Normal = ( NormalMatrix * vec4(normal, 0.0f) ).xyz;
 	vert_UV = uv;
 	vert_EyePosition = -vert_Position;
 

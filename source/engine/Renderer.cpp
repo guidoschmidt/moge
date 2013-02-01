@@ -27,7 +27,7 @@ static void TW_CALL SwitchRotation(void* clientData){ tw_rotation = !tw_rotation
 Renderer::Renderer(int width, int height)
 {
 	tw_rotSpeed = 0.2f;
-	m_fieldOfView = 60.0f;
+	m_fieldOfView = 45.0f;
 
 	time1 = 0.0f;
 	time2 = 0.0f;
@@ -165,12 +165,15 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/3-deferred_reflections.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/3-deferred_reflections.frag.glsl"
 		);
+		/*
 		//! Initialization of 4th pass
 		deferredProgram_Pass4_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/4-bb.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/4-bb.frag.glsl"
 		);
 		//! Fullscreen quad initialization
+		*/
+		//! Create a fullscreen quad to display deferred rendered textures
 		fsq_ptr->CreateFSQ();
 
 	InitializeMatrices();
@@ -349,6 +352,7 @@ void Renderer::CameraMovement()
 	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
 	m_fieldOfView = 50.0f - x;
+	scenegraph_ptr->GetActiveCamera()->SetFielOfView(m_fieldOfView);
 
 	/* Orientation *************************************************/
 	if(glfwGetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
@@ -437,7 +441,7 @@ void Renderer::RenderLoop(void){
 		}
 
 		//! Set background color
-		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
+		//glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
 
 		//! Input handling
 		CalculateFPS(0.5, false);
@@ -474,7 +478,7 @@ void Renderer::RenderLoop(void){
 
 			//! Drawing
 			//! Cubemap uniforms
-			//deferredProgram_Pass1_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
+			deferredProgram_Pass1_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMapByID(0)), 0);
 			deferredProgram_Pass1_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
