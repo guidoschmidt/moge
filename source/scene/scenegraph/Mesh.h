@@ -57,9 +57,9 @@ namespace scene {
 			void CreateBoundingBox(void);
 
 		public:
+			Mesh();
 			Mesh(aiMesh* m);
 			virtual ~Mesh();
-
 
 			//! Material
 			// Setter

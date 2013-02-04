@@ -1,10 +1,10 @@
 LOGFILE
 SCENE & SCENEGRAPH
 #Cameras: 0 camera
-#Meshes: 5
-Mesh #0 was added to the scenegrapg!
-Mesh #0 was added to the scenegrapg!
-Mesh #0 was added to the scenegrapg!
-Mesh #0 was added to the scenegrapg!
-Mesh #0 was added to the scenegrapg!
+#Meshes: 6
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
 Scene Processing was successfull

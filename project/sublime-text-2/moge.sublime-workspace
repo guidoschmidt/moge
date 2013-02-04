@@ -4,36 +4,60 @@
 		"selected_items":
 		[
 			[
-				"sam",
-				"samlingPosition"
+				"ss",
+				"ssPosition"
+			],
+			[
+				"vs",
+				"vsReflectVec"
 			],
 			[
 				"fra",
-				"fragmentPosition"
+				"fragment"
+			],
+			[
+				"defe",
+				"deferredDiffuseTex"
+			],
+			[
+				"frag",
+				"fragmentDepth"
+			],
+			[
+				"fr",
+				"fragmentDepth"
+			],
+			[
+				"def",
+				"deferredDepthTex"
+			],
+			[
+				"Projec",
+				"ProjectionMatrix"
+			],
+			[
+				"ssP",
+				"ssPosition"
+			],
+			[
+				"sam",
+				"sampledDepth"
+			],
+			[
+				"de",
+				"deferredDiffuseTex"
+			],
+			[
+				"ray",
+				"rayDepth"
+			],
+			[
+				"Proj",
+				"ProjectionMatrix"
 			],
 			[
 				"line",
 				"linearizeDepth"
-			],
-			[
-				"defe",
-				"deferredDepthTex"
-			],
-			[
-				"frag",
-				"fragement"
-			],
-			[
-				"vs",
-				"vsReflectVector"
-			],
-			[
-				"ss",
-				"ssReflectVector"
-			],
-			[
-				"def",
-				"deferredNormalTex"
 			],
 			[
 				"pro",
@@ -48,20 +72,12 @@
 				"ssVecPos"
 			],
 			[
-				"de",
-				"deferredNormalTex"
-			],
-			[
 				"dee",
 				"deferredNormalTex"
 			],
 			[
 				"defer",
 				"deferredPositionTex"
-			],
-			[
-				"ssP",
-				"ssPosReflect"
 			],
 			[
 				"vsPos",
@@ -194,10 +210,6 @@
 			[
 				"SSR",
 				"SSR"
-			],
-			[
-				"ray",
-				"rayDepth"
 			],
 			[
 				"ssSh",
@@ -339,16 +351,24 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 5499,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 4940,
-				"line_ending": "Unix"
+				"buffer_size": 3290,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+			"settings":
+			{
+				"buffer_size": 2413,
+				"line_ending": "Windows"
 			}
 		}
 	],
@@ -408,12 +428,13 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
 		"/C/Temp/ssr.hlsl",
@@ -439,7 +460,6 @@
 		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
 		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
-		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
@@ -567,7 +587,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -575,15 +595,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 5499,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3439,
-								3439
+								0,
+								0
 							]
 						],
 						"settings":
@@ -592,34 +612,60 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1675.0,
+						"translation.y": 4519.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 4940,
+						"buffer_size": 3290,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3046,
-								3006
+								2295,
+								2295
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1083.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+					"settings":
+					{
+						"buffer_size": 2413,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1037,
+								1037
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1625.0,
+						"translation.y": 969.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -699,6 +745,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 198.0,
+	"side_bar_width": 317.0,
 	"status_bar_visible": true
 }

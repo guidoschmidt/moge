@@ -10,7 +10,8 @@ namespace scene {
 
 	Node::Node()
 	{
-		parent = 0;
+		m_parent = 0;
+		m_type = "Node";
 	}
 
 	Node::~Node()
@@ -20,13 +21,13 @@ namespace scene {
 	//! Set the node's parent node
 	void Node::SetParent(Node* p)
 	{
-		parent = p;
+		m_parent = p;
 	}
 
 	//! Get the node's parent node
 	Node* Node::GetParent()
 	{
-		return parent;
+		return m_parent;
 	}
 
 	//! Add a child node
@@ -50,6 +51,12 @@ namespace scene {
 	void Node::Draw(void)
 	{
 
+	}
+
+	//!
+	std::string Node::GetType(void)
+	{
+		return m_type;
 	}
 
 } //! namespace scene

@@ -44,6 +44,7 @@ namespace scene {
 
 			//! Setter
 			void SetMatrix(glm::mat4);
+			void SetPosition(glm::vec3);
 
 			//! Getter
 			glm::mat4 GetModelMatrix(void);

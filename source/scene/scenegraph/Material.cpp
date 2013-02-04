@@ -8,7 +8,7 @@
 
 namespace scene {
 
-
+	//! Constructor
 	Material::Material(int mat_id, std::string mat_name)
 	{
 		//! Identification

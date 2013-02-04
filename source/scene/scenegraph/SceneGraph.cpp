@@ -13,10 +13,12 @@ namespace scene {
 	//! Constructor
 	SceneGraph::SceneGraph()
 	{
-		setupComplete = false;
-		writeLogFile = true;
+		m_setupComplete = false;
+		m_writeLogFile = true;
 
-		activeCamera = 0;
+		m_activeCamera_ptr = 0;
+
+		m_lightMatIndex = -1;
 
 		Initialize();
 	}
@@ -25,8 +27,8 @@ namespace scene {
 	//! Destructor
 	SceneGraph::~SceneGraph()
 	{
-		if(writeLogFile)
-			logfile.close();
+		if(m_writeLogFile)
+			m_logfile.close();
 	}
 
 
@@ -36,16 +38,16 @@ namespace scene {
 	 */
 	void SceneGraph::Initialize(void)
 	{
-		materialman = Singleton<scene::MaterialManager>::Instance();
+		m_materialman_ptr = Singleton<scene::MaterialManager>::Instance();
 
 		Node root();
 
-		if(writeLogFile)
+		if(m_writeLogFile)
 		{
-			logfile.open("logs/scene.txt");
+			m_logfile.open("logs/scene.txt");
 
-			logfile << "LOGFILE" << std::endl;
-			logfile << "SCENE & SCENEGRAPH" << std::endl;
+			m_logfile << "LOGFILE" << std::endl;
+			m_logfile << "SCENE & SCENEGRAPH" << std::endl;
 		}
 	}
 
@@ -60,19 +62,19 @@ namespace scene {
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
-			scene = aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials );
-			if(!scene)
+			m_scene_ptr = m_aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials );
+			if(!m_scene_ptr)
 			{
-				logfile << "ERROR | assimp: could not import " << filename << std::endl;
+				m_logfile << "ERROR | assimp: could not import " << filename << std::endl;
 			}
 			else
 			{
-				ProcessScene(scene);
+				ProcessScene(m_scene_ptr);
 			}
 		}
 		else
 		{
-			logfile << "ERROR | assimp: file " << filename << " could not be read!" << std::endl;
+			m_logfile << "ERROR | assimp: file " << filename << " could not be read!" << std::endl;
 		}
 		infile.close();
 	}
@@ -86,7 +88,7 @@ namespace scene {
 	void SceneGraph::ProcessScene(const aiScene* scene)
 	{
 		//! Cameras
-		logfile << "#Cameras: " << scene->mNumCameras << " camera" << std::endl;
+		m_logfile << "#Cameras: " << scene->mNumCameras << " camera" << std::endl;
 		//! TODO Camera import stuff, blender-collada export doesnt provide correct camera coordinates
 		/*!
 		 * Incomment code for correct import of camera
@@ -121,8 +123,8 @@ namespace scene {
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		Camera* camera = new Camera(position, lookAt, up);
-		activeCamera = camera;
-		root.AddChild(camera);
+		m_activeCamera_ptr = camera;
+		m_root.AddChild(camera);
 
 		/* MATERIALS ****************************************************************/
 		//! Materials
@@ -133,6 +135,13 @@ namespace scene {
 			aiString ai_mat_name;
 			aiGetMaterialString(material, AI_MATKEY_NAME, &ai_mat_name);
 			std::string mat_name = &(ai_mat_name.data[0]);
+
+			//! Check if material is Light
+			if(mat_name == "Light")
+			{
+				m_lightMatIndex = mat;
+				std::cout << "matLightIndex = " << m_lightMatIndex << std::endl;
+			}
 
 			//! Get material's textures
 			aiString ai_tex_path;
@@ -164,49 +173,75 @@ namespace scene {
 			if(mat_name == "Cobblestone")
 				reflectance = 1.0f;
 
-			materialman->AddMaterial(mat_name, reflectance, textures);
+			m_materialman_ptr->AddMaterial(mat_name, reflectance, textures);
 		}
 
 		// Cubemaps
-		materialman->AddCubeMap("./assets/texture/cubemaps/stockholm");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/stockholm");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
-		logfile << "#Meshes: " << scene->mNumMeshes << std::endl;
+		m_logfile << "#Meshes: " << scene->mNumMeshes << std::endl;
 		for(unsigned int c = 0; c < scene->mRootNode->mNumChildren; c++)
 		{
 			for(unsigned int m = 0; m < scene->mRootNode->mChildren[c]->mNumMeshes; m++)
 			{
 				//! Get mesh and create new scenegraph node
 				unsigned int meshID = scene->mRootNode->mChildren[c]->mMeshes[m];
-				Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
 				//! Get material index of mesh
 				unsigned int material_index = scene->mMeshes[meshID]->mMaterialIndex;
-				mesh->SetMaterial(materialman->GetMaterial(material_index));
 
 				//! Get aiNode's transformation
 				aiVector3D aiPosition, aiScale;
 				aiQuaternion aiRotation;
 				scene->mRootNode->mChildren[c]->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
 
-				//! Convert the aiNode's transformation and store them in mesh
-				//! Translation
-				glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
-				mesh->Translate(position);
-				//! Scale
-				glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
-				mesh->Scale(scale);
-				//! Rotation
-				glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
-				mesh->RotateQuat(rotation);
+				//! It's light geometry
+				if(material_index == m_lightMatIndex)
+				{
+					std::cout << "index = " << material_index << std::endl;
+					m_pointLightMesh = new Mesh(scene->mMeshes[meshID]);
+					Light* light = new Light(glm::vec3(0.0f), 1.0f, glm::vec3(1.0f), POINT);
+					//! Convert the aiNode's transformation and store them in mesh
+					//! Translation
+					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
+					light->Translate(position);
+					//! Scale
+					glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
+					light->Scale(scale);
+					//! Rotation
+					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
+					light->RotateQuat(rotation);
 
-				//! Add mesh to scenegraph
-				root.AddChild(mesh);
-				logfile << "Mesh #" << m << " was added to the scenegrapg!" << std::endl;
+					m_root.AddChild(light);
+					std::cout << "Light #" << m << " was added to the scenegraph!" << std::endl;
+				}
+				//! It's mesh geometry
+				else
+				{
+					Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
+					mesh->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
+
+					//! Convert the aiNode's transformation and store them in mesh
+					//! Translation
+					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
+					mesh->Translate(position);
+					//! Scale
+					glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
+					mesh->Scale(scale);
+					//! Rotation
+					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
+					mesh->RotateQuat(rotation);
+
+					//! Add mesh to scenegraph
+					m_root.AddChild(mesh);
+					m_logfile << "Mesh #" << m << " was added to the scenegraph!" << std::endl;
+				}
 			}
 		}
-		logfile << "Scene Processing was successfull" << std::endl;
-		setupComplete = true;
+
+		m_logfile << "Scene Processing was successfull" << std::endl;
+		m_setupComplete = true;
 	}
 
 
@@ -217,7 +252,7 @@ namespace scene {
 	 */
 	void SceneGraph::Logging(bool logging)
 	{
-		writeLogFile = logging;
+		m_writeLogFile = logging;
 	}
 
 
@@ -228,7 +263,7 @@ namespace scene {
 	 */
 	unsigned int SceneGraph::NodeCount(void)
 	{
-		return root.ChildrenCount();
+		return m_root.ChildrenCount();
 	}
 
 
@@ -240,7 +275,7 @@ namespace scene {
 	 */
 	Node* SceneGraph::GetNode(int i)
 	{
-		return root.GetChild(i);
+		return m_root.GetChild(i);
 	}
 
 
@@ -251,8 +286,8 @@ namespace scene {
 	 */
 	Camera* SceneGraph::GetActiveCamera(void)
 	{
-		if(activeCamera != 0)
-			return activeCamera;
+		if(m_activeCamera_ptr != 0)
+			return m_activeCamera_ptr;
 		else
 			return new Camera();
 	}
@@ -264,12 +299,12 @@ namespace scene {
 	 */
 	glm::mat4 SceneGraph::DrawNodes()
 	{
-		if(setupComplete)
+		if(m_setupComplete)
 		{
-			for(unsigned int i = 0; i < root.ChildrenCount(); i++)
+			for(unsigned int i = 0; i < m_root.ChildrenCount(); i++)
 			{
-				root.GetChild(i)->Draw();
-				return root.GetChild(i)->GetModelMatrix();
+				m_root.GetChild(i)->Draw();
+				return m_root.GetChild(i)->GetModelMatrix();
 			}
 		}
 		return glm::mat4(1.0f);
@@ -284,13 +319,13 @@ namespace scene {
 	 */
 	glm::mat4 SceneGraph::DrawNode(unsigned int i)
 	{
-		if((i >= 0) && (i < root.ChildrenCount()))
+		if((i >= 0) && (i < m_root.ChildrenCount()))
 		{
 			//! Check if mesh
-			if(dynamic_cast<Mesh*>(root.GetChild(i)) != 0)
+			if(dynamic_cast<Mesh*>(m_root.GetChild(i)) != 0)
 			{
-				root.GetChild(i)->Draw();
-				return root.GetChild(i)->GetModelMatrix();
+				m_root.GetChild(i)->Draw();
+				return m_root.GetChild(i)->GetModelMatrix();
 			}
 			//!TODO check if camera or light
 		}

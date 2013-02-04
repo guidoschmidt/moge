@@ -30,25 +30,33 @@ namespace scene {
 	std::vector<Node*>* SceneOrganizer::OrganizeByMaterial(void)
 	{
 		std::cout << "Organizing Scene" << std::endl;
+		int lightindex;
 		for(unsigned int m = 0; m < m_materialman_ptr->MaterialCount(); m++)
 		{
 			for(unsigned int i = 0; i < m_scenegraph_ptr->NodeCount(); i++)
 			{
-				if(dynamic_cast<Mesh*>(m_scenegraph_ptr->GetNode(i)) != 0)
+				if(m_scenegraph_ptr->GetNode(i)->GetType() == "Mesh")
 				{
 					int node_mat_id = dynamic_cast<Mesh*>(m_scenegraph_ptr->GetNode(i))->GetMaterial()->GetMaterialID();
 					int sort_mat_id = m_materialman_ptr->GetMaterial(m)->GetMaterialID();
 					if(node_mat_id == sort_mat_id)
 						m_renderQ.push_back(m_scenegraph_ptr->GetNode(i));
 				}
+				if(m_scenegraph_ptr->GetNode(i)->GetType() == "Light")
+					lightindex = i;
 			}
 		}
+		//! Push Lights
+		m_renderQ.push_back(m_scenegraph_ptr->GetNode(lightindex));
 
 		//! Put organized node-list onto console
 		std::cout << "Organized RenderQ (by material): ";
 		for(unsigned int x=0; x < m_renderQ.size(); x++)
 		{
-			std::cout << "(" << x << ")" << static_cast<Mesh*>(m_renderQ[x])->GetMaterial()->GetName() << ", ";
+			if(m_renderQ[x]->GetType() == "Mesh")
+				std::cout << "(" << x << ")" << static_cast<Mesh*>(m_renderQ[x])->GetMaterial()->GetName() << ", ";
+			if(m_renderQ[x]->GetType() == "Light")
+				std::cout << "(" << x << ")" << "Light" << ", ";
 		}
 
 		return &m_renderQ;

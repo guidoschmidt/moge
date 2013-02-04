@@ -10,7 +10,7 @@ namespace scene {
 
 	Transformation::Transformation()
 	{
-		// TODO
+
 	}
 
 	Transformation::~Transformation()
@@ -62,6 +62,12 @@ namespace scene {
 	glm::vec3 Transformation::GetPosition(void)
 	{
 		return m_position;
+	}
+
+
+	void Transformation::SetPosition(glm::vec3 position)
+	{
+		m_position = position;
 	}
 
 } //! namespace scene

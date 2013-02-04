@@ -13,12 +13,48 @@ namespace scene {
 	 *
 	 * @param m
 	 */
+	Mesh::Mesh()
+	{
+		m_type = "Mesh";
+		m_translationMatrix = glm::mat4(1.0f);
+		m_rotationMatrix = glm::mat4(0.0f);
+		m_scaleMatrix = glm::mat4(1.0f);
+		m_modelMatrix = glm::mat4(1.0f);
+
+		m_boundingBox.max = glm::vec3( 0.0f,  0.0f,  0.0f);
+		m_boundingBox.min = glm::vec3( 0.0f,  0.0f,  0.0f);
+
+		VAO_id = 0;
+		BBVAO_id = 0;
+		VBO_id = 0;
+		IBO_id = 0;
+		NBO_id = 0;
+		UVBO_id = 0;
+		BBO_id = 0;
+		BBIO_id = 0;
+		material_ptr = 0;
+		mesh_ptr = 0;
+		ErrorCheckMesh = 0;
+	}
+
+
+	//! Constructor
+	/*!
+	 *
+	 * @param m
+	 */
 	Mesh::Mesh(aiMesh* m)
 	{
+		m_type = "Mesh";
 		mesh_ptr = m;
 		Initialize();
 		CreateBuffers();
 		Material material();
+
+		m_translationMatrix = glm::mat4(1.0f);
+		m_rotationMatrix = glm::mat4(0.0f);
+		m_scaleMatrix = glm::mat4(1.0f);
+		m_modelMatrix = glm::mat4(1.0f);
 
 		m_boundingBox.max = glm::vec3( 0.0f,  0.0f,  0.0f);
 		m_boundingBox.min = glm::vec3( 0.0f,  0.0f,  0.0f);
@@ -293,6 +329,5 @@ namespace scene {
 	{
 		return (Singleton<MaterialManager>::Instance()->GetTextureByID(material_ptr->GetTextureID(type)));
 	}
-
 
 } //! namespace scene

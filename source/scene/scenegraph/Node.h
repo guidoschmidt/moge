@@ -7,7 +7,10 @@
 #ifndef NODE_H_
 #define NODE_H_
 
+//! C++ includes
 #include <vector>
+#include <string>
+//! Local includes
 #include "Transformation.h"
 
 namespace scene {
@@ -18,8 +21,9 @@ namespace scene {
 
 		protected:
 			//! Hierarchy
-			Node* parent;
+			Node* m_parent;
 			std::vector<Node*> children;
+			std::string m_type;
 
 		public:
 			Node();
@@ -35,6 +39,8 @@ namespace scene {
 			unsigned int ChildrenCount(void);
 
 			virtual void Draw(void);
+
+			std::string GetType(void);
 		};
 
 } //! namespace scene

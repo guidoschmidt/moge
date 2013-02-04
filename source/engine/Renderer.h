@@ -55,7 +55,7 @@ class Renderer
 		Context* context_ptr;
 		FSQ* fsq_ptr;
 		ShaderProgram 	*forwardProgram_ptr,
-						*deferredProgram_Pass1_ptr,
+						*m_gBufferProgram_ptr,
 						*deferredProgram_Pass2_ptr,
 						*deferredProgram_Pass3_ptr,
 						*deferredProgram_Pass4_ptr;
@@ -78,6 +78,8 @@ class Renderer
 
 		float tw_rotSpeed;
 		bool tw_mouseLight;
+		bool tw_useNormalMapping;
+		bool tw_drawLights;
 		float tw_deltaDepth;
 		bool tw_SSR;
 		bool tw_blur;

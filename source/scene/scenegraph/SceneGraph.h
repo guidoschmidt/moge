@@ -26,44 +26,52 @@
 //! Local includes
 #include "../../utilities/Singleton.h"
 #include "../MaterialManager.h"
-#include "Node.h"
 #include "Camera.h"
-#include "Mesh.h"
+#include "Light.h"
 #include "Material.h"
+#include "Mesh.h"
+#include "Node.h"
 
 namespace scene {
 
 	class SceneGraph {
 
 		private:
-			bool setupComplete;
-			Camera* activeCamera;
+			bool m_setupComplete;
+			Camera* m_activeCamera_ptr;
 
 			//! Assimp
-			Assimp::Importer aiImporter;
-			const aiScene* scene;
+			Assimp::Importer m_aiImporter;
+			const aiScene* m_scene_ptr;
 
 			//! Node hierachry
-			Node root;
+			Node m_root;
 
 			//! Material manager
-			scene::MaterialManager* materialman;
+			scene::MaterialManager* m_materialman_ptr;
 
 			//! Logfile
-			bool writeLogFile;
-			std::ofstream logfile;
+			bool m_writeLogFile;
+			std::ofstream m_logfile;
 
 			//! Matrix-stack
 			std::stack<glm::mat4> matrixStack;
 
+			//! Light geometry
+			unsigned int m_lightMatIndex;
+
+		protected:
+			void ProcessScene(const aiScene* scene);
+
 		public:
+			Mesh* m_pointLightMesh;
+
 			SceneGraph();
 			virtual ~SceneGraph();
 
 			void Initialize(void);
 
 			void LoadSceneFromFile(const std::string filename);
-			void ProcessScene(const aiScene* scene);
 
 			void Logging(bool logging);
 

@@ -127,9 +127,9 @@ vec4 SSR()
 		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
 		
 		// intersection found
-		if(rayDepth > sampledDepth)
+		if(rayDepth >= sampledDepth)
 		{
-			if(abs(rayDepth - sampledDepth) < 0.002f)
+			if(abs(rayDepth - sampledDepth) < 0.005f)
 			{
 				// Blur implemented as simple averaging along x and y axis
 				if(blur)
@@ -229,7 +229,7 @@ void main(void)
 		{
 			if(reflectance > 0.0f)
 			{
-				FragColor = reflectance * SSR() + (1.0f - reflectance) * shaded;
+				FragColor = reflectance * SSR(); // + (1.0f - reflectance) * shaded;
 			}
 		}
 	}

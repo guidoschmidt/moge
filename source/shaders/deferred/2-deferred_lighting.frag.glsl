@@ -43,7 +43,7 @@ uniform MouseInfo Mouse;
 
 uniform int textureID;
 
-uniform bool mouseLight;
+//uniform bool mouseLight;
 
 uniform float Shininess;
 
@@ -73,24 +73,23 @@ void main(void)
 	// Lightposition to view space, and control it with mouse
 	vec4 lightPosition = ProjectionMatrix * ViewMatrix * Light.Position;
 	
-	if(mouseLight)
-	{
-		float mouseX = Mouse.X/Screen.Width;
-		float mouseY = Mouse.Y/Screen.Height;
-		mouseX = ((mouseX - 0.5f) * 2.0f);
-		mouseY = ((mouseY - 0.5f) * 2.0f);
-	
-		lightPosition.x += 20.0f * mouseX;
-		lightPosition.z += 20.0f * mouseY;
-	}
-	
 	// Gather G-Buffer information from textures
 	vec3 position = vec3(texture(deferredPositionTex, vert_UV));
 	vec3 normal = vec3(texture(deferredNormalTex, vert_UV));
 	vec3 diffuseColor = vec3(texture(deferredColorTex, vert_UV));
 	float depth = float(texture(deferredDepthTex,vert_UV));
+	vec3 materialID = texture(deferredMaterialIDTex, vert_UV).rgb;
 
 	// Shading
 	// Diffuse
-	FragColor = vec4(diffuseShading(position, normal, diffuseColor, lightPosition), 1.0f);
+	vec4 shaded = vec4(0.0f);
+	
+	if(materialID == 0.0f)
+		shaded = vec4(Light.Diffuse, 1.0f);
+	else
+		shaded = vec4(diffuseShading(position, normal, diffuseColor, lightPosition), 1.0f);	
+
+
+	FragColor = shaded;
+
 }
