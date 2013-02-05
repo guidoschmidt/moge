@@ -79,42 +79,37 @@ vec4 SSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float initalStep = 0.01f;
-	float stepSize = 0.025f;
+	float initalStep = 0.001f;
+	float stepSize = 0.01f;
 	float blurSize = 1.0f;
 
 	// Current fragment
 	vec2 fragment = gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
+	vec2 ssfragment = 0.5f * fragment + 0.5f;
+	vec3 ssPosition = vec3(ssfragment, 0.0f);
+	ssPosition.z = linearizeDepth( texture(deferredDepthTex, vert_UV) ); 
 
 	// Normal & position
 	vec3 vsNormal = normalize(texture(deferredNormalTex, fragment).xyz);
 	vec3 vsPosition = texture(deferredPositionTex, fragment).xyz;
-	vec3 ssPosition = (ProjectionMatrix * vec4(vsPosition, 1.0f)).xyz;
-	ssPosition = (0.5f * ssPosition) + 0.5f;
 	
 	// View vector
-	vec3 vsViewVec = -ssPosition;
+	vec3 vsViewVec = normalize( -ssPosition );
+	vsViewVec.y -= Camera.Position.y;
 
 	// Reflection vector
-	vec3 vsReflectVec = reflect(normalize(vsViewVec), normalize(vsNormal));
+	vec3 vsReflectVec = reflect(vsViewVec, vsNormal);
 	vsReflectVec = normalize(vsReflectVec);
-	vsReflectVec += ssPosition;
-	vec3 ssReflectVec = (vec4(vsReflectVec, 0.0f) * ProjectionMatrix).xyz / vsReflectVec.z;
-	ssReflectVec = (0.5f * ssReflectVec) + 0.5f;
-	ssReflectVec -= ssPosition;
-
-	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)
-	//ssReflectVec.z *= -1;
 
 	// Initialze traced ray
-	vec3 initialRay = ssReflectVec * (initalStep); 
+	vec3 initialRay = vsReflectVec * initalStep; 
 
 	vec3 tracedRay = initialRay;
 	// Get depth informations
 	float fragmentDepth = linearizeDepth(texture(deferredDepthTex, fragment)); 
-	vec2 samplingPosition = fragment + tracedRay.xy;
-	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
-	float rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) / fragmentDepth;
+	vec3 samplingPosition = ssPosition + tracedRay;
+	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition.xy));
+	float rayDepth =  ssPosition.z + tracedRay.z * fragmentDepth;
 
 	// Ray tracing while in screen space
 	int count = 0;
@@ -122,12 +117,13 @@ vec4 SSR()
 			samplingPosition.y > 0.0f && samplingPosition.y < 1.0f)
 	{
 		// Update sampling position and depth values
-		samplingPosition = fragment + tracedRay.xy;
-		sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition));
-		rayDepth = fragmentDepth + linearizeDepth(tracedRay.z) * fragmentDepth;
+		samplingPosition.x = (2.0f * ssPosition.x - 1.0f) + tracedRay.x;
+		samplingPosition.y = (2.0f * ssPosition.y - 1.0f) + tracedRay.y;
+		sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition.xy) );
+		rayDepth = ssPosition.z + tracedRay.z * fragmentDepth;
 		
 		// intersection found
-		if(rayDepth >= sampledDepth)
+		if(rayDepth > sampledDepth)
 		{
 			if(abs(rayDepth - sampledDepth) < 0.005f)
 			{
@@ -139,7 +135,7 @@ vec4 SSR()
 					float size = blurSize/100.0f;
 					for(float i = -0.01f; i < size; i+=0.001)
 					{
-						vec2 pos = samplingPosition;
+						vec2 pos = samplingPosition.xy;
 						pos += i;
 
 						if(jittering)
@@ -148,7 +144,7 @@ vec4 SSR()
 							float randomY = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Height * 500f);
 						 	pos += vec2(randomX, randomY);
 						}
-
+ 
 						sum += vec3(texture(deferredDiffuseTex, pos));
 					}
 					sum /= (2 * size) * 1000;
@@ -157,7 +153,8 @@ vec4 SSR()
 				}
 				// No blur
 				else{
-					fragmentColor = vec4(texture(deferredDiffuseTex, samplingPosition).rgb, 1.0f);	
+					fragmentColor = vec4( textureLod(deferredDiffuseTex, samplingPosition.xy, 5).rgb, 1.0f );
+					break;
 				}
 			}
 			// Ray tracing termination
@@ -203,7 +200,7 @@ vec4 SSR()
 		else if(fragment.x > (divider + offset))
 			fragmentColor = vec4(vsNormal, 1.0f);
 		else
-			fragmentColor = vec4(tracedRay, 1.0f);	
+			fragmentColor = vec4(vsReflectVec, 1.0f);	
 	}
 
 	// Return color from sampled fragment
@@ -229,9 +226,10 @@ void main(void)
 		{
 			if(reflectance > 0.0f)
 			{
-				FragColor = reflectance * SSR(); // + (1.0f - reflectance) * shaded;
+				FragColor = reflectance * SSR() + (1.0f - reflectance) * shaded;
 			}
 		}
+		//FragColor = SSR();
 	}
 	// Positions
 	else if(textureID == 0)

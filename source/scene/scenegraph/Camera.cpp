@@ -214,7 +214,7 @@ namespace scene {
 	//! Resets the camera to an inital position
 	void Camera::Reset(void)
 	{
-		m_position = glm::vec3(0.0f, 5.0f, 10.0f);
+		m_position = glm::vec3(0.0f, 25.0f, 50.0f);
 		m_lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
 		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 

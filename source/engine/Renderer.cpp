@@ -346,11 +346,11 @@ void Renderer::KeyboardFunction(void)
 	}
 	if(glfwGetKey('Z'))
 	{
-		LightPosition.y += 0.01f;
+		LightPosition.y += m_speed;
 	}
 	if(glfwGetKey('H'))
 	{
-		LightPosition.y -= 0.01f;
+		LightPosition.y -= m_speed;
 	}
 	if(tw_mouseLight)
 	{

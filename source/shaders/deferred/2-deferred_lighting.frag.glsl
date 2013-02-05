@@ -84,8 +84,10 @@ void main(void)
 	// Diffuse
 	vec4 shaded = vec4(0.0f);
 	
+	// Lights are shaded only with lightcolor
 	if(materialID == 0.0f)
 		shaded = vec4(Light.Diffuse, 1.0f);
+	// Everything else is shaded with diffuse shading	
 	else
 		shaded = vec4(diffuseShading(position, normal, diffuseColor, lightPosition), 1.0f);	
 

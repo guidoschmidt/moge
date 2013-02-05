@@ -122,7 +122,7 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 void FrameBufferObject::Use(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
-
+	glGenerateMipmap(GL_TEXTURE_2D);
 	GLenum drawBuffers[5] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
 	glDrawBuffers(5, drawBuffers);
 

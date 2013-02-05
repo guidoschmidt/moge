@@ -66,7 +66,7 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 void main(void)
 {
 	// G-Buffer: Position
-	Position = normalize(vert_Position);
+	Position = vert_Position;
 	// G-Buffer: Color/Albedo
 	Color = texture(colorTex, vert_UV).rgb;
 	// G-Buffer: Normal
@@ -99,6 +99,7 @@ void main(void)
 			MaterialIDs.r = 0.0f;
 			MaterialIDs.g = 0.0f;
 			MaterialIDs.b = 0.0f;
+			Reflectance.a = 0.0f;
 			break;
 		case 0:
 			MaterialIDs.r = 1.0f;
