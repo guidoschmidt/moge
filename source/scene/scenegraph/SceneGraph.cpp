@@ -87,36 +87,6 @@ namespace scene {
 	 */
 	void SceneGraph::ProcessScene(const aiScene* scene)
 	{
-		//! Cameras
-		m_logfile << "#Cameras: " << scene->mNumCameras << " camera" << std::endl;
-		//! TODO Camera import stuff, blender-collada export doesnt provide correct camera coordinates
-		/*!
-		 * Incomment code for correct import of camera
-		 *
-		if(scene->HasCameras())
-		{
-			for(unsigned int cam = 0; cam < scene->mNumCameras; cam++)
-			{
-
-				glm::vec3 position(	scene->mCameras[cam]->mPosition.x,
-									scene->mCameras[cam]->mPosition.y,
-									scene->mCameras[cam]->mPosition.z);
-				glm::vec3 lookAt(	scene->mCameras[cam]->mLookAt.x,
-									scene->mCameras[cam]->mLookAt.y,
-									scene->mCameras[cam]->mLookAt.y);
-				glm::vec3 up(		scene->mCameras[cam]->mUp.x,
-									scene->mCameras[cam]->mUp.y,
-									scene->mCameras[cam]->mUp.z);
-				Camera* camera = new Camera(position, lookAt, up);
-
-				root.AddChild(camera);
-				activeCamera = camera;
-				logfile << "#Camera(" << cam << ") @ (" << position.x << "|" << position.y << "|" << position.z << ")" << std::endl;
-				logfile << "#Camera-LookAt(" << cam << ") @ (" << lookAt.x << "|" << lookAt.y << "|" << lookAt.z << ")" << std::endl;
-
-			}
-		}*/
-
 		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
 		glm::vec3 position(0.0f, 25.0f, 50.0f);
@@ -137,16 +107,16 @@ namespace scene {
 			std::string mat_name = &(ai_mat_name.data[0]);
 
 			//! Check if material is Light
-			if(mat_name == "Light")
+			std::string contains_light("Light");
+			if(mat_name.find(contains_light) != std::string::npos)
 			{
 				m_lightMatIndex = mat;
-				std::cout << "matLightIndex = " << m_lightMatIndex << std::endl;
 			}
 
 			//! Get material's textures
 			aiString ai_tex_path;
 			std::vector<texture> textures;
-			//! Diffuse
+
 			//! File-extension and folder of textures
 			std::string fileextension = "tga";
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path);
@@ -156,22 +126,29 @@ namespace scene {
 			unsigned extPos = tex_name_temp.find("." + fileextension);
 			std::string tex_name = tex_name_temp.erase(extPos);
 
+			//! Diffuse
 			texture diffuse;
 			diffuse.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
 			diffuse.m_type = DIFFUSE;
 			textures.push_back(diffuse);
 
-			if(mat_name == "Tiles" || mat_name == "Skin")
+			float reflectance = 0.0f;
+			if(mat_name == "Cobblestone")
+				reflectance = 1.0f;
+
+			//! Console output
+			std::cout << "\nMaterial " << mat << ":" << mat_name << std::endl;
+			std::cout << "	Textures: " << std::endl;
+			std::cout << "	" << diffuse.m_type << ": " << diffuse.m_filename << std::endl;
+			//! Normal
+			if(mat_name == "Street" || mat_name == "Skin" || mat_name == "Tiles")
 			{
 				texture normal;
 				normal.m_filename = "./assets/texture/" + fileextension + "/" + tex_name + "_normal." + fileextension;
 				normal.m_type = NORMAL;
 				textures.push_back(normal);
+				std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
 			}
-
-			float reflectance = 0.0f;
-			if(mat_name == "Cobblestone")
-				reflectance = 1.0f;
 
 			m_materialman_ptr->AddMaterial(mat_name, reflectance, textures);
 		}
@@ -311,7 +288,7 @@ namespace scene {
 	}
 
 
-	//! Draws a given node of the scenegraph
+	//! Draws a single node of the scenegraph
 	/*!
 	 *
 	 * @param i

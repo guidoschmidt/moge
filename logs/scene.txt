@@ -1,6 +1,5 @@
 LOGFILE
 SCENE & SCENEGRAPH
-#Cameras: 0 camera
 #Meshes: 6
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!

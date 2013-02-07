@@ -39,6 +39,7 @@ uniform bool blur;
 uniform bool compareDepth;
 uniform bool showReflVecs;
 uniform bool jittering;
+uniform bool mouseSlider;
 
 uniform float deltaDepth;
 	
@@ -50,8 +51,10 @@ uniform sampler2D deferredColorTex;
 uniform sampler2D deferredNormalTex;
 uniform sampler2D deferredMaterialIDTex;
 uniform sampler2D deferredReflectanceTex;
-uniform sampler2D deferredDepthTex;
+uniform sampler2D deferredReflecVecTex;
+uniform sampler2D deferredZTex;
 uniform sampler2D deferredDiffuseTex;
+uniform sampler2D deferredDepthTex;
 
 
 /*** Functions ****************************************************************/ 
@@ -79,15 +82,15 @@ vec4 SSR()
 {
 	// Variables
 	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float initalStep = 0.001f;
-	float stepSize = 0.01f;
+	float initalStep = 0.06f;
+	float stepSize = 1.0f/Screen.Width;
 	float blurSize = 1.0f;
 
 	// Current fragment
 	vec2 fragment = gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
-	vec2 ssfragment = 0.5f * fragment + 0.5f;
+	vec2 ssfragment = 2.0f * fragment - 1.0f;
 	vec3 ssPosition = vec3(ssfragment, 0.0f);
-	ssPosition.z = linearizeDepth( texture(deferredDepthTex, vert_UV) ); 
+	ssPosition.z =  linearizeDepth( texture(deferredDepthTex, vert_UV) ); 
 
 	// Normal & position
 	vec3 vsNormal = normalize(texture(deferredNormalTex, fragment).xyz);
@@ -95,113 +98,93 @@ vec4 SSR()
 	
 	// View vector
 	vec3 vsViewVec = normalize( -ssPosition );
-	vsViewVec.y -= Camera.Position.y;
+	//vsViewVec -= Camera.Position;
 
 	// Reflection vector
-	vec3 vsReflectVec = reflect(vsViewVec, vsNormal);
-	vsReflectVec = normalize(vsReflectVec);
+	vec4 ReflectVec = texture(deferredReflecVecTex, fragment);
+	vec3 vsReflectVec = normalize(ReflectVec ).xyz / ReflectVec.z;
+	//vec3 vsReflectVec = reflect( vsViewVec, vsNormal);
+	//vsReflectVec = normalize(vsReflectVec);
+	vsReflectVec = vsReflectVec * initalStep;
 
-	// Initialze traced ray
-	vec3 initialRay = vsReflectVec * initalStep; 
-
-	vec3 tracedRay = initialRay;
 	// Get depth informations
-	float fragmentDepth = linearizeDepth(texture(deferredDepthTex, fragment)); 
-	vec3 samplingPosition = ssPosition + tracedRay;
-	float sampledDepth = linearizeDepth(texture(deferredDepthTex, samplingPosition.xy));
-	float rayDepth =  ssPosition.z + tracedRay.z * fragmentDepth;
+	float fragmentDepth = linearizeDepth( texture(deferredDepthTex, fragment) ); 
+	vec2 samplingPosition = fragment + (vsReflectVec.xy);
+	float sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition) );
+	float rayDepth = fragmentDepth + vsReflectVec.z;
 
 	// Ray tracing while in screen space
 	int count = 0;
+	
+	/*
 	while(	samplingPosition.x > 0.0f && samplingPosition.x < 1.0f &&
 			samplingPosition.y > 0.0f && samplingPosition.y < 1.0f)
 	{
 		// Update sampling position and depth values
-		samplingPosition.x = (2.0f * ssPosition.x - 1.0f) + tracedRay.x;
-		samplingPosition.y = (2.0f * ssPosition.y - 1.0f) + tracedRay.y;
-		sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition.xy) );
-		rayDepth = ssPosition.z + tracedRay.z * fragmentDepth;
+		samplingPosition = fragment + vsReflectVec.xy;
+		sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition) );
+		rayDepth = vsReflectVec.z;
+
+		// Manually break
+		if(count == 500)
+			break;
 		
 		// intersection found
 		if(rayDepth > sampledDepth)
 		{
-			if(abs(rayDepth - sampledDepth) < 0.005f)
-			{
-				// Blur implemented as simple averaging along x and y axis
-				if(blur)
-				{
-					// @TODO Jittering, blur in negative & positive x,y-axis
-					vec3 sum = vec3(0.0f);
-					float size = blurSize/100.0f;
-					for(float i = -0.01f; i < size; i+=0.001)
-					{
-						vec2 pos = samplingPosition.xy;
-						pos += i;
-
-						if(jittering)
-						{
-							float randomX = clamp(rand(gl_FragCoord.xy), 0, 1)/(Screen.Width * 500f);
-							float randomY = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Height * 500f);
-						 	pos += vec2(randomX, randomY);
-						}
- 
-						sum += vec3(texture(deferredDiffuseTex, pos));
-					}
-					sum /= (2 * size) * 1000;
-					
-					fragmentColor = vec4(sum, 1.0f);
-				}
-				// No blur
-				else{
-					fragmentColor = vec4( textureLod(deferredDiffuseTex, samplingPosition.xy, 5).rgb, 1.0f );
-					break;
-				}
-			}
-			// Ray tracing termination
+			//float delta = abs(rayDepth - sampledDepth);
+			fragmentColor = vec4( texture(deferredDiffuseTex, samplingPosition).rgb, 1.0f );	
+			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 1.0f );	
 			break;
 		}
-		else
-			fragmentColor = vec4(texture(deferredDiffuseTex, fragment).rgb, 1.0f);
-
-
+		
 		//Jitter the initial ray
 		if(jittering)
 		{
 			float randomOffset1 = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Width  * 15000f);
 			float randomOffset2 = clamp(rand(gl_FragCoord.xy), 0, 1)/(Screen.Height * 15000f);
 			float randomOffset3 = clamp(rand(gl_FragCoord.zz), 0, 1)/(fragmentDepth * 15000f);
-			tracedRay += vec3(randomOffset1, randomOffset2, 0);
+			vsReflectVec += vec3(randomOffset1, randomOffset2, 0);
 			stepSize += randomOffset3;
 		}
 
-		tracedRay += tracedRay * stepSize;
+		vsReflectVec += stepSize;
 		count++;
 	}
+	*/
 
-	// Variables for displaying 2 textures with divider on screen 
-	float divider = Mouse.X/Screen.Width;
-	float offset = 0.0009f;
-	
-	// Debugging depths
-	if(compareDepth)
+	if(mouseSlider)
 	{
-		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
-			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
-		else if(fragment.x > (divider + offset))
-			fragmentColor = vec4(sampledDepth, sampledDepth, sampledDepth, 1.0f);
-		else
-			fragmentColor = vec4(rayDepth, rayDepth, rayDepth, 1.0f);	
+		// Variables for displaying 2 textures with divider on screen 
+		float divider = Mouse.X/Screen.Width;
+		float offset = 0.0009f;
+		
+		// Debugging depths
+		if(compareDepth)
+		{
+			if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
+				fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
+			// Right
+			else if(fragment.x > (divider + offset))
+				fragmentColor = vec4(sampledDepth, sampledDepth, sampledDepth, 1.0f);
+			// Left
+			else
+				fragmentColor = vec4(rayDepth, rayDepth, rayDepth, 1.0f);	
+		}
+		// Debugging reflection vectors
+		if(showReflVecs)
+		{
+			if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
+				fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
+			// Right
+			else if(fragment.x > (divider + offset))
+				fragmentColor = texture(deferredReflectanceTex, samplingPosition);
+			// Left
+			else
+				fragmentColor = vec4(vsReflectVec, 1.0f);	
+		}
 	}
-	// Debugging reflection vectors
-	if(showReflVecs)
-	{
-		if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
-			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
-		else if(fragment.x > (divider + offset))
-			fragmentColor = vec4(vsNormal, 1.0f);
-		else
-			fragmentColor = vec4(vsReflectVec, 1.0f);	
-	}
+
 
 	// Return color from sampled fragment
 	return fragmentColor;
@@ -229,7 +212,8 @@ void main(void)
 				FragColor = reflectance * SSR() + (1.0f - reflectance) * shaded;
 			}
 		}
-		//FragColor = SSR();
+		if(mouseSlider)
+			FragColor = SSR();
 	}
 	// Positions
 	else if(textureID == 0)
@@ -248,7 +232,17 @@ void main(void)
 	{
 		FragColor = vec4( texture(deferredReflectanceTex, vert_UV).a );
 	}
-	// Depth
+	// Reflection vector
 	else if(textureID == 5)
+	{
+		FragColor = texture(deferredReflecVecTex, vert_UV);
+	}
+	// Z-Value
+	else if(textureID == 6)
+	{
+		FragColor = texture(deferredZTex, vert_UV);
+	}
+	// Depth
+	else if(textureID == 7)
 		FragColor = vec4( linearizeDepth( float(texture(deferredDepthTex, vert_UV)) ) );
 }

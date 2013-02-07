@@ -30,11 +30,11 @@ void main(void)
 	// Normals are multiplied with transposed inverse model view matrix
 	vert_Normal = ( NormalMatrix * vec4(normal, 0.0f) ).xyz;
 	vert_UV = uv;
-	vert_EyePosition = -vert_Position;
+	vert_EyePosition = normalize(-vert_Position);
 
 	// Cubemap reflections
-	vec3 worldView = normalize(CameraPosition - vert_Position);
-	vert_ReflectDirection = reflect(-worldView, vert_Normal);
+	vec3 worldView = normalize(-vert_Position);
+	//vert_ReflectDirection = reflect(-worldView, vert_Normal);
 
 	gl_Position = MVPMatrix * vec4(vertex, 1.0f);
 }

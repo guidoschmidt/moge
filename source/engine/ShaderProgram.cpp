@@ -199,7 +199,7 @@ void ShaderProgram::Link(void)
 	glGetProgramiv(m_shaderProgram_ID, GL_LINK_STATUS, &linkStatus);
 	if(linkStatus == GL_FALSE){
 		std::cout << "ERROR | ShaderProgram: shader program linking failed!" << std::endl;
-		GLSL::PrintShaderProgramInfoLog(m_shaderProgram_ID);
+		//GLSL::PrintShaderProgramInfoLog(m_shaderProgram_ID);
 		m_islinked = false;
 	}
 	else{

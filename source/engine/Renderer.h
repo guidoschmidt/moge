@@ -68,8 +68,8 @@ class Renderer
 		float time1, time2, timedif;
 
 		//! AnttWeakBar texture choose
-		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_MATID=3, TEX_REFL=4, TEX_DEPTH=5} DeferredTexture;
-		#define NUM_TEXS 7
+		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_MATID=3, TEX_REFL=4, TEX_REFLVEC=5, TEX_REALDEPTH=6, TEX_DEPTH=7} DeferredTexture;
+		#define NUM_TEXS 9
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
@@ -80,7 +80,9 @@ class Renderer
 		bool tw_mouseLight;
 		bool tw_useNormalMapping;
 		bool tw_drawLights;
+		bool tw_mouseSlider;
 		float tw_deltaDepth;
+		float tw_rayMultiplier;
 		bool tw_SSR;
 		bool tw_blur;
 		bool tw_compareDepth;
@@ -88,6 +90,8 @@ class Renderer
 		bool tw_jittering;
 		bool tw_drawSkyBox;
 		bool tw_boundingbox;
+		//! Passes
+		bool tw_pass1, tw_pass2, tw_pass3, tw_pass4;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

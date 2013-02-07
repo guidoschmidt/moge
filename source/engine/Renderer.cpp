@@ -13,7 +13,6 @@ bool tw_rotation;
 bool loaded;
 float theta = 0, phi = 0;
 float r = 0;
-static void TW_CALL SwitchDeffered(void* clientData){ tw_deferred = !tw_deferred;}
 static void TW_CALL SwitchRotation(void* clientData){ tw_rotation = !tw_rotation;}
 //! ANTTWEAKBAR CALLBACKS END
 
@@ -45,6 +44,13 @@ Renderer::Renderer(int width, int height)
 	tw_reflvec = false;
 	tw_jittering = false;
 	tw_boundingbox = false;
+	tw_rayMultiplier = 0.0f;
+
+	//! Passes
+	tw_pass1 = true;
+	tw_pass2 = true;
+	tw_pass3 = true;
+	tw_pass4 = false;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
@@ -92,11 +98,9 @@ void Renderer::Initialize(int width, int height)
 
 	/*!
 	 * AntTweakBar
-	 * TODO Set HSV as standard for color inputs
 	 */
-	//TwAddButton(context_ptr->GetBar(), "toggledeferred", SwitchDeffered, NULL, "key='space' label='Toggle Deferred Rendering' group='Rendering'");
 	//! Deferred: render targets choice
-	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_MATID, "Material ID"}, {TEX_REFL, "Reflectance"}, {TEX_DEPTH, "Depthmap"}};
+	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_MATID, "Material ID"}, {TEX_REFL, "Reflectance"}, {TEX_REFLVEC, "Reflection Vector"}, {TEX_REALDEPTH, "Real Depth"}, {TEX_DEPTH, "Depthmap"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context_ptr->GetBar(), "deferredTextureChoice", texType, &tw_currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
 	//! Scene choice
@@ -123,6 +127,8 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug dephts'");
 	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vectors'");
+	TwAddVarRW(context_ptr->GetBar(), "raymultiplier", TW_TYPE_FLOAT, &tw_rayMultiplier, "step='0.01' group='SSR' label='Ray step'");
+	TwAddVarRW(context_ptr->GetBar(), "mouseslider", TW_TYPE_BOOLCPP, &tw_mouseSlider, "group='SSR' label='Debugging'");
 	//! Environment mapping
 	TwAddVarRW(context_ptr->GetBar(), "drawskybox", TW_TYPE_BOOLCPP, &tw_drawSkyBox, "group='Forward Shading' label='Draw skybox'");
 	//! Draw modes
@@ -133,20 +139,16 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "drawlights", TW_TYPE_BOOLCPP, &tw_drawLights, "group='Light' label='Draw lights'");
+	//! Shader Programs
+	TwAddVarRW(context_ptr->GetBar(), "pass1", TW_TYPE_BOOLCPP, &tw_pass1, "group='Renderer' label='Pass 01'");
+	TwAddVarRW(context_ptr->GetBar(), "pass2", TW_TYPE_BOOLCPP, &tw_pass2, "group='Renderer' label='Pass 02'");
+	TwAddVarRW(context_ptr->GetBar(), "pass3", TW_TYPE_BOOLCPP, &tw_pass3, "group='Renderer' label='Pass 03'");
+	TwAddVarRW(context_ptr->GetBar(), "pass4", TW_TYPE_BOOLCPP, &tw_pass4, "group='Renderer' label='Pass 04'");
+
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
 	materialman_ptr = Singleton<scene::MaterialManager>::Instance();
-
-
-	/*! Init forward rendering
-	 **************************/
-		/*
-		forwardProgram_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/forward/cm_forward.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/forward/cm_forward.frag.glsl"
-		);
-		*/
 
 	/*! Init deferred rendering
 	 * *************************/
@@ -173,14 +175,13 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/3-deferred_reflections.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/3-deferred_reflections.frag.glsl"
 		);
-		/*
 		//! Initialization of 4th pass
 		deferredProgram_Pass4_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/4-bb.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/4-bb.frag.glsl"
 		);
 		//! Fullscreen quad initialization
-		*/
+
 		//! Create a fullscreen quad to display deferred rendered textures
 		fsq_ptr->CreateFSQ();
 
@@ -431,26 +432,13 @@ void Renderer::RenderLoop(void){
 		//! Time calculations
 		timedif = time2 - time1;
 		m_speed = 2.0f * timedif;
-
 		time1 = glfwGetTime();
 
-		//! Scene loading
+		//! Scene loading and organizing
 		if(!loaded){
 			switch (tw_currentScene) {
 				case HEAD:
 					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/collada/SimpleScene.dae");
-					break;
-				case GEOMETRY:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/blend/Scene.blend");
-					break;
-				case BUDDHA:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/collada/Buddha.dae");
-					break;
-				case TEAPOT:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/blend/Teapot.blend");
-					break;
-				default:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/blend/Head.blend");
 					break;
 			}
 			renderQ_ptr = Singleton<scene::SceneOrganizer>::Instance()->OrganizeByMaterial();
@@ -483,17 +471,27 @@ void Renderer::RenderLoop(void){
 		/************************************
 		 *  RENDER LOOP
 		 ************************************/
-		//if(tw_deferred){
-			/*!* * * * * * * * * * * * * * *
-			 *		DEFERRED RENDERING	   *
-			 *		1ST RENDER PASS		   *
-			 *		G-BUFFER	     	   *
-			 * * * * * * * * * * * * * * * */
+
+		/*!* * * * * * * * * * * * * * *
+		 *		DEFERRED RENDERING	   *
+		 *		1ST RENDER PASS		   *
+		 *		G-BUFFER	     	   *
+		 * * * * * * * * * * * * * * * */
+		if(tw_pass1){
 			//! Framebuffer object setup and clear buffers
 			gBuffer_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//! Shader program setup & uniform bindings
 			m_gBufferProgram_ptr->Use();
+
+			/*
+			glClear(GL_STENCIL_BUFFER_BIT);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_STENCIL_TEST);
+			glEnable(GL_DEPTH_TEST);
+
+			glCullFace(GL_FRONT);
+			*/
 
 			//! Drawing
 			//! Cubemap uniforms
@@ -501,6 +499,8 @@ void Renderer::RenderLoop(void){
 			m_gBufferProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			//! Normal mapping uniform
 			m_gBufferProgram_ptr->SetUniform("useNormalMapping", tw_useNormalMapping);
+			//! Camera
+			m_gBufferProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
 
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
@@ -520,8 +520,8 @@ void Renderer::RenderLoop(void){
 					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
-						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
+						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
+						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
 						m_gBufferProgram_ptr->SetUniform("Material.id", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID());
 						m_gBufferProgram_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
 					}
@@ -552,14 +552,20 @@ void Renderer::RenderLoop(void){
 				}
 			}
 
+			//glDisable(GL_STENCIL_TEST);
+			//glDisable(GL_CULL_FACE);
+
 			gBuffer_ptr->Unuse();
 			m_gBufferProgram_ptr->Unuse();
+		}
 
-			/*!* * * * * * * * * * * * * * *
-			 *		DEFERRED RENDERING	   *
-			 *		2ND RENDER PASS		   *
-			 *		LIGHTING			   *
-			 * * * * * * * * * * * * * * * */
+		/*!* * * * * * * * * * * * * * *
+		 *		DEFERRED RENDERING	   *
+		 *		2ND RENDER PASS		   *
+		 *		LIGHTING			   *
+		 * * * * * * * * * * * * * * * */
+		if(tw_pass2)
+		{
 			fbo_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			deferredProgram_Pass2_ptr->Use();
@@ -597,11 +603,14 @@ void Renderer::RenderLoop(void){
 
 			fbo_ptr->Unuse();
 			deferredProgram_Pass2_ptr->Unuse();
+		}
 
-			/*!* * * * * * * * * * * * * * *
-			 *		DEFERRED RENDERING	   *
-			 *		3RD RENDER PASS		   *
-			 * * * * * * * * * * * * * * * */
+		/*!* * * * * * * * * * * * * * *
+		 *		DEFERRED RENDERING	   *
+		 *		3RD RENDER PASS		   *
+		 * * * * * * * * * * * * * * * */
+		if(tw_pass3)
+		{
 			deferredProgram_Pass3_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//! Raytrace uniform parameters
@@ -611,6 +620,8 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("jittering", tw_jittering);
 			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
 			deferredProgram_Pass3_ptr->SetUniform("showReflVecs", tw_reflvec);
+			deferredProgram_Pass3_ptr->SetUniform("rayMultiplier", tw_rayMultiplier);
+			deferredProgram_Pass3_ptr->SetUniform("mouseSlider", tw_mouseSlider);
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass3_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
@@ -632,43 +643,31 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 6);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflecVecTex", gBuffer_ptr->GetTexture(5), 5);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredZTex", gBuffer_ptr->GetTexture(6), 6);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 7);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 8);
 
 			//! Drawing
 			fsq_ptr->Draw();
 
 			deferredProgram_Pass3_ptr->Unuse();
+		}
 
-			/*!* * * * * * * * * * * * * * *
-			 *		DEFERRED RENDERING	   *
-			 *		4TH RENDER PASS		   *
-			 * * * * * * * * * * * * * * * */
+		/*!* * * * * * * * * * * * * * *
+		 *		DEFERRED RENDERING	   *
+		 *		4TH RENDER PASS		   *
+		 * * * * * * * * * * * * * * * */
+		if(tw_pass4)
+		{
 			/*
 			deferredProgram_Pass4_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//! Raytrace uniform parameters
-			deferredProgram_Pass4_ptr->SetUniform("deltaDepth", tw_deltaDepth);
-			deferredProgram_Pass4_ptr->SetUniform("toggleSSR", tw_SSR);
-			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
-			deferredProgram_Pass4_ptr->SetUniform("jittering", tw_jittering);
-			deferredProgram_Pass4_ptr->SetUniform("compareDepth", tw_compareDepth);
-			deferredProgram_Pass4_ptr->SetUniform("showReflVecs", tw_reflvec);
+
 			//! Camera uniforms
 			deferredProgram_Pass4_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass4_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());
 			deferredProgram_Pass4_ptr->SetUniform("Camera.FarPlane", scenegraph_ptr->GetActiveCamera()->GetFarPlane());
-			//! Matrix uniforms
-			deferredProgram_Pass4_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
-			deferredProgram_Pass4_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
-			//! Mouse uniforms
-			deferredProgram_Pass4_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
-			deferredProgram_Pass4_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
-			//! Window uniforms
-			deferredProgram_Pass4_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
-			deferredProgram_Pass4_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
-			//! ColorattachmentID to choose which attachment is displayed
-			deferredProgram_Pass4_ptr->SetUniform("textureID", tw_currentDeferredTex);
 			//! Colorattachments
 			deferredProgram_Pass4_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
 			deferredProgram_Pass4_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
@@ -683,74 +682,16 @@ void Renderer::RenderLoop(void){
 
 			deferredProgram_Pass4_ptr->Unuse();
 			*/
-		//}
-		//else{
-			/*!* * * * * * * * * * * * * * *
-			 *		FORWARD RENDERING	   *
-			 * * * * * * * * * * * * * * * */
-			/*
-			forwardProgram_ptr->Use();
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			//! Light uniforms
-			forwardProgram_ptr->SetUniform("Light.Position", LightPosition);
-			forwardProgram_ptr->SetUniform("Light.Ambient", LightAmbient);
-			forwardProgram_ptr->SetUniform("Light.Diffuse", LightDiffuse);
-			forwardProgram_ptr->SetUniform("Light.Specular", LightSpecular);
-			//! Camera uniforms
-			forwardProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
-			//! Cubemap uniforms
-			forwardProgram_ptr->SetUniform("drawSkyBox", tw_drawSkyBox);
-			//forwardProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMap(0)), 0);
-			//! Material uniforms
-			forwardProgram_ptr->SetUniform("Shininess", m_shininess);
-			//! Mouse uniforms
-			forwardProgram_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
-			forwardProgram_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
-			forwardProgram_ptr->SetUniform("mouseLight", tw_mouseLight);
-			//! Window uniforms
-			forwardProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
-			forwardProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
-
-			//! Drawing
-			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
-			{
-				if(static_cast<scene::Mesh*>((*renderQ_ptr)[n]))
-				{
-					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
-					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
-					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
-					//! Matrix uniforms
-					forwardProgram_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
-					forwardProgram_ptr->SetUniform("ModelMatrix", ModelMatrix);
-					forwardProgram_ptr->SetUniform("ViewMatrix", ViewMatrix);
-					forwardProgram_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
-					forwardProgram_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
-					forwardProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
-					{
-						forwardProgram_ptr->SetUniformSampler("colorTex", *(dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
-					}
-					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
-
-					//! Draws the bounding boxes
-					if(tw_boundingbox)
-					{
-						static_cast<scene::Mesh*>((*renderQ_ptr)[n])->DrawBoundingBox();
-					}
-				}
-			}
-
-			forwardProgram_ptr->Unuse();
-		*/
-		//}
+		}
 
 		//! Draw AntTweakBar-GUI
 		TwDraw();
+
 		context_ptr->SwapBuffers();
 
+		//! Time calculations end
 		time2 = glfwGetTime();
+
 		//! Check for context exiting
 		if(context_ptr->IsExiting()){
 			m_running = false;

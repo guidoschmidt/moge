@@ -46,8 +46,12 @@ void FrameBufferObject::CreateGBuffer(void)
 	AddColorAttachment(3);
 	//! Reflectivity
 	AddColorAttachment(4);
+	//! Reflection vector
+	AddColorAttachment(5);
+	//! Real depth
+	AddColorAttachment(6);
 	//! Depth
-	AddDepthAttachment_Texture(5);
+	AddDepthAttachment_Texture(6);
 }
 
 
@@ -85,7 +89,7 @@ void FrameBufferObject::AddDepthAttachment_Buffer(void)
 	//! Create a depth buffer
 	glGenRenderbuffers(1, &m_depthBuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT32F, m_width, m_height);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT32F, m_width, m_height);
 
 	//! Bind depth buffer to FBO
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
@@ -110,7 +114,7 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, m_width, m_height);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT, m_width, m_height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
 }
 
@@ -122,9 +126,9 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 void FrameBufferObject::Use(void)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	GLenum drawBuffers[5] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4};
-	glDrawBuffers(5, drawBuffers);
+
+	GLenum drawBuffers[7] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
+	glDrawBuffers(7, drawBuffers);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 }

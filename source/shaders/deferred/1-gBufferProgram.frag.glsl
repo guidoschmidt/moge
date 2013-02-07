@@ -14,6 +14,7 @@ in vec2 vert_UV;
 in vec3 vert_Camera;
 in vec3 vert_ReflectDirection;
 in vec3 vert_EyePosition;
+in float Z;
 
 /*** Output *******************************************************************/
 layout (location = 0) out vec3 Position;
@@ -21,6 +22,8 @@ layout (location = 1) out vec3 Color;
 layout (location = 2) out vec3 Normal;
 layout (location = 3) out vec3 MaterialIDs;
 layout (location = 4) out vec4 Reflectance;
+layout (location = 5) out vec3 ReflectVec;
+layout (location = 6) out vec4 RealDepth;
 
 /*** Uniforms *****************************************************************/
 uniform bool useNormalMapping;
@@ -71,7 +74,6 @@ void main(void)
 	Color = texture(colorTex, vert_UV).rgb;
 	// G-Buffer: Normal
 	Normal = normalize(vert_Normal);
-
 	// Normal mapping
 	vec3 normalmap = texture(normalTex, vert_UV).rgb;
 	if(useNormalMapping)
@@ -85,6 +87,7 @@ void main(void)
 	}
 	
 	// G-Buffer: Reflections
+	ReflectVec = normalize( reflect(vert_EyePosition, Normal) ); 
 	vec3 cubeMapColor = texture(cubeMapTex, vert_ReflectDirection.xyz).rgb;
 	Reflectance.rgb = cubeMapColor.rgb;
 	//Reflectance.a = texture(colorTex, vert_UV).a;
@@ -113,6 +116,7 @@ void main(void)
 		case 3:
 			MaterialIDs.r = 1.0f;
 			MaterialIDs.g = 1.0f;
+			Reflectance.a = 0.0f;
 			break;
 		case 4:
 			MaterialIDs.g = 1.0f;
