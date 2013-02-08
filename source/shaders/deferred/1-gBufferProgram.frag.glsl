@@ -68,11 +68,9 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 /*** Main *********************************************************************/
 void main(void)
 {
-	// G-Buffer: Position
+	// Filling G-Buffer
 	Position = vert_Position;
-	// G-Buffer: Color/Albedo
 	Color = texture(colorTex, vert_UV).rgb;
-	// G-Buffer: Normal
 	Normal = normalize(vert_Normal);
 	// Normal mapping
 	vec3 normalmap = texture(normalTex, vert_UV).rgb;
@@ -87,14 +85,17 @@ void main(void)
 	}
 	
 	// G-Buffer: Reflections
-	ReflectVec = normalize( reflect(vert_EyePosition, Normal) ); 
+	//ReflectVec = vert_ReflectDirection;
+	ReflectVec = normalize( reflect(-vert_EyePosition, Normal) ); 
 	vec3 cubeMapColor = texture(cubeMapTex, vert_ReflectDirection.xyz).rgb;
 	Reflectance.rgb = cubeMapColor.rgb;
-	//Reflectance.a = texture(colorTex, vert_UV).a;
+	Reflectance.a = texture(colorTex, vert_UV).a;
 	
 	if(normalmap.r != 0 && normalmap.g != 0 && normalmap.b != 0){
 		Reflectance.a = texture(colorTex, vert_UV).a;
 	}
+
+	
 	
 	switch(Material.id)
 	{
@@ -116,7 +117,7 @@ void main(void)
 		case 3:
 			MaterialIDs.r = 1.0f;
 			MaterialIDs.g = 1.0f;
-			Reflectance.a = 0.0f;
+			Reflectance.a = 1.0f; //texture(colorTex, vert_UV).a;
 			break;
 		case 4:
 			MaterialIDs.g = 1.0f;

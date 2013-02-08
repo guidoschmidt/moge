@@ -34,7 +34,7 @@ void main(void)
 
 	// Cubemap reflections
 	vec3 worldView = normalize(-vert_Position);
-	//vert_ReflectDirection = reflect(-worldView, vert_Normal);
+	vert_ReflectDirection = reflect(-worldView, vert_Normal);
 
 	gl_Position = MVPMatrix * vec4(vertex, 1.0f);
 }

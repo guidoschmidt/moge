@@ -1,7 +1,6 @@
 LOGFILE
 SCENE & SCENEGRAPH
-#Meshes: 6
-Mesh #0 was added to the scenegraph!
+#Meshes: 5
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!

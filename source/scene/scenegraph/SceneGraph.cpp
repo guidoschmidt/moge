@@ -141,7 +141,10 @@ namespace scene {
 			std::cout << "	Textures: " << std::endl;
 			std::cout << "	" << diffuse.m_type << ": " << diffuse.m_filename << std::endl;
 			//! Normal
-			if(mat_name == "Street" || mat_name == "Skin" || mat_name == "Tiles")
+			if(
+					mat_name == "Street" || mat_name == "Skin" || mat_name == "Tiles" ||
+					mat_name == "Cobblestone"
+			   )
 			{
 				texture normal;
 				normal.m_filename = "./assets/texture/" + fileextension + "/" + tex_name + "_normal." + fileextension;

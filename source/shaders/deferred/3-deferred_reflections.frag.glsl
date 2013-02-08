@@ -34,14 +34,14 @@ uniform MouseInfo Mouse;
 
 uniform int textureID;
 
+uniform float rayStepSize;
+
 uniform bool toggleSSR;
 uniform bool blur;
 uniform bool compareDepth;
 uniform bool showReflVecs;
 uniform bool jittering;
 uniform bool mouseSlider;
-
-uniform float deltaDepth;
 	
 uniform	mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
@@ -56,15 +56,21 @@ uniform sampler2D deferredZTex;
 uniform sampler2D deferredDiffuseTex;
 uniform sampler2D deferredDepthTex;
 
+// Variables for displaying 2 textures with divider on screen 
+float divider = Mouse.X/Screen.Width;
+float offset = 0.0009f;
 
 /*** Functions ****************************************************************/ 
+/*
+ * Linearizes a depth value
+ */
 float linearizeDepth(float depth)
 {
 	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-// Random float
-/*
+
+/* Random float
  * @source: http://web.archive.org/web/20080211204527/http://lumina.sourceforge.net/Tutorials/Noise.html
  */
 float rand(vec2 co)
@@ -72,122 +78,99 @@ float rand(vec2 co)
     return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
 }
 
-/******************************************************************************/
-// LATEST (working, with some perspective errors)
-/* SSR (screen space reflections)
- * @date 	27.01.13
+/*
+ * Raytracing to get reflected color
+ */
+vec3 raytrace(in vec3 reflectionVector, in vec2 normalizedResolution, in float startDepth)
+{
+	vec3 color = vec3(0.0f);
+	float stepSize = rayStepSize;
+
+	float size = length(reflectionVector.xy);
+	reflectionVector = reflectionVector/size;
+	reflectionVector = reflectionVector * stepSize;
+
+	vec2 uv = vert_UV;
+	float currentDepth = startDepth;
+	float sampledDepth = linearizeDepth( texture(deferredDepthTex, uv).z );
+
+	while(uv.x <= 1.0 && uv.x >= 0.0 &&
+	      uv.y <= 1.0 && uv.y >= 0.0)
+	{
+		uv = uv + reflectionVector.xy;
+		currentDepth = currentDepth + reflectionVector.z * startDepth;
+		float sampledDepth = linearizeDepth( texture(deferredDepthTex, uv).z );
+
+		if(currentDepth > sampledDepth)
+		{
+			float delta = (currentDepth - sampledDepth);
+			if(delta < min(rayStepSize, length(reflectionVector) ) )
+			{
+				color = texture(deferredDiffuseTex, uv).rgb;
+				break;
+			}
+		}
+		else
+		{
+		 	color = texture(deferredDiffuseTex, vert_UV).rgb;
+		}
+	}
+
+	// Debugging depths
+	if(mouseSlider && compareDepth)
+	{
+		if((vert_UV.x <= (divider + offset)) && (vert_UV.x >= (divider - offset)))
+			color = vec3(1.0f, 0.0f, 0.0f);
+		// Right side
+		else if(vert_UV.x > (divider + offset))
+			color = vec3(sampledDepth);
+		// Left side
+		else
+			color = vec3(currentDepth);	
+	}
+
+	return color;
+}
+
+/* 
+ * SSR (screen space reflections)
+ * @date 	08.02.13
  * @author	Guido Schmidt
- ******************************************************************************/
+ */
 vec4 SSR()
 {
-	// Variables
-	vec4 fragmentColor = vec4(0.0f, 0.0f, 0.0f, 0.0f);
-	float initalStep = 0.06f;
-	float stepSize = 1.0f/Screen.Width;
-	float blurSize = 1.0f;
+	vec3 reflectedColor = vec3(0.0f);
 
-	// Current fragment
-	vec2 fragment = gl_FragCoord.xy/vec2(Screen.Width, Screen.Height);
-	vec2 ssfragment = 2.0f * fragment - 1.0f;
-	vec3 ssPosition = vec3(ssfragment, 0.0f);
-	ssPosition.z =  linearizeDepth( texture(deferredDepthTex, vert_UV) ); 
+	vec2 normalizedResolution = vec2(1/Screen.Width, 1/Screen.Height);
+	vec3 normal = normalize( texture(deferredNormalTex, vert_UV) ).xyz;
 
-	// Normal & position
-	vec3 vsNormal = normalize(texture(deferredNormalTex, fragment).xyz);
-	vec3 vsPosition = texture(deferredPositionTex, fragment).xyz;
-	
-	// View vector
-	vec3 vsViewVec = normalize( -ssPosition );
-	//vsViewVec -= Camera.Position;
+	float localDepth = linearizeDepth( texture(deferredDepthTex, vert_UV).z );
 
-	// Reflection vector
-	vec4 ReflectVec = texture(deferredReflecVecTex, fragment);
-	vec3 vsReflectVec = normalize(ReflectVec ).xyz / ReflectVec.z;
-	//vec3 vsReflectVec = reflect( vsViewVec, vsNormal);
-	//vsReflectVec = normalize(vsReflectVec);
-	vsReflectVec = vsReflectVec * initalStep;
+	vec3 lookVector = normalize( vec3(0.0f, 0.0f, Camera.NearPlane) );
+	vec3 reflectionVector = ( ProjectionMatrix * reflect( vec4(-lookVector, 0), vec4(normal, 0) ) ).xyz;
 
-	// Get depth informations
-	float fragmentDepth = linearizeDepth( texture(deferredDepthTex, fragment) ); 
-	vec2 samplingPosition = fragment + (vsReflectVec.xy);
-	float sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition) );
-	float rayDepth = fragmentDepth + vsReflectVec.z;
 
-	// Ray tracing while in screen space
-	int count = 0;
-	
-	/*
-	while(	samplingPosition.x > 0.0f && samplingPosition.x < 1.0f &&
-			samplingPosition.y > 0.0f && samplingPosition.y < 1.0f)
+	// Debugging reflection vectors
+	if(mouseSlider && showReflVecs)
 	{
-		// Update sampling position and depth values
-		samplingPosition = fragment + vsReflectVec.xy;
-		sampledDepth = linearizeDepth( texture(deferredDepthTex, samplingPosition) );
-		rayDepth = vsReflectVec.z;
 
-		// Manually break
-		if(count == 500)
-			break;
-		
-		// intersection found
-		if(rayDepth > sampledDepth)
-		{
-			//float delta = abs(rayDepth - sampledDepth);
-			fragmentColor = vec4( texture(deferredDiffuseTex, samplingPosition).rgb, 1.0f );	
-			fragmentColor = vec4(1.0f, 0.0f, 0.0f, 1.0f );	
-			break;
-		}
-		
-		//Jitter the initial ray
-		if(jittering)
-		{
-			float randomOffset1 = clamp(rand(gl_FragCoord.yx), 0, 1)/(Screen.Width  * 15000f);
-			float randomOffset2 = clamp(rand(gl_FragCoord.xy), 0, 1)/(Screen.Height * 15000f);
-			float randomOffset3 = clamp(rand(gl_FragCoord.zz), 0, 1)/(fragmentDepth * 15000f);
-			vsReflectVec += vec3(randomOffset1, randomOffset2, 0);
-			stepSize += randomOffset3;
-		}
-
-		vsReflectVec += stepSize;
-		count++;
+		if((vert_UV.x <= (divider + offset)) && (vert_UV.x >= (divider - offset)))
+			reflectedColor = vec3(1.0f, 0.0f, 0.0f);
+		// Right side
+		else if(vert_UV.x > (divider + offset))
+			reflectedColor = normal;
+		// Left side
+		else
+			reflectedColor = reflectionVector;	
 	}
-	*/
-
-	if(mouseSlider)
+	// No debugging
+	else
 	{
-		// Variables for displaying 2 textures with divider on screen 
-		float divider = Mouse.X/Screen.Width;
-		float offset = 0.0009f;
-		
-		// Debugging depths
-		if(compareDepth)
-		{
-			if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
-				fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
-			// Right
-			else if(fragment.x > (divider + offset))
-				fragmentColor = vec4(sampledDepth, sampledDepth, sampledDepth, 1.0f);
-			// Left
-			else
-				fragmentColor = vec4(rayDepth, rayDepth, rayDepth, 1.0f);	
-		}
-		// Debugging reflection vectors
-		if(showReflVecs)
-		{
-			if((fragment.x <= (divider + offset)) && (fragment.x >= (divider - offset)))
-				fragmentColor = vec4(1.0f, 0.0f, 0.0f, 0.5f);
-			// Right
-			else if(fragment.x > (divider + offset))
-				fragmentColor = texture(deferredReflectanceTex, samplingPosition);
-			// Left
-			else
-				fragmentColor = vec4(vsReflectVec, 1.0f);	
-		}
+		reflectedColor = raytrace(reflectionVector, normalizedResolution, localDepth);	
 	}
+	
 
-
-	// Return color from sampled fragment
-	return fragmentColor;
+	return vec4(reflectedColor, 1.0f);
 }
 
 /*** Main *********************************************************************/
@@ -212,8 +195,13 @@ void main(void)
 				FragColor = reflectance * SSR() + (1.0f - reflectance) * shaded;
 			}
 		}
-		if(mouseSlider)
+		if( (mouseSlider && showReflVecs) || (mouseSlider && compareDepth) )
+		{
 			FragColor = SSR();
+		}
+
+		//FragColor = vec4(rayStepSize);
+
 	}
 	// Positions
 	else if(textureID == 0)

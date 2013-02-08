@@ -1,34 +1,31 @@
 #version 400
-struct CameraInfo
-{
-	vec3 Position;
-	vec3 LookAt;
-	float NearPlane;
-	float FarPlane;
-};
 
+
+in vec3 vert_Position;
+in vec3 vert_Normal;
 in vec2 vert_UV;
 
-out vec4 FragColor;
+out vec3 FragColor;
 
-uniform CameraInfo Camera;
+uniform vec2 Screen;
 
-uniform sampler2D deferredPositionTex;
-uniform sampler2D deferredColorTex;
-uniform sampler2D deferredNormalTex;
-uniform sampler2D deferredMaterialIDTex;
-uniform sampler2D deferredReflectanceTex;
-uniform sampler2DMS deferredDepthTex;
-uniform sampler2D deferredDiffuseTex;
+uniform sampler2D colorTex; 
 
-/*** Functions ****************************************************************/ 
-float linearizeDepth(float depth)
+float intersect(in vec3 rayO, in vec3 rayD)
 {
-	return (2.0 * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
+	return vert_Position.z;
 }
+
 
 void main()
 {
-	vec4 a = texelFetch(deferredDepthTex, vert_UV, 0);
-	FragColor = a;
+	// Fragment coordinates from 0 to 1
+	vec2 uv = gl_FragCoord.xy/vec2(800, 800);
+	vec3 color = vec3(0.0f);
+
+	// Create a ray with rayO origin and rayD destination
+	vec3 ray = normalize( reflect( -vert_Position, vert_Normal) );
+	
+
+	FragColor = color;
 }

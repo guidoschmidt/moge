@@ -81,8 +81,7 @@ class Renderer
 		bool tw_useNormalMapping;
 		bool tw_drawLights;
 		bool tw_mouseSlider;
-		float tw_deltaDepth;
-		float tw_rayMultiplier;
+		float tw_rayStepSize;
 		bool tw_SSR;
 		bool tw_blur;
 		bool tw_compareDepth;
