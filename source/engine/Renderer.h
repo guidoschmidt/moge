@@ -59,7 +59,7 @@ class Renderer
 						*deferredProgram_Pass2_ptr,
 						*deferredProgram_Pass3_ptr,
 						*deferredProgram_Pass4_ptr;
-		FrameBufferObject* gBuffer_ptr, *fbo_ptr;
+		FrameBufferObject* gBuffer_ptr, *lighting_fbo_ptr, *reflection_fbo_ptr;
 		float m_angle;
 		float m_fieldOfView;
 
@@ -68,8 +68,16 @@ class Renderer
 		float time1, time2, timedif;
 
 		//! AnttWeakBar texture choose
-		typedef enum {TEX_COMPOSIT=-1, TEX_POSITION=0, TEX_COLOR=1, TEX_NORMAL=2, TEX_MATID=3, TEX_REFL=4, TEX_REFLVEC=5, TEX_REALDEPTH=6, TEX_DEPTH=7} DeferredTexture;
-		#define NUM_TEXS 9
+		typedef enum {	TEX_COMPOSIT	=	-1,
+						TEX_POSITION	=	 0,
+						TEX_COLOR		=	 1,
+						TEX_NORMAL		=	 2,
+						TEX_MATID		=	 3,
+						TEX_REFL		=	 4,
+						TEX_REFLVEC		=	 5,
+						TEX_DEPTH		=	 6
+		} DeferredTexture;
+		#define NUM_TEXS 8
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
@@ -102,9 +110,12 @@ class Renderer
 		glm::mat4 ProjectionMatrix;
 		glm::mat4 MVPMatrix;
 		//! Lights
+		int tw_currentLight;
 		glm::vec4 LightPosition;
+		GLfloat LightPositions[6];
 		glm::vec3 LightAmbient;
 		glm::vec3 LightDiffuse;
+		GLfloat LightDiffuses[6];
 		glm::vec3 LightSpecular;
 		//! Camera
 		glm::vec3 CameraPosition;

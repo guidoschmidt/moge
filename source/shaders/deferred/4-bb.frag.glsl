@@ -1,31 +1,32 @@
 #version 400
+struct Impostor
+{
+	vec3 max;
+	vec3 min;
+	vec3 normal;
+};
 
 
+/*** Input ********************************************************************/
+in vec2 vert_UV;
 in vec3 vert_Position;
 in vec3 vert_Normal;
-in vec2 vert_UV;
+in vec3 vert_EyePosition;
 
+/*** Output *******************************************************************/
 out vec3 FragColor;
 
+/*** Uniforms *****************************************************************/
 uniform vec2 Screen;
+uniform sampler2D colorTex;
+uniform 
 
-uniform sampler2D colorTex; 
-
-float intersect(in vec3 rayO, in vec3 rayD)
-{
-	return vert_Position.z;
-}
-
-
+/*** Main *********************************************************************/
 void main()
 {
-	// Fragment coordinates from 0 to 1
-	vec2 uv = gl_FragCoord.xy/vec2(800, 800);
-	vec3 color = vec3(0.0f);
+	vec3 EyeVec = vert_Position - vert_EyePosition;
+	vec3 ReflectVec = normalize( reflect( EyeVec, vert_Normal ) );
+	FragColor = ReflectVec;
 
-	// Create a ray with rayO origin and rayD destination
-	vec3 ray = normalize( reflect( -vert_Position, vert_Normal) );
-	
-
-	FragColor = color;
+	vec3 finalColor = vec3(0.0f);
 }

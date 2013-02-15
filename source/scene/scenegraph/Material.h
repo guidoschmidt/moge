@@ -27,7 +27,8 @@ namespace scene {
 	typedef enum {
 		DIFFUSE = 0,
 		NORMAL = 1,
-		CUBEMAP = 2
+		CUBEMAP = 2,
+		LIGHT = 3
 	} texturetype;
 
 	struct textureRef{

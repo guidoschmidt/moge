@@ -74,6 +74,7 @@ class ShaderProgram
 
 		//! Uniforms bindings
 		void SetUniform(const std::string name, const glm::vec3 &vec);
+		void SetUniform(const std::string name, const GLfloat vec[]);
 		void SetUniform(const std::string name, const glm::vec4 &vec);
 		void SetUniform(const std::string name, const glm::mat4 &mat);
 		void SetUniform(const std::string name, float val);

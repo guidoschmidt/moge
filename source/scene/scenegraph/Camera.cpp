@@ -25,7 +25,7 @@ namespace scene {
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
 		m_nearPlane = 0.1f;
-		m_farPlane = 100.0f;
+		m_farPlane = 500.0f;
 
 		m_translationMatrix = glm::mat4(1.0f);
 		m_rotationMatrix = glm::mat4(1.0f);
@@ -51,7 +51,7 @@ namespace scene {
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
 		m_nearPlane = 0.1f;
-		m_farPlane = 100.f;
+		m_farPlane = 500.f;
 
 		m_translationMatrix = glm::mat4(1.0f);
 		m_qOrientation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);

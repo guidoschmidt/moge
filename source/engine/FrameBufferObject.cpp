@@ -11,7 +11,7 @@
  * @param width
  * @param height
  */
-FrameBufferObject::FrameBufferObject()
+FrameBufferObject::FrameBufferObject(bool gBuffer)
 {
 	m_width = Singleton<Context>::Instance()->GetWidth();
 	m_height = Singleton<Context>::Instance()->GetHeight();
@@ -19,7 +19,12 @@ FrameBufferObject::FrameBufferObject()
 	glGenFramebuffers(1, &m_FBO_ID);
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-	CreateGBuffer();
+	if(gBuffer){
+		CreateGBuffer();
+	}
+	else
+		CreateBuffers(2);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -48,10 +53,18 @@ void FrameBufferObject::CreateGBuffer(void)
 	AddColorAttachment(4);
 	//! Reflection vector
 	AddColorAttachment(5);
-	//! Real depth
-	AddColorAttachment(6);
 	//! Depth
 	AddDepthAttachment_Texture(6);
+
+	std::cout << "# Attachments" << m_attachmentCounter << std::endl;
+	m_isGBuffer = true;
+}
+
+
+void FrameBufferObject::CreateBuffers(int count)
+{
+	//! Color attachment 0
+	AddColorAttachment(0);
 }
 
 
@@ -75,8 +88,13 @@ void FrameBufferObject::AddColorAttachment(GLint textureUnit)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
 	//! Bind texture to color attachment point
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + m_attachmentCounter, GL_TEXTURE_2D, renderTexture, 0);
-	m_attachmentCounter++;
+
+	//! Push the color attachment and the texture to FBO's intern storage
+	m_drawBuffers.push_back(GL_COLOR_ATTACHMENT0 + m_attachmentCounter);
 	m_renderTargets.push_back(renderTexture);
+
+	//! Increase attachment counter
+	m_attachmentCounter++;
 }
 
 
@@ -125,12 +143,24 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
  */
 void FrameBufferObject::Use(void)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
+	if(m_isGBuffer)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-	GLenum drawBuffers[7] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5, GL_COLOR_ATTACHMENT6};
-	glDrawBuffers(7, drawBuffers);
+		glDrawBuffers(6, &m_drawBuffers[0]);
 
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+	}
+	else
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
+
+		glDrawBuffers(1, &m_drawBuffers[0]);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+	}
+
+
 }
 
 //! Unbinds the framebuffer object

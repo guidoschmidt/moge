@@ -21,15 +21,19 @@
 class FrameBufferObject
 {
 	private:
-		int m_width, m_height;
-		int m_attachmentCounter;
 		GLuint m_FBO_ID;
+		bool m_isGBuffer;
+		int m_width, m_height;
+		GLsizei m_attachmentCounter;
+
 		GLuint m_depthBuffer;
 		GLuint m_depthTexture;
+
 		std::vector<GLuint> m_renderTargets;
+		std::vector<GLenum> m_drawBuffers;
 
 	public:
-		FrameBufferObject();
+		FrameBufferObject(bool gBuffer);
 		~FrameBufferObject();
 
 		void AddColorAttachment(int textureUnit);
@@ -37,6 +41,8 @@ class FrameBufferObject
 		void AddDepthAttachment_Texture(int textureUnit);
 
 		void CreateGBuffer(void);
+		void CreateBuffers(int count);
+
 
 		void Use(void);
 		void Unuse(void);

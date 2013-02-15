@@ -24,6 +24,9 @@ namespace scene {
 			glm::vec3 m_color;
 			lighttype m_lightType;
 
+			//! Material
+			Material* m_material_ptr;
+
 		public:
 			Light();
 			Light(glm::vec3 position, float intensty, glm::vec3 color, lighttype type);
@@ -34,10 +37,13 @@ namespace scene {
 			float GetIntensity(void);
 			glm::vec3 GetColor(void);
 			lighttype GetLightType(void);
+			Material* GetMaterial(void);
+			GLuint* GetTextureHandle();
 			//! Setter
 			void SetIntensity(float intensity);
 			void SetColor(glm::vec3 color);
 			void SetLightType(lighttype type);
+			void SetMaterial(Material* material);
 
 			void DrawLightGeometry(void);
 	};

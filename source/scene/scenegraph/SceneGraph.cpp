@@ -17,6 +17,7 @@ namespace scene {
 		m_writeLogFile = true;
 
 		m_activeCamera_ptr = 0;
+		m_activeLight_ptr = 0;
 
 		m_lightMatIndex = -1;
 
@@ -125,14 +126,26 @@ namespace scene {
 			std::string tex_name_temp = diffuseTex_path.substr(foundname+1);
 			unsigned extPos = tex_name_temp.find("." + fileextension);
 			std::string tex_name = tex_name_temp.erase(extPos);
+			float reflectance = 0.0f;
 
+			//! Light material?
+			size_t foundLight = mat_name.find_first_of("_");
+			std::string isLight = mat_name.substr(0, foundLight);
+			if(isLight == "Light")
+			{
+				texture light;
+				light.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
+				light.m_type = LIGHT;
+				textures.push_back(light);
+			}
+
+			//! Other materials
 			//! Diffuse
 			texture diffuse;
 			diffuse.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
 			diffuse.m_type = DIFFUSE;
 			textures.push_back(diffuse);
 
-			float reflectance = 0.0f;
 			if(mat_name == "Cobblestone")
 				reflectance = 1.0f;
 
@@ -157,7 +170,7 @@ namespace scene {
 		}
 
 		// Cubemaps
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/stockholm");
+		//m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/stockholm");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
@@ -176,16 +189,28 @@ namespace scene {
 				aiQuaternion aiRotation;
 				scene->mRootNode->mChildren[c]->mTransformation.Decompose(aiScale, aiRotation, aiPosition);
 
-				//! It's light geometry
-				if(material_index == m_lightMatIndex)
+				//! Get node's name and type
+				aiString ai_node_name = scene->mRootNode->mChildren[c]->mName;
+				std::string node_name = &(ai_node_name.data[0]);
+				size_t foundname = node_name.find_first_of("_");
+				std::string node_type = node_name.substr(0, foundname);
+
+				//! Importing Nodes
+				/******************************************/
+				//! Light geometry
+				if(material_index == m_lightMatIndex && !m_pointLightMesh)
 				{
-					std::cout << "index = " << material_index << std::endl;
 					m_pointLightMesh = new Mesh(scene->mMeshes[meshID]);
+				}
+				//! Lights
+				if(node_type == "Light")
+				{
 					Light* light = new Light(glm::vec3(0.0f), 1.0f, glm::vec3(1.0f), POINT);
 					//! Convert the aiNode's transformation and store them in mesh
 					//! Translation
 					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
 					light->Translate(position);
+					std::cout << position.x << ", " << position.y << ", " << position.z << std::endl;
 					//! Scale
 					glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
 					light->Scale(scale);
@@ -193,11 +218,15 @@ namespace scene {
 					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
 					light->RotateQuat(rotation);
 
+					light->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
+
 					m_root.AddChild(light);
-					std::cout << "Light #" << m << " was added to the scenegraph!" << std::endl;
+					m_lights.push_back(light);
+					m_activeLight_ptr = 0;
+					std::cout << "Node #" << c << " is a Light!" << std::endl;
 				}
-				//! It's mesh geometry
-				else
+				//! Mesh geometry
+				if(node_type == "Mesh")
 				{
 					Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
 					mesh->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
@@ -270,6 +299,31 @@ namespace scene {
 			return m_activeCamera_ptr;
 		else
 			return new Camera();
+	}
+
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	Light* SceneGraph::GetActiveLight(void)
+	{
+		if(m_activeLight_ptr > 0 && m_activeLight_ptr < m_lights.size())
+			return m_lights[m_activeLight_ptr];
+		else
+			return new Light();
+	}
+
+	//!
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
+	void SceneGraph::SetActiveLight(int i)
+	{
+		m_activeLight_ptr = i;
 	}
 
 

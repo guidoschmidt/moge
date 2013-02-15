@@ -23,7 +23,7 @@ layout (location = 2) out vec3 Normal;
 layout (location = 3) out vec3 MaterialIDs;
 layout (location = 4) out vec4 Reflectance;
 layout (location = 5) out vec3 ReflectVec;
-layout (location = 6) out vec4 RealDepth;
+//layout (location = 6) is DepthBuffer
 
 /*** Uniforms *****************************************************************/
 uniform bool useNormalMapping;
@@ -54,6 +54,7 @@ mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
     float invmax = inversesqrt( max( dot(T,T), dot(B,B) ) );
     return mat3( T * invmax, B * invmax, N );
 }
+
 // @source: http://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
 vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 {
@@ -68,10 +69,11 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 /*** Main *********************************************************************/
 void main(void)
 {
-	// Filling G-Buffer
+	// G-Buffer: Positions, Colors (Albedo), Normals
 	Position = vert_Position;
 	Color = texture(colorTex, vert_UV).rgb;
 	Normal = normalize(vert_Normal);
+	
 	// Normal mapping
 	vec3 normalmap = texture(normalTex, vert_UV).rgb;
 	if(useNormalMapping)
@@ -85,18 +87,12 @@ void main(void)
 	}
 	
 	// G-Buffer: Reflections
-	//ReflectVec = vert_ReflectDirection;
 	ReflectVec = normalize( reflect(-vert_EyePosition, Normal) ); 
 	vec3 cubeMapColor = texture(cubeMapTex, vert_ReflectDirection.xyz).rgb;
 	Reflectance.rgb = cubeMapColor.rgb;
 	Reflectance.a = texture(colorTex, vert_UV).a;
 	
-	if(normalmap.r != 0 && normalmap.g != 0 && normalmap.b != 0){
-		Reflectance.a = texture(colorTex, vert_UV).a;
-	}
-
-	
-	
+	// G-Buffer: Materials
 	switch(Material.id)
 	{
 		case -1: // -1 is light
@@ -117,7 +113,6 @@ void main(void)
 		case 3:
 			MaterialIDs.r = 1.0f;
 			MaterialIDs.g = 1.0f;
-			Reflectance.a = 1.0f; //texture(colorTex, vert_UV).a;
 			break;
 		case 4:
 			MaterialIDs.g = 1.0f;

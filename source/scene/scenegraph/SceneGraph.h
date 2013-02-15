@@ -39,6 +39,7 @@ namespace scene {
 		private:
 			bool m_setupComplete;
 			Camera* m_activeCamera_ptr;
+			int m_activeLight_ptr;
 
 			//! Assimp
 			Assimp::Importer m_aiImporter;
@@ -46,6 +47,7 @@ namespace scene {
 
 			//! Node hierachry
 			Node m_root;
+			std::vector<Light*> m_lights;
 
 			//! Material manager
 			scene::MaterialManager* m_materialman_ptr;
@@ -79,6 +81,8 @@ namespace scene {
 
 			Node* GetNode(int i);
 			Camera* GetActiveCamera(void);
+			Light* GetActiveLight(void);
+			void SetActiveLight(int i);
 
 			//! Drawing
 			glm::mat4 DrawNodes(void);

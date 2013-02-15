@@ -16,6 +16,7 @@ namespace scene {
 		m_intensity = 1.0f;
 		m_color = glm::vec3(1.0f);
 		m_lightType = POINT;
+		m_material_ptr = 0;
 	}
 
 	//!
@@ -26,6 +27,7 @@ namespace scene {
 		m_intensity = intensity;
 		m_color = color;
 		m_lightType = type;
+		m_material_ptr = 0;
 	}
 
 	//!
@@ -53,6 +55,18 @@ namespace scene {
 		return m_lightType;
 	}
 
+	Material* Light::GetMaterial(void)
+	{
+		if(m_material_ptr != 0)
+			return m_material_ptr;
+		return 0;
+	}
+
+	GLuint* Light::GetTextureHandle()
+	{
+		return (Singleton<MaterialManager>::Instance()->GetTextureByID(m_material_ptr->GetTextureID(LIGHT)));
+	}
+
 //! Setter
 
 	//!
@@ -71,6 +85,15 @@ namespace scene {
 	void Light::SetLightType(lighttype type)
 	{
 		m_lightType = type;
+	}
+
+	//! Set the mesh's material
+	/*!
+	 *
+	 */
+	void Light::SetMaterial(Material* material)
+	{
+		m_material_ptr = material;
 	}
 
 } //! namespace scene

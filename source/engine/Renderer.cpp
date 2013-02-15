@@ -49,13 +49,13 @@ Renderer::Renderer(int width, int height)
 	tw_pass1 = true;
 	tw_pass2 = true;
 	tw_pass3 = true;
-	tw_pass4 = false;
+	tw_pass4 = true;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
 	m_shininess = 12.0f;
 
-	m_backgroundColor = glm::vec3(0.15f, 0.25f, 0.35f);
+	m_backgroundColor = glm::vec3(0.0f, 0.0f, 0.05f);
 
 	Initialize(width, height);
 }
@@ -99,7 +99,15 @@ void Renderer::Initialize(int width, int height)
 	 * AntTweakBar
 	 */
 	//! Deferred: render targets choice
-	TwEnumVal texEV[NUM_TEXS] = { {TEX_COMPOSIT, "Composited"}, {TEX_POSITION, "Positionmap"} ,{TEX_COLOR, "Colormap"}, {TEX_NORMAL, "Normalmap"}, {TEX_MATID, "Material ID"}, {TEX_REFL, "Reflectance"}, {TEX_REFLVEC, "Reflection Vector"}, {TEX_REALDEPTH, "Real Depth"}, {TEX_DEPTH, "Depthmap"}};
+	TwEnumVal texEV[NUM_TEXS] = {
+									{TEX_COMPOSIT, "Composited"},
+									{TEX_POSITION, "Positionmap"},
+									{TEX_COLOR, "Colormap"},
+									{TEX_NORMAL, "Normalmap"},
+									{TEX_MATID, "Material ID"},
+									{TEX_REFL, "Reflectance"},
+									{TEX_REFLVEC, "Reflection Vector"},
+									{TEX_DEPTH, "Depthmap"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context_ptr->GetBar(), "deferredTextureChoice", texType, &tw_currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
 	//! Scene choice
@@ -121,7 +129,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOLCPP, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 	//! SSR parameters
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.0001' value='0.05' step='0.001' group='SSR' label='Step size'");
+	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.0001' value='0.015' step='0.001' group='SSR' label='Step size'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug depht'");
@@ -132,15 +140,19 @@ void Renderer::Initialize(int width, int height)
 	//! Normal mapping
 	TwAddVarRW(context_ptr->GetBar(), "normalmapping", TW_TYPE_BOOLCPP, &tw_useNormalMapping, "group='Material' label='Normal mapping'");
 	//! Light properties
-	TwAddVarRW(context_ptr->GetBar(), "lightDiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light' colormode='hls'");
-	TwAddVarRW(context_ptr->GetBar(), "lightSpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
+	TwEnumVal lightEV[2] = { {0, "Light 1"}, {1, "Light 2"} };
+	TwType lightChoice = TwDefineEnum("Light #", lightEV, 2);
+	TwAddVarRW(context_ptr->GetBar(), "lightchoice", lightChoice, &tw_currentLight, "label='Light' group='Light' keyIncr='<' keyDecr='>' help='Select editable light.' ");
+	TwAddVarRW(context_ptr->GetBar(), "lightdiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light' colormode='hls'");
+	TwAddVarRW(context_ptr->GetBar(), "lightdpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "drawlights", TW_TYPE_BOOLCPP, &tw_drawLights, "group='Light' label='Draw lights'");
 	//! Shader Programs
+	/*
 	TwAddVarRW(context_ptr->GetBar(), "pass1", TW_TYPE_BOOLCPP, &tw_pass1, "group='Renderer' label='Pass 01'");
 	TwAddVarRW(context_ptr->GetBar(), "pass2", TW_TYPE_BOOLCPP, &tw_pass2, "group='Renderer' label='Pass 02'");
 	TwAddVarRW(context_ptr->GetBar(), "pass3", TW_TYPE_BOOLCPP, &tw_pass3, "group='Renderer' label='Pass 03'");
 	TwAddVarRW(context_ptr->GetBar(), "pass4", TW_TYPE_BOOLCPP, &tw_pass4, "group='Renderer' label='Pass 04'");
-
+	*/
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -155,7 +167,9 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/1-gBufferProgram.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/1-gBufferProgram.frag.glsl"
 		);
-		gBuffer_ptr = new FrameBufferObject();
+		gBuffer_ptr = new FrameBufferObject(true);
+		gBuffer_ptr->CreateGBuffer();
+
 		/*! Initialization of 2nd pass
 		 *  Deferred Lighting and Shading
 		 */
@@ -163,7 +177,8 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/2-deferred_lighting.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/2-deferred_lighting.frag.glsl"
 		);
-		fbo_ptr = new FrameBufferObject();
+		lighting_fbo_ptr = new FrameBufferObject(false);
+
 		/*! Initialization of 3nd pass
 		 * 	SSR pass (screen space reflections)
 		 */
@@ -171,10 +186,12 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/3-deferred_reflections.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/3-deferred_reflections.frag.glsl"
 		);
+		reflection_fbo_ptr = new FrameBufferObject(false);
+
 		//! Initialization of 4th pass
 		deferredProgram_Pass4_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/deferred/4-bb.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/deferred/4-bb.frag.glsl"
+				GLSL::VERTEX, "./source/shaders/deferred/4-deferred_compositing.vert.glsl",
+				GLSL::FRAGMENT, "./source/shaders/deferred/4-deferred_compositing.frag.glsl"
 		);
 		//! Fullscreen quad initialization
 
@@ -210,8 +227,14 @@ void Renderer::InitializeLight(void)
 {
 	LightPosition = glm::vec4(0.0f, 10.0f, 0.0f, 0.0f);
 	LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
-	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
+	LightDiffuses[0] = 1.0f;
+	LightDiffuses[1] = 1.0f;
+	LightDiffuses[2] = 1.0f;
+	LightDiffuses[3] = 0.25f;
+	LightDiffuses[4] = 0.0f;
+	LightDiffuses[5] = 0.15f;
 
+	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
 }
 
 //! Initializes the DevIL image loader utility
@@ -360,6 +383,8 @@ void Renderer::KeyboardFunction(void)
 	}
 }
 
+
+//!
 void Renderer::CameraMovement()
 {
 	//! Mouse position
@@ -434,7 +459,7 @@ void Renderer::RenderLoop(void){
 		m_speed = 5.0f * timedif;
 		time1 = glfwGetTime();
 
-		//! Scene loading and organizing
+		//! Scene loading and organizingS
 		if(!loaded){
 			switch (tw_currentScene) {
 				case HEAD:
@@ -484,23 +509,15 @@ void Renderer::RenderLoop(void){
 			//! Shader program setup & uniform bindings
 			m_gBufferProgram_ptr->Use();
 
-			/*
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glEnable(GL_CULL_FACE);
-			glEnable(GL_STENCIL_TEST);
-			glEnable(GL_DEPTH_TEST);
-
-			glCullFace(GL_FRONT);
-			*/
-
-			//! Drawing
 			//! Cubemap uniforms
-			m_gBufferProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMapByID(0)), 0);
-			m_gBufferProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			//m_gBufferProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMapByID(0)), 0);
+
 			//! Normal mapping uniform
 			m_gBufferProgram_ptr->SetUniform("useNormalMapping", tw_useNormalMapping);
 			//! Camera
 			m_gBufferProgram_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
+			ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
+			ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
 
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
@@ -509,8 +526,6 @@ void Renderer::RenderLoop(void){
 				{
 					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
 					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
-					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
 					//! Matrix uniforms
 					m_gBufferProgram_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
 					m_gBufferProgram_ptr->SetUniform("ModelMatrix", ModelMatrix);
@@ -537,23 +552,25 @@ void Renderer::RenderLoop(void){
 				//! Lights
 				else if((*renderQ_ptr)[n]->GetType() == "Light" && tw_drawLights)
 				{
-					static_cast<scene::Light*>((*renderQ_ptr)[n])->SetPosition(glm::vec3(LightPosition));
+					//! Light properties
+					scenegraph_ptr->SetActiveLight(tw_currentLight);
+					scenegraph_ptr->GetActiveLight()->SetPosition(glm::vec3(LightPosition));
+
+					//! Uniforms
 					ModelMatrix = static_cast<scene::Light*>((*renderQ_ptr)[n])->GetModelMatrix();
-					m_gBufferProgram_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
+					m_gBufferProgram_ptr->SetUniform("NormalMatrix", glm::transpose( glm::inverse(ViewMatrix * ModelMatrix) ) );
 					m_gBufferProgram_ptr->SetUniform("ModelMatrix", ModelMatrix);
 					m_gBufferProgram_ptr->SetUniform("ViewMatrix", ViewMatrix);
 					m_gBufferProgram_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
 					m_gBufferProgram_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
 					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-					m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(materialman_ptr->GetTextureByID(2)), 5);
+					m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Light*>((*renderQ_ptr)[n])->GetTextureHandle()), 5);
 					m_gBufferProgram_ptr->SetUniform("Material.id", -1);
 					m_gBufferProgram_ptr->SetUniform("Material.reflectance", 0.0f);
+
 					scenegraph_ptr->m_pointLightMesh->Draw();
 				}
 			}
-
-			//glDisable(GL_STENCIL_TEST);
-			//glDisable(GL_CULL_FACE);
 
 			gBuffer_ptr->Unuse();
 			m_gBufferProgram_ptr->Unuse();
@@ -566,13 +583,37 @@ void Renderer::RenderLoop(void){
 		 * * * * * * * * * * * * * * * */
 		if(tw_pass2)
 		{
-			fbo_ptr->Use();
+			lighting_fbo_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			deferredProgram_Pass2_ptr->Use();
 			//! Light uniforms
+
+			if(tw_currentLight == 0)
+			{
+				LightPositions[0] = LightPosition.x;
+				LightPositions[1] = LightPosition.y;
+				LightPositions[2] = LightPosition.z;
+
+				LightDiffuses[0] = LightDiffuse.x;
+				LightDiffuses[1] = LightDiffuse.y;
+				LightDiffuses[2] = LightDiffuse.z;
+			}
+			else if(tw_currentLight == 1)
+			{
+				LightPositions[0] = LightPosition.x;
+				LightPositions[1] = LightPosition.y;
+				LightPositions[2] = LightPosition.z;
+
+				LightDiffuses[3] = LightDiffuse.x;
+				LightDiffuses[4] = LightDiffuse.y;
+				LightDiffuses[5] = LightDiffuse.z;
+			}
+
+			deferredProgram_Pass2_ptr->SetUniform("lightPositions", LightPositions);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Position", LightPosition);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Ambient", LightAmbient);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", LightDiffuse);
+			deferredProgram_Pass2_ptr->SetUniform("lightDifusse", LightDiffuses);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
 			//! Material uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
@@ -590,18 +631,17 @@ void Renderer::RenderLoop(void){
 			//! Window uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
-			//! Colorattachments
+			//! Color attachments
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
 			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 5);
 
 			//! Drawing
 			fsq_ptr->Draw();
 
-			fbo_ptr->Unuse();
+			lighting_fbo_ptr->Unuse();
 			deferredProgram_Pass2_ptr->Unuse();
 		}
 
@@ -611,8 +651,10 @@ void Renderer::RenderLoop(void){
 		 * * * * * * * * * * * * * * * */
 		if(tw_pass3)
 		{
-			deferredProgram_Pass3_ptr->Use();
+			reflection_fbo_ptr->Use();
+
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			deferredProgram_Pass3_ptr->Use();
 			//! Raytrace uniform parameters
 			deferredProgram_Pass3_ptr->SetUniform("toggleSSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("rayStepSize", tw_rayStepSize);
@@ -634,22 +676,16 @@ void Renderer::RenderLoop(void){
 			//! Window uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
-			//! ColorattachmentID to choose which attachment is displayed
-			deferredProgram_Pass3_ptr->SetUniform("textureID", tw_currentDeferredTex);
 			//! Colorattachments
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflecVecTex", gBuffer_ptr->GetTexture(5), 5);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredZTex", gBuffer_ptr->GetTexture(6), 6);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 7);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", fbo_ptr->GetTexture(0), 8);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 6);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 7);
 
 			//! Drawing
 			fsq_ptr->Draw();
 
+			reflection_fbo_ptr->Unuse();
 			deferredProgram_Pass3_ptr->Unuse();
 		}
 
@@ -662,59 +698,47 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass4_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			//! Screen uniform
-			deferredProgram_Pass4_ptr->SetUniform("Screen", glm::vec3(context_ptr->GetWidth(), context_ptr->GetHeight(), 0.0f));
+//			//! Camera uniforms
+//			deferredProgram_Pass4_ptr->SetUniform("CameraPosition", scenegraph_ptr->GetActiveCamera()->GetPosition());
+//			ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
+//			ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
+//			deferredProgram_Pass4_ptr->SetUniform("ViewMatrix", ViewMatrix);
+//			deferredProgram_Pass4_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
+//
+//			for(unsigned int i=0; i < renderQ_ptr->size(); i++)
+//			{
+//				//! Meshes
+//				if((*renderQ_ptr)[i]->GetType() == "Mesh" )
+//				{
+//					ModelMatrix = (*renderQ_ptr)[i]->GetModelMatrix();
+//					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+//					deferredProgram_Pass4_ptr->SetUniform("ModelMatrix", ModelMatrix);
+//					deferredProgram_Pass4_ptr->SetUniform("NormalMatrix", glm::transpose( glm::inverse(ViewMatrix * ModelMatrix) ) );
+//					deferredProgram_Pass4_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
+//					deferredProgram_Pass4_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+//					(*renderQ_ptr)[i]->Draw();
+//
+//				}
+//			}
+
+			//! ColorattachmentID to choose which attachment is displayed
+			deferredProgram_Pass4_ptr->SetUniform("textureID", tw_currentDeferredTex);
+
+			//! Texture uniforms
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflecVecTex", gBuffer_ptr->GetTexture(5), 5);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 6);
+
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 7);
+
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredSSRTex", reflection_fbo_ptr->GetTexture(0), 8);
 
 			//! Drawing
-			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
-			{
-				//! Geometry
-				if((*renderQ_ptr)[n]->GetType() == "Mesh")
-				{
-					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
-					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
-					ViewMatrix = scenegraph_ptr->GetActiveCamera()->GetViewMatrix();
-					ProjectionMatrix = scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix();
-					//! Matrix uniforms
-					deferredProgram_Pass4_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
-					deferredProgram_Pass4_ptr->SetUniform("ModelMatrix", ModelMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ViewMatrix", ViewMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
-					{
-						deferredProgram_Pass4_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
-						deferredProgram_Pass4_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
-						deferredProgram_Pass4_ptr->SetUniform("Material.id", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID());
-						deferredProgram_Pass4_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
-					}
-					static_cast<scene::Mesh*>((*renderQ_ptr)[n])->Draw();
-
-					//! Draws the bounding boxes
-					if(tw_boundingbox)
-					{
-						static_cast<scene::Mesh*>((*renderQ_ptr)[n])->DrawBoundingBox();
-					}
-				}
-
-				//! Lights
-				else if((*renderQ_ptr)[n]->GetType() == "Light" && tw_drawLights)
-				{
-					static_cast<scene::Light*>((*renderQ_ptr)[n])->SetPosition(glm::vec3(LightPosition));
-					ModelMatrix = static_cast<scene::Light*>((*renderQ_ptr)[n])->GetModelMatrix();
-					deferredProgram_Pass4_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
-					deferredProgram_Pass4_ptr->SetUniform("ModelMatrix", ModelMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ViewMatrix", ViewMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
-					deferredProgram_Pass4_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
-					deferredProgram_Pass4_ptr->SetUniformSampler("colorTex", *(materialman_ptr->GetTextureByID(2)), 5);
-					deferredProgram_Pass4_ptr->SetUniform("Material.id", -1);
-					deferredProgram_Pass4_ptr->SetUniform("Material.reflectance", 0.0f);
-					scenegraph_ptr->m_pointLightMesh->Draw();
-				}
-			}
+			fsq_ptr->Draw();
 
 			deferredProgram_Pass4_ptr->Unuse();
 		}
