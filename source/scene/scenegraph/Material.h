@@ -52,8 +52,8 @@ namespace scene {
 			std::vector<textureRef> m_texture_ids;
 
 			//! Material properties
-			glm::vec4 m_diffuseColor;
-			glm::vec4 m_specularColor;
+			glm::vec3 m_diffuseColor;
+			glm::vec3 m_specularColor;
 			float m_reflectance;
 
 		public:
@@ -66,14 +66,14 @@ namespace scene {
 			//! Getter
 			int GetMaterialID(void);
 			std::string GetName(void);
-			glm::vec4 GetDiffuseColor(void);
-			glm::vec4 GetSpecularColor(void);
+			glm::vec3 GetDiffuseColor(void);
+			glm::vec3 GetSpecularColor(void);
 			float GetReflectivity(void);
 			//! Setter
 			void SetID(int mat_id);
 			void SetName(std::string mat_name);
-			void SetDiffuseColor(glm::vec4 diffuse);
-			void SetSpecularColor(glm::vec4 specular);
+			void SetDiffuseColor(glm::vec3 diffuse);
+			void SetSpecularColor(glm::vec3 specular);
 			void SetReflectance(float reflection);
 			//! Functions
 			void AddTexture(textureRef tex);

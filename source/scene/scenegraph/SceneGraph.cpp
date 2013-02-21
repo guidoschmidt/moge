@@ -60,10 +60,11 @@ namespace scene {
 	 */
 	void SceneGraph::LoadSceneFromFile(const std::string filename)
 	{
+		m_scene_name = "museum";
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
-			m_scene_ptr = m_aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_RemoveRedundantMaterials );
+			m_scene_ptr = m_aiImporter.ReadFile(filename, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_RemoveRedundantMaterials );
 			if(!m_scene_ptr)
 			{
 				m_logfile << "ERROR | assimp: could not import " << filename << std::endl;
@@ -90,7 +91,7 @@ namespace scene {
 	{
 		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
-		glm::vec3 position(0.0f, 25.0f, 50.0f);
+		glm::vec3 position(0.0f, 1.8f, 5.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		Camera* camera = new Camera(position, lookAt, up);
@@ -117,60 +118,70 @@ namespace scene {
 			//! Get material's textures
 			aiString ai_tex_path;
 			std::vector<texture> textures;
+			std::string tex_name;
+			float reflectance = 0.0f;
 
 			//! File-extension and folder of textures
 			std::string fileextension = "tga";
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path);
-			std::string diffuseTex_path = &(ai_tex_path.data[0]);
-			size_t foundname = diffuseTex_path.find_last_of("/");
-			std::string tex_name_temp = diffuseTex_path.substr(foundname+1);
-			unsigned extPos = tex_name_temp.find("." + fileextension);
-			std::string tex_name = tex_name_temp.erase(extPos);
-			float reflectance = 0.0f;
+			if(AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path))
+			{
+				std::string diffuseTex_path = &(ai_tex_path.data[0]);
+				size_t foundname = diffuseTex_path.find_last_of("/");
+				std::string tex_name_temp = diffuseTex_path.substr(foundname+1);
+				unsigned extPos = tex_name_temp.find("." + fileextension);
+				tex_name = tex_name_temp.erase(extPos);
+			}
+			else
+			{
+				tex_name = "none";
+			}
 
-			//! Light material?
+			//! Light material
 			size_t foundLight = mat_name.find_first_of("_");
+
 			std::string isLight = mat_name.substr(0, foundLight);
+			aiColor3D aiDiffuse;
+			material->Get(AI_MATKEY_COLOR_SPECULAR, aiDiffuse);
+			glm::vec3 difColor = glm::vec3(aiDiffuse.r, aiDiffuse.g, aiDiffuse.b);
+
 			if(isLight == "Light")
 			{
 				texture light;
-				light.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
+				light.m_filename = "./assets/texture/light/Light.tga";
 				light.m_type = LIGHT;
 				textures.push_back(light);
 			}
 
 			//! Other materials
-			//! Diffuse
+			//! Diffuse maps
 			texture diffuse;
-			diffuse.m_filename = "./assets/texture/"+ fileextension + "/" + tex_name + "." + fileextension;
+			diffuse.m_filename = "./assets/texture/" + m_scene_name + "/" + fileextension + "/" + tex_name + "." + fileextension;
 			diffuse.m_type = DIFFUSE;
 			textures.push_back(diffuse);
-
-			if(mat_name == "Cobblestone")
-				reflectance = 1.0f;
 
 			//! Console output
 			std::cout << "\nMaterial " << mat << ":" << mat_name << std::endl;
 			std::cout << "	Textures: " << std::endl;
 			std::cout << "	" << diffuse.m_type << ": " << diffuse.m_filename << std::endl;
-			//! Normal
+			//! Normal maps
 			if(
 					mat_name == "Street" || mat_name == "Skin" || mat_name == "Tiles" ||
-					mat_name == "Cobblestone"
+					mat_name == "Cobblestone" || mat_name == "Museum"
 			   )
 			{
 				texture normal;
-				normal.m_filename = "./assets/texture/" + fileextension + "/" + tex_name + "_normal." + fileextension;
+				normal.m_filename = "./assets/texture/" + m_scene_name + "/" + fileextension + "/" + tex_name + "_normal." + fileextension;
 				normal.m_type = NORMAL;
 				textures.push_back(normal);
 				std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
 			}
 
-			m_materialman_ptr->AddMaterial(mat_name, reflectance, textures);
+			std::cout << "	" << "Diffuse Color " << difColor.r << ", " << difColor.g << ", " << difColor.b << std::endl;
+			m_materialman_ptr->AddMaterial(mat_name, difColor, reflectance, textures);
 		}
 
-		// Cubemaps
-		//m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/stockholm");
+		/* CUBEMAPS ****************************************************************/
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/skybox");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
@@ -194,18 +205,24 @@ namespace scene {
 				std::string node_name = &(ai_node_name.data[0]);
 				size_t foundname = node_name.find_first_of("_");
 				std::string node_type = node_name.substr(0, foundname);
+				node_name = node_name.substr(foundname+1);
 
 				//! Importing Nodes
 				/******************************************/
 				//! Light geometry
-				if(material_index == m_lightMatIndex && !m_pointLightMesh)
+				if(node_type == "LightGeometry")
 				{
-					m_pointLightMesh = new Mesh(scene->mMeshes[meshID]);
+					if(node_name == "Sphere")
+						m_pointLightMesh = new Mesh(scene->mMeshes[meshID]);
+					else if(node_name == "Cone")
+						m_spotLightMesh = new Mesh(scene->mMeshes[meshID]);
 				}
 				//! Lights
 				if(node_type == "Light")
 				{
-					Light* light = new Light(glm::vec3(0.0f), 1.0f, glm::vec3(1.0f), POINT);
+					Light* light = new Light(node_name, glm::vec3(0.0f), 1.0f, glm::vec3(1.0f), POINT);
+					m_materialman_ptr->GetMaterial(material_index)->GetDiffuseColor();
+
 					//! Convert the aiNode's transformation and store them in mesh
 					//! Translation
 					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
@@ -219,14 +236,17 @@ namespace scene {
 					light->RotateQuat(rotation);
 
 					light->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
+					light->SetColor(light->GetMaterial()->GetDiffuseColor());
 
 					m_root.AddChild(light);
 					m_lights.push_back(light);
-					m_activeLight_ptr = 0;
-					std::cout << "Node #" << c << " is a Light!" << std::endl;
+					m_activeLight_ptr = m_lights.size()-1;
+
+					std::cout << "Node #" << c << " is a Light!";
+					std::cout << " Color: "<< light->GetColor().r << ", " << light->GetColor().r << ", " << light->GetColor().r << std::endl;
 				}
 				//! Mesh geometry
-				if(node_type == "Mesh")
+				else if(node_type == "Mesh")
 				{
 					Mesh* mesh = new Mesh(scene->mMeshes[meshID]);
 					mesh->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
@@ -246,10 +266,33 @@ namespace scene {
 					m_root.AddChild(mesh);
 					m_logfile << "Mesh #" << m << " was added to the scenegraph!" << std::endl;
 				}
+				//! Billboards
+				else if(node_type == "Billboard")
+				{
+					Billboard* billboard = new Billboard(scene->mMeshes[meshID]);
+					billboard->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
+
+					//! Convert the aiNode's transformation and store them in mesh
+					//! Translation
+					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
+					billboard->Translate(position);
+					//! Scale
+					glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
+					billboard->Scale(scale);
+					//! Rotation
+					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
+					billboard->RotateQuat(rotation);
+
+					//! Add billboard to scenegraph
+					m_root.AddChild(billboard);
+					m_logfile << "Billboard #" << m << " was added to the scenegraph!" << std::endl;
+				}
 			}
 		}
 
-		m_logfile << "Scene Processing was successfull" << std::endl;
+		m_logfile << "Scene Processing was successfull:" << std::endl;
+		std::cout << "Scene # Lights:" << m_lights.size() << std::endl;
+
 		m_setupComplete = true;
 	}
 
@@ -287,6 +330,27 @@ namespace scene {
 		return m_root.GetChild(i);
 	}
 
+	//!
+	/*!
+	 *
+	 * @param type
+	 * @return
+	 */
+	Mesh* SceneGraph::GetLightMesh(lighttype type)
+	{
+		Mesh* mesh;
+		switch(type)
+		{
+			case POINT:
+				mesh = m_pointLightMesh;
+				break;
+			case SPOT:
+				mesh = m_spotLightMesh;
+				break;
+		}
+		return mesh;
+	}
+
 
 	//!
 	/*!
@@ -309,7 +373,7 @@ namespace scene {
 	 */
 	Light* SceneGraph::GetActiveLight(void)
 	{
-		if(m_activeLight_ptr > 0 && m_activeLight_ptr < m_lights.size())
+		if(m_activeLight_ptr >= 0 && m_activeLight_ptr < m_lights.size())
 			return m_lights[m_activeLight_ptr];
 		else
 			return new Light();
@@ -318,8 +382,28 @@ namespace scene {
 	//!
 	/*!
 	 *
+	 */
+	int SceneGraph::GetLightCount(void)
+	{
+		return m_lights.size();
+	}
+
+
+	//!
+	/*!
+	 *
 	 * @param i
 	 * @return
+	 */
+	Light* SceneGraph::GetLight(int i)
+	{
+		return m_lights[i];
+	}
+
+	//!
+	/*!
+	 *
+	 * @param i
 	 */
 	void SceneGraph::SetActiveLight(int i)
 	{

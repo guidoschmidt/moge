@@ -23,13 +23,14 @@ namespace scene {
 			float m_intensity;
 			glm::vec3 m_color;
 			lighttype m_lightType;
+			std::string m_name;
 
 			//! Material
 			Material* m_material_ptr;
 
 		public:
 			Light();
-			Light(glm::vec3 position, float intensty, glm::vec3 color, lighttype type);
+			Light(std::string name, glm::vec3 position, float intensty, glm::vec3 color, lighttype type);
 
 			virtual ~Light();
 
@@ -37,6 +38,7 @@ namespace scene {
 			float GetIntensity(void);
 			glm::vec3 GetColor(void);
 			lighttype GetLightType(void);
+			std::string GetName(void);
 			Material* GetMaterial(void);
 			GLuint* GetTextureHandle();
 			//! Setter

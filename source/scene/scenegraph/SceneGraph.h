@@ -26,6 +26,7 @@
 //! Local includes
 #include "../../utilities/Singleton.h"
 #include "../MaterialManager.h"
+#include "Billboard.h"
 #include "Camera.h"
 #include "Light.h"
 #include "Material.h"
@@ -40,6 +41,7 @@ namespace scene {
 			bool m_setupComplete;
 			Camera* m_activeCamera_ptr;
 			int m_activeLight_ptr;
+			std::string m_scene_name;
 
 			//! Assimp
 			Assimp::Importer m_aiImporter;
@@ -61,12 +63,13 @@ namespace scene {
 
 			//! Light geometry
 			unsigned int m_lightMatIndex;
+			Mesh* m_pointLightMesh;
+			Mesh* m_spotLightMesh;
 
 		protected:
 			void ProcessScene(const aiScene* scene);
 
 		public:
-			Mesh* m_pointLightMesh;
 
 			SceneGraph();
 			virtual ~SceneGraph();
@@ -82,6 +85,9 @@ namespace scene {
 			Node* GetNode(int i);
 			Camera* GetActiveCamera(void);
 			Light* GetActiveLight(void);
+			Light* GetLight(int i);
+			Mesh* GetLightMesh(lighttype type);
+			int GetLightCount(void);
 			void SetActiveLight(int i);
 
 			//! Drawing

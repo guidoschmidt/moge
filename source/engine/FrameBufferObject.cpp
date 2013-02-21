@@ -41,20 +41,22 @@ FrameBufferObject::~FrameBufferObject()
  */
 void FrameBufferObject::CreateGBuffer(void)
 {
-	//! Positions
+	//! World Positions
 	AddColorAttachment(0);
-	//! Colors
+	//! View Positions
 	AddColorAttachment(1);
-	//! Normals
+	//! Colors
 	AddColorAttachment(2);
-	//! MaterialIDs
+	//! Normals
 	AddColorAttachment(3);
-	//! Reflectivity
+	//! MaterialIDs
 	AddColorAttachment(4);
-	//! Reflection vector
+	//! Reflectance
 	AddColorAttachment(5);
+	//! Reflection vector
+	AddColorAttachment(6);
 	//! Depth
-	AddDepthAttachment_Texture(6);
+	AddDepthAttachment_Texture(7);
 
 	std::cout << "# Attachments" << m_attachmentCounter << std::endl;
 	m_isGBuffer = true;
@@ -147,7 +149,7 @@ void FrameBufferObject::Use(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-		glDrawBuffers(6, &m_drawBuffers[0]);
+		glDrawBuffers(7, &m_drawBuffers[0]);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 	}

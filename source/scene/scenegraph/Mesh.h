@@ -26,21 +26,22 @@
 
 namespace scene {
 
+	struct BoundingBox{
+		glm::vec3 max;
+		glm::vec3 min;
+		std::vector<GLfloat> vertices;
+		std::vector<GLint> indices;
+	};
+
 	class Mesh : public Node {
-		struct BoundingBox{
-			glm::vec3 max;
-			glm::vec3 min;
-			std::vector<GLfloat> vertices;
-			std::vector<GLint> indices;
-		};
 
 		private:
 			//! Topology variables
-			aiMesh* mesh_ptr;
-			std::vector<GLfloat> vertices;
-			std::vector<GLint> indices;
-			std::vector<GLfloat> normals;
-			std::vector<GLfloat> uvs;
+			aiMesh* m_mesh_ptr;
+			std::vector<GLfloat> m_vertices;
+			std::vector<GLint> m_indices;
+			std::vector<GLfloat> m_normals;
+			std::vector<GLfloat> m_uvs;
 			BoundingBox m_boundingBox;
 
 			//! Buffer handlers
@@ -48,10 +49,10 @@ namespace scene {
 			GLuint VAO_id, BBVAO_id;
 			GLuint VBO_id, IBO_id, NBO_id, UVBO_id, BBO_id, BBIO_id;
 
-			//! Material
 			Material* material_ptr;
 
 		protected:
+
 			void Initialize(void);
 			void CreateBuffers(void);
 			void CreateBoundingBox(void);

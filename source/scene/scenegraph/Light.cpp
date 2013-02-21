@@ -20,8 +20,9 @@ namespace scene {
 	}
 
 	//!
-	Light::Light(glm::vec3 position, float intensity, glm::vec3 color, lighttype type)
+	Light::Light(std::string name, glm::vec3 position, float intensity, glm::vec3 color, lighttype type)
 	{
+		m_name = name;
 		m_type = "Light";
 		m_position = position;
 		m_intensity = intensity;
@@ -48,6 +49,12 @@ namespace scene {
 	glm::vec3 Light::GetColor(void)
 	{
 		return m_color;
+	}
+
+	//!
+	std::string Light::GetName(void)
+	{
+		return m_name;
 	}
 
 	lighttype Light::GetLightType(void)

@@ -25,7 +25,7 @@ namespace scene {
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
 		m_nearPlane = 0.1f;
-		m_farPlane = 500.0f;
+		m_farPlane = 200.0f;
 
 		m_translationMatrix = glm::mat4(1.0f);
 		m_rotationMatrix = glm::mat4(1.0f);
@@ -51,7 +51,7 @@ namespace scene {
 		m_fieldOfView = 60.0f;
 		m_aspect = CalculateAspect();
 		m_nearPlane = 0.1f;
-		m_farPlane = 500.f;
+		m_farPlane = 200.f;
 
 		m_translationMatrix = glm::mat4(1.0f);
 		m_qOrientation = glm::quat(0.0f, 0.0f, 0.0f, 0.0f);
@@ -214,7 +214,7 @@ namespace scene {
 	//! Resets the camera to an inital position
 	void Camera::Reset(void)
 	{
-		m_position = glm::vec3(0.0f, 25.0f, 50.0f);
+		m_position = glm::vec3(0.0f, 1.80f, 5.0f);
 		m_lookAt = glm::vec3(0.0f, 0.0f, 0.0f);
 		m_up = glm::vec3(0.0f, 1.0f, 0.0f);
 

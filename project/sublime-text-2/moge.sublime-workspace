@@ -4,20 +4,160 @@
 		"selected_items":
 		[
 			[
+				"light",
+				"lightPos"
+			],
+			[
+				"node",
+				"node_name"
+			],
+			[
+				"no",
+				"node"
+			],
+			[
+				"node_",
+				"node_name"
+			],
+			[
+				"defe",
+				"deferredWoldPositionTex"
+			],
+			[
+				"di",
+				"diffuseColor"
+			],
+			[
+				"diff",
+				"diffuseShading"
+			],
+			[
+				"li",
+				"lightPosition"
+			],
+			[
+				"deferredV",
+				"deferredViewPositionTex"
+			],
+			[
+				"ligh",
+				"lightCount"
+			],
+			[
+				"ver",
+				"vert_EyePosition"
+			],
+			[
+				"ref",
+				"Reflectance"
+			],
+			[
+				"nor",
+				"normal"
+			],
+			[
+				"cub",
+				"cubemapReflectVec"
+			],
+			[
+				"re",
+				"reflectance"
+			],
+			[
+				"r",
+				"rayStep"
+			],
+			[
+				"dfe",
+				"deferredReflectionVecTex"
+			],
+			[
+				"ray",
+				"rayStep"
+			],
+			[
+				"sa",
+				"samplePosition2D"
+			],
+			[
+				"pro",
+				"projRay"
+			],
+			[
+				"s",
+				"sampleDepth"
+			],
+			[
+				"def",
+				"deferredDepthTex"
+			],
+			[
+				"sam",
+				"samplePosition3D"
+			],
+			[
+				"defer",
+				"deferredReflectionVecTex"
+			],
+			[
+				"u",
+				"vert_UV"
+			],
+			[
+				"refl",
+				"refl"
+			],
+			[
+				"ker",
+				"kernelY"
+			],
+			[
+				"refle",
+				"reflectance"
+			],
+			[
+				"ji",
+				"jitter"
+			],
+			[
+				"deferr",
+				"deferredSSRTex"
+			],
+			[
+				"lin",
+				"linearizeDepth"
+			],
+			[
+				"posi",
+				"position"
+			],
+			[
+				"vet",
+				"vert_UV"
+			],
+			[
+				"scre",
+				"screenPos"
+			],
+			[
+				"sc",
+				"screenPos"
+			],
+			[
+				"de",
+				"deferredDepthTex"
+			],
+			[
+				"v",
+				"vert_UV"
+			],
+			[
 				"tw_ligh",
 				"tw_currentLight"
 			],
 			[
 				"Ligh",
 				"LightDiffuses"
-			],
-			[
-				"sa",
-				"sampledPosition"
-			],
-			[
-				"defe",
-				"deferredDepthTex"
 			],
 			[
 				"refineSa",
@@ -36,24 +176,8 @@
 				"refineSamplePosition"
 			],
 			[
-				"ref",
-				"refineVector"
-			],
-			[
 				"cu",
 				"currentDepth"
-			],
-			[
-				"de",
-				"deferredDiffuseTex"
-			],
-			[
-				"sam",
-				"sampledPosition"
-			],
-			[
-				"re",
-				"refinements"
 			],
 			[
 				"to",
@@ -68,32 +192,12 @@
 				"vec4"
 			],
 			[
-				"light",
-				"lightDiffuse"
-			],
-			[
-				"li",
-				"lightPositions"
-			],
-			[
-				"ver",
-				"vert_EyePosition"
-			],
-			[
 				"raytra",
 				"Raytracing"
 			],
 			[
 				"refe",
 				"reflectionVector"
-			],
-			[
-				"ray",
-				"rayStepSize"
-			],
-			[
-				"def",
-				"deferredDepthTex"
 			],
 			[
 				"sh",
@@ -130,10 +234,6 @@
 			[
 				"Cam",
 				"Camera"
-			],
-			[
-				"nor",
-				"normalizedResolution"
 			],
 			[
 				"loc",
@@ -192,16 +292,8 @@
 				"tsph"
 			],
 			[
-				"r",
-				"rayO"
-			],
-			[
 				"ra",
 				"rayO"
-			],
-			[
-				"no",
-				"normal"
 			],
 			[
 				"mO",
@@ -233,10 +325,6 @@
 			],
 			[
 				"divi",
-				"divider"
-			],
-			[
-				"di",
 				"divider"
 			],
 			[
@@ -296,16 +384,8 @@
 				"NormalMatrix"
 			],
 			[
-				"lin",
-				"linearizeDepth"
-			],
-			[
 				"Hei",
 				"Height"
-			],
-			[
-				"defer",
-				"deferredDepthTex"
 			],
 			[
 				"mat",
@@ -328,10 +408,6 @@
 				"linearizeDepth"
 			],
 			[
-				"pro",
-				"ProjectionMatrix"
-			],
-			[
 				"ssVe",
 				"ssVecPos"
 			],
@@ -346,10 +422,6 @@
 			[
 				"vsReflectV",
 				"vsReflectVec"
-			],
-			[
-				"refle",
-				"reflection"
 			],
 			[
 				"dept",
@@ -442,78 +514,6 @@
 			[
 				"sampled",
 				"sampledDepth"
-			],
-			[
-				"refl",
-				"reflect"
-			],
-			[
-				"new",
-				"newReflectionVector"
-			],
-			[
-				"cam",
-				"Camera"
-			],
-			[
-				"pos",
-				"position"
-			],
-			[
-				"xy",
-				"xyz"
-			],
-			[
-				"deferreD",
-				"deferredDiffuseTex"
-			],
-			[
-				"rayD",
-				"rayDepth"
-			],
-			[
-				"rec",
-				"reflectedColor"
-			],
-			[
-				"trac",
-				"tracedRay"
-			],
-			[
-				"traced",
-				"tracedRay"
-			],
-			[
-				"reflecta",
-				"reflectance"
-			],
-			[
-				"reflection",
-				"reflectionVector"
-			],
-			[
-				"deferr",
-				"deferredPositionTex"
-			],
-			[
-				"in",
-				"include"
-			],
-			[
-				"back",
-				"background"
-			],
-			[
-				"fon",
-				"font-variant"
-			],
-			[
-				"text",
-				"text-transform"
-			],
-			[
-				"pa",
-				"padding"
 			]
 		]
 	},
@@ -523,15 +523,15 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 2631,
+				"buffer_size": 2569,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
 			"settings":
 			{
-				"buffer_size": 27879,
+				"buffer_size": 11141,
 				"line_ending": "Windows"
 			}
 		}
@@ -600,15 +600,22 @@
 	},
 	"file_history":
 	[
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/4-deferred_compositing.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
+		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/include/fast_lbf.h",
+		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/cross_bilateral_filter.cpp",
+		"/D/Studium/Hiwi West/Informatik 2013/hotels/hotels.html",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/4-deferred_compositing.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/4-deferred_compositing.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-bb.frag.glsl",
@@ -619,7 +626,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections2.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.vs",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-SSR-gBufferProgram.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-SSR-gBufferProgram.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/CMakeLists.txt",
@@ -717,6 +723,20 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"deferredWorlPositionTex",
+			"Pos",
+			";\n",
+			"vert_Position",
+			" \n",
+			"rayDepth",
+			"sampleDepth",
+			"rayDepth",
+			"sampleDepth",
+			"sampledPosition",
+			"stepX",
+			"mesh",
+			"	reflectionVector",
+			"	position.xy = 0.5f * position.xy + 0.5f;\n",
 			"currentDepth",
 			"\n				",
 			"materialID",
@@ -843,7 +863,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -851,15 +871,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 2631,
+						"buffer_size": 2569,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								587,
-								587
+								1789,
+								1789
 							]
 						],
 						"settings":
@@ -958,25 +978,29 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 399.0,
+						"translation.y": 1097.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
 					"settings":
 					{
-						"buffer_size": 27879,
+						"buffer_size": 11141,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								19714,
-								19714
+								6059,
+								6059
+							],
+							[
+								6132,
+								6132
 							]
 						],
 						"settings":
@@ -1075,7 +1099,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 10678.0,
+						"translation.y": 3340.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1129,8 +1153,16 @@
 		"selected_items":
 		[
 			[
+				"scene",
+				"source/scene/scenegraph/SceneGraph.cpp"
+			],
+			[
 				"3",
 				"source/shaders/deferred/3-deferred_reflections.frag.glsl"
+			],
+			[
+				"4",
+				"source/shaders/deferred/4-deferred_compositing.frag.glsl"
 			],
 			[
 				"inde",
@@ -1159,6 +1191,10 @@
 			[
 				"",
 				"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/project/bachelorarbeit.sublime-project"
+			],
+			[
+				"ju",
+				"/C/Users/guidoschmidt/Development/code/web/juli/project/juli.sublime-project"
 			]
 		],
 		"width": 380.0

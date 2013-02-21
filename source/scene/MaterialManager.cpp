@@ -53,7 +53,7 @@ namespace scene {
 	 * @param name
 	 * @param texturefile
 	 */
-	void MaterialManager::AddMaterial(std::string name, float reflectivity, std::vector<texture> textures)
+	void MaterialManager::AddMaterial(std::string name, glm::vec3 diffuse, float reflectivity, std::vector<texture> textures)
 	{
 		m_materials.push_back(new Material(m_materialCounter, name));
 		for(unsigned int tex = 0; tex < textures.size(); tex++)
@@ -70,6 +70,7 @@ namespace scene {
 
 			m_textureCounter++;
 		}
+		m_materials[m_materialCounter]->SetDiffuseColor(diffuse);
 		m_materialCounter++;
 	}
 
@@ -93,19 +94,18 @@ namespace scene {
 	 */
 	void MaterialManager::LoadTexture(std::string filename)
 	{
-		ILboolean loadSuccess = ilLoadImage(filename.c_str());
+		//ILboolean loadSuccess = ilLoadImage(filename.c_str());
 
-		if(loadSuccess)
-		{
+		//if(loadSuccess)
+		//{
 			glActiveTexture(GL_TEXTURE0);
 			glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
 			glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
-			//! Set texture's clamping
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			//! Set texture's filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			//! New gflw texture loading
+			glfwLoadTexture2D(&filename[0], GLFW_BUILD_MIPMAPS_BIT);
+			//! OLd devIL texture loading
+			/*!
 			//! Load image into texture
 			glTexImage2D(	GL_TEXTURE_2D,
 							0,
@@ -116,15 +116,28 @@ namespace scene {
 							ilGetInteger(IL_IMAGE_FORMAT),
 							GL_UNSIGNED_BYTE,
 							ilGetData());
+			//! Build mipmaps
+			//ILboolean ilutOglBuildMipmaps();
+			*/
+
+			//! Set texture's clamping
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			//! Set texture's filtering
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+			/*!
 			//! Delete image
 			ilDeleteImages(1, &Image_id);
 			std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
-		}
-		else if(!loadSuccess)
-		{
-			ErrorCheckTexture = ilGetError();
-			std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
-		}
+			*/
+		//}
+		//else if(!loadSuccess)
+		//{
+		//	ErrorCheckTexture = ilGetError();
+		//	std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
+		//}
 	}
 
 
@@ -157,7 +170,7 @@ namespace scene {
 		//! Load cubemap images
 		for(int i=0; i < 6; i++)
 		{
-			std::string m_filename = filename + "_" + suffixes[i] + ".png";
+			std::string m_filename = filename + "_" + suffixes[i] + ".tga";
 			loadSuccess = ilLoadImage(m_filename .c_str());
 			glTexImage2D(	cubemap_targets[i],
 							0,

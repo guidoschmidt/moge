@@ -15,7 +15,7 @@
 #include <string>
 //! OpenGL includes
 #include <GL/glew.h>
-#include <GL/gl.h>
+#include <GL/glfw.h>
 //! DevIL includes
 #include <IL/il.h>
 #include <IL/ilu.h>
@@ -61,7 +61,7 @@ namespace scene {
 
 			//! Material
 			void AddMaterial(std::string name);
-			void AddMaterial(std::string name, float reflectivity, std::vector<texture> textures);
+			void AddMaterial(std::string name, glm::vec3 diffuse, float reflectivity, std::vector<texture> textures);
 			void AddCubeMap(std::string filename);
 
 			//! Getter

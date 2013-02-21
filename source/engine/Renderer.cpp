@@ -101,13 +101,15 @@ void Renderer::Initialize(int width, int height)
 	//! Deferred: render targets choice
 	TwEnumVal texEV[NUM_TEXS] = {
 									{TEX_COMPOSIT, "Composited"},
-									{TEX_POSITION, "Positionmap"},
+									{TEX_WORLDPOSITION, "World Positionmap"},
+									{TEX_VIEWPOSITION, "View Positionmap"},
 									{TEX_COLOR, "Colormap"},
 									{TEX_NORMAL, "Normalmap"},
 									{TEX_MATID, "Material ID"},
 									{TEX_REFL, "Reflectance"},
 									{TEX_REFLVEC, "Reflection Vector"},
-									{TEX_DEPTH, "Depthmap"}};
+									{TEX_DEPTH, "Depthmap"},
+									{TEX_SSR, "SSR"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context_ptr->GetBar(), "deferredTextureChoice", texType, &tw_currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
 	//! Scene choice
@@ -129,8 +131,10 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOLCPP, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 	//! SSR parameters
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.0001' value='0.015' step='0.001' group='SSR' label='Step size'");
+	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.0001' value='0.005' step='0.001' group='SSR' label='Step size'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
+	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='8' label='Kernel X'");
+	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='8' label='Kernel Y'");
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug depht'");
 	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vector'");
@@ -140,9 +144,7 @@ void Renderer::Initialize(int width, int height)
 	//! Normal mapping
 	TwAddVarRW(context_ptr->GetBar(), "normalmapping", TW_TYPE_BOOLCPP, &tw_useNormalMapping, "group='Material' label='Normal mapping'");
 	//! Light properties
-	TwEnumVal lightEV[2] = { {0, "Light 1"}, {1, "Light 2"} };
-	TwType lightChoice = TwDefineEnum("Light #", lightEV, 2);
-	TwAddVarRW(context_ptr->GetBar(), "lightchoice", lightChoice, &tw_currentLight, "label='Light' group='Light' keyIncr='<' keyDecr='>' help='Select editable light.' ");
+	TwAddVarRW(context_ptr->GetBar(), "lightambient", TW_TYPE_COLOR3F, &LightAmbient, "label='Ambient' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "lightdiffuse", TW_TYPE_COLOR3F, &LightDiffuse, "label='Diffuse' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "lightdpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "drawlights", TW_TYPE_BOOLCPP, &tw_drawLights, "group='Light' label='Draw lights'");
@@ -225,15 +227,8 @@ void Renderer::InitializeMatrices(void)
  */
 void Renderer::InitializeLight(void)
 {
-	LightPosition = glm::vec4(0.0f, 10.0f, 0.0f, 0.0f);
+	LightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
-	LightDiffuses[0] = 1.0f;
-	LightDiffuses[1] = 1.0f;
-	LightDiffuses[2] = 1.0f;
-	LightDiffuses[3] = 0.25f;
-	LightDiffuses[4] = 0.0f;
-	LightDiffuses[5] = 0.15f;
-
 	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
 }
 
@@ -463,9 +458,27 @@ void Renderer::RenderLoop(void){
 		if(!loaded){
 			switch (tw_currentScene) {
 				case HEAD:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/collada/BillboardScene.dae");
+					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/collada/museum/Museum.dae");
 					break;
 			}
+			TwEnumVal lightEV[scenegraph_ptr->GetLightCount()];
+			for(int l = 0; l < scenegraph_ptr->GetLightCount(); l++)
+			{
+				lightEV[l].Label = scenegraph_ptr->GetLight(l)->GetName().c_str();
+				lightEV[l].Value = l;
+				//! Positions
+				LightPositions[l][0] = scenegraph_ptr->GetLight(l)->GetPosition().x;
+				LightPositions[l][1] = scenegraph_ptr->GetLight(l)->GetPosition().y;
+				LightPositions[l][2] = scenegraph_ptr->GetLight(l)->GetPosition().z;
+				//! Colors
+				LightDiffuses[l][0]  = scenegraph_ptr->GetLight(l)->GetColor().x;
+				LightDiffuses[l][1]  = scenegraph_ptr->GetLight(l)->GetColor().y;
+				LightDiffuses[l][2]  = scenegraph_ptr->GetLight(l)->GetColor().z;
+			}
+
+			TwType lightChoice = TwDefineEnum("Light #", lightEV, scenegraph_ptr->GetLightCount());
+			TwAddVarRW(context_ptr->GetBar(), "lightchoice", lightChoice, &tw_currentLight, "label='Light' group='Light' keyIncr='<' keyDecr='>' help='Select editable light.' ");
+
 			renderQ_ptr = Singleton<scene::SceneOrganizer>::Instance()->OrganizeByMaterial();
 			std::cout << "RenderQ has size: " << renderQ_ptr->size() << std::endl;
 			loaded = true;
@@ -510,7 +523,7 @@ void Renderer::RenderLoop(void){
 			m_gBufferProgram_ptr->Use();
 
 			//! Cubemap uniforms
-			//m_gBufferProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMapByID(0)), 0);
+			m_gBufferProgram_ptr->SetUniformCubemap("cubeMapTex", *(materialman_ptr->GetCubeMapByID(0)), 0);
 
 			//! Normal mapping uniform
 			m_gBufferProgram_ptr->SetUniform("useNormalMapping", tw_useNormalMapping);
@@ -535,8 +548,8 @@ void Renderer::RenderLoop(void){
 					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
-						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
+						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 1);
+						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 2);
 						m_gBufferProgram_ptr->SetUniform("Material.id", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID());
 						m_gBufferProgram_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
 					}
@@ -552,9 +565,15 @@ void Renderer::RenderLoop(void){
 				//! Lights
 				else if((*renderQ_ptr)[n]->GetType() == "Light" && tw_drawLights)
 				{
-					//! Light properties
 					scenegraph_ptr->SetActiveLight(tw_currentLight);
-					scenegraph_ptr->GetActiveLight()->SetPosition(glm::vec3(LightPosition));
+					scenegraph_ptr->GetActiveLight()->SetPosition(LightPosition);
+					scenegraph_ptr->GetActiveLight()->SetColor(LightDiffuse);
+					LightPositions[tw_currentLight][0] = LightPosition.x;
+					LightPositions[tw_currentLight][1] = LightPosition.y;
+					LightPositions[tw_currentLight][2] = LightPosition.z;
+					LightDiffuses[tw_currentLight][0] = LightDiffuse.r;
+					LightDiffuses[tw_currentLight][1] = LightDiffuse.g;
+					LightDiffuses[tw_currentLight][2] = LightDiffuse.b;
 
 					//! Uniforms
 					ModelMatrix = static_cast<scene::Light*>((*renderQ_ptr)[n])->GetModelMatrix();
@@ -564,12 +583,43 @@ void Renderer::RenderLoop(void){
 					m_gBufferProgram_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
 					m_gBufferProgram_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
 					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+
 					m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Light*>((*renderQ_ptr)[n])->GetTextureHandle()), 5);
+					m_gBufferProgram_ptr->SetUniform("lightColor", (static_cast<scene::Light*>((*renderQ_ptr)[n])->GetColor()));
+
 					m_gBufferProgram_ptr->SetUniform("Material.id", -1);
 					m_gBufferProgram_ptr->SetUniform("Material.reflectance", 0.0f);
 
-					scenegraph_ptr->m_pointLightMesh->Draw();
+					scenegraph_ptr->GetLightMesh(scene::POINT)->Draw();
 				}
+				//! Billboards
+				else if((*renderQ_ptr)[n]->GetType() == "Billboard")
+				{
+					ModelMatrix = static_cast<scene::Billboard*>((*renderQ_ptr)[n])->GetModelMatrix();
+					ModelMatrix = glm::mat4(1.0f) * RotationMatrix * ModelMatrix;
+					//! Matrix uniforms
+					m_gBufferProgram_ptr->SetUniform("NormalMatrix", glm::transpose(glm::inverse(ViewMatrix * ModelMatrix)));
+					m_gBufferProgram_ptr->SetUniform("ModelMatrix", ModelMatrix);
+					m_gBufferProgram_ptr->SetUniform("ViewMatrix", ViewMatrix);
+					m_gBufferProgram_ptr->SetUniform("ModelViewMatrix", ViewMatrix * ModelMatrix);
+					m_gBufferProgram_ptr->SetUniform("ProjectionMatrix", ProjectionMatrix);
+					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
+					if(static_cast<scene::Billboard*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
+					{
+						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 5);
+						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 6);
+						m_gBufferProgram_ptr->SetUniform("Material.id", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID());
+						m_gBufferProgram_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
+					}
+					static_cast<scene::Billboard*>((*renderQ_ptr)[n])->Draw();
+
+					//! Draws the bounding boxes
+					if(tw_boundingbox)
+					{
+						//static_cast<scene::Billboard*>((*renderQ_ptr)[n])->DrawBoundingBox();
+					}
+				}
+
 			}
 
 			gBuffer_ptr->Unuse();
@@ -586,35 +636,15 @@ void Renderer::RenderLoop(void){
 			lighting_fbo_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			deferredProgram_Pass2_ptr->Use();
+
 			//! Light uniforms
+			deferredProgram_Pass2_ptr->SetUniform("ambientColor", LightAmbient);
+			deferredProgram_Pass2_ptr->SetUniform("Light.Position", 3, &LightPositions[0][0]);
+			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", 3, &LightDiffuses[0][0]);
 
-			if(tw_currentLight == 0)
-			{
-				LightPositions[0] = LightPosition.x;
-				LightPositions[1] = LightPosition.y;
-				LightPositions[2] = LightPosition.z;
-
-				LightDiffuses[0] = LightDiffuse.x;
-				LightDiffuses[1] = LightDiffuse.y;
-				LightDiffuses[2] = LightDiffuse.z;
-			}
-			else if(tw_currentLight == 1)
-			{
-				LightPositions[0] = LightPosition.x;
-				LightPositions[1] = LightPosition.y;
-				LightPositions[2] = LightPosition.z;
-
-				LightDiffuses[3] = LightDiffuse.x;
-				LightDiffuses[4] = LightDiffuse.y;
-				LightDiffuses[5] = LightDiffuse.z;
-			}
-
-			deferredProgram_Pass2_ptr->SetUniform("lightPositions", LightPositions);
-			deferredProgram_Pass2_ptr->SetUniform("Light.Position", LightPosition);
-			deferredProgram_Pass2_ptr->SetUniform("Light.Ambient", LightAmbient);
-			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", LightDiffuse);
-			deferredProgram_Pass2_ptr->SetUniform("lightDifusse", LightDiffuses);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
+			deferredProgram_Pass2_ptr->SetUniform("Light.Count", scenegraph_ptr->GetLightCount());
+
 			//! Material uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Shininess", m_shininess);
 			//! Matrix uniforms
@@ -632,11 +662,12 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass2_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Color attachments
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
-			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredWorldPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredViewPositionTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass2_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(5), 5);
 
 			//! Drawing
 			fsq_ptr->Draw();
@@ -658,7 +689,6 @@ void Renderer::RenderLoop(void){
 			//! Raytrace uniform parameters
 			deferredProgram_Pass3_ptr->SetUniform("toggleSSR", tw_SSR);
 			deferredProgram_Pass3_ptr->SetUniform("rayStepSize", tw_rayStepSize);
-			deferredProgram_Pass3_ptr->SetUniform("blur", tw_blur);
 			deferredProgram_Pass3_ptr->SetUniform("jittering", tw_jittering);
 			deferredProgram_Pass3_ptr->SetUniform("mouseSlider", tw_mouseSlider);
 			deferredProgram_Pass3_ptr->SetUniform("showReflVecs", tw_reflvec);
@@ -677,10 +707,12 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Colorattachments
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 6);
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 7);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(1), 0);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(3), 1);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(5), 2);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectionVecTex", gBuffer_ptr->GetTexture(6), 3);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 4);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 5);
 
 			//! Drawing
 			fsq_ptr->Draw();
@@ -724,18 +756,26 @@ void Renderer::RenderLoop(void){
 			//! ColorattachmentID to choose which attachment is displayed
 			deferredProgram_Pass4_ptr->SetUniform("textureID", tw_currentDeferredTex);
 
+			//! Blurring uniforms
+			deferredProgram_Pass4_ptr->SetUniform("blurSwitch", tw_blur);
+			deferredProgram_Pass4_ptr->SetUniform("kernelX", tw_blurX);
+			deferredProgram_Pass4_ptr->SetUniform("kernelY", tw_blurY);
+			//! Window uniforms
+			deferredProgram_Pass4_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
+			deferredProgram_Pass4_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Texture uniforms
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(0), 0);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(1), 1);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(2), 2);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(3), 3);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(4), 4);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflecVecTex", gBuffer_ptr->GetTexture(5), 5);
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 6);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredWorldPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredViewPositionTex", gBuffer_ptr->GetTexture(1), 1);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredColorTex", gBuffer_ptr->GetTexture(2), 2);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(3), 3);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredMaterialIDTex", gBuffer_ptr->GetTexture(4), 4);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(5), 5);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredReflecVecTex", gBuffer_ptr->GetTexture(6), 6);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDepthTex", gBuffer_ptr->GetDepthTexture(), 7);
 
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 7);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredDiffuseTex", lighting_fbo_ptr->GetTexture(0), 8);
 
-			deferredProgram_Pass4_ptr->SetUniformSampler("deferredSSRTex", reflection_fbo_ptr->GetTexture(0), 8);
+			deferredProgram_Pass4_ptr->SetUniformSampler("deferredSSRTex", reflection_fbo_ptr->GetTexture(0), 9);
 
 			//! Drawing
 			fsq_ptr->Draw();

@@ -199,7 +199,7 @@ void Context::AddAntTweakBar(void)
 
 	bar_ptr = TwNewBar("GUI");
 
-	TwDefine("GUI label='Engine Properties' contained='true' fontstyle='fixed' color='0 0 0' alpha='100' text='light' position='0 0' size='250 600'");
+	TwDefine("GUI label='Engine Properties' contained='true' fontstyle='fixed' color='0 0 0' alpha='50' text='light' position='0 0' size='250 800'");
 
 	//! Set GLFW event callbacks
 	//! Directly redirect GLFW mouse button events to AntTweakBar

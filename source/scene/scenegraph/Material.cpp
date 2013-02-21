@@ -51,8 +51,8 @@ namespace scene {
 	/*!
 	 *
 	 */
-	glm::vec4 Material::GetDiffuseColor(void){ return m_diffuseColor; }
-	glm::vec4 Material::GetSpecularColor(void){ return m_specularColor; }
+	glm::vec3 Material::GetDiffuseColor(void){ return m_diffuseColor; }
+	glm::vec3 Material::GetSpecularColor(void){ return m_specularColor; }
 	float Material::GetReflectivity(void){ return m_reflectance; }
 
 
@@ -60,8 +60,8 @@ namespace scene {
 	/*!
 	 *
 	 */
-	void Material::SetDiffuseColor(glm::vec4 diffuse){ m_diffuseColor = diffuse; }
-	void Material::SetSpecularColor(glm::vec4 specular){ m_specularColor = specular; }
+	void Material::SetDiffuseColor(glm::vec3 diffuse){ m_diffuseColor = diffuse; }
+	void Material::SetSpecularColor(glm::vec3 specular){ m_specularColor = specular; }
 	void Material::SetReflectance(float reflection){ m_reflectance= reflection; }
 
 

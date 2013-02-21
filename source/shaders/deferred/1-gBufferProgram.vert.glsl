@@ -7,11 +7,10 @@ layout (location=2) in vec2 uv;
 
 
 /*** Output *******************************************************************/
-out vec3 vert_Position;
+out vec3 vert_wsPosition;
+out vec3 vert_vsPosition;
 out vec3 vert_Normal;
 out vec2 vert_UV;
-out vec3 vert_Camera;
-out vec3 vert_ReflectDirection;
 out vec3 vert_EyePosition;
 
 /*** Uniforms *****************************************************************/
@@ -26,15 +25,11 @@ uniform mat4 MVPMatrix;
 /*** Main *********************************************************************/
 void main(void)
 {	
-	vert_Position = ( ViewMatrix * ModelMatrix * vec4(vertex, 1.0f) ).xyz;
-	// Normals are multiplied with transposed inverse model view matrix
+	vert_wsPosition = ( ModelMatrix * vec4(vertex, 1.0f) ).xyz;
+	vert_vsPosition = ( ViewMatrix * ModelMatrix * vec4(vertex, 1.0f) ).xyz;
 	vert_Normal = ( NormalMatrix * vec4(normal, 0.0f) ).xyz;
 	vert_UV = uv;
-	vert_EyePosition = normalize(-vert_Position);
-
-	// Cubemap reflections
-	vec3 worldView = normalize(-vert_Position);
-	vert_ReflectDirection = reflect(-worldView, vert_Normal);
+	vert_EyePosition = normalize(-vert_vsPosition);
 
 	gl_Position = MVPMatrix * vec4(vertex, 1.0f);
 }

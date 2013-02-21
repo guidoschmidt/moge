@@ -68,16 +68,18 @@ class Renderer
 		float time1, time2, timedif;
 
 		//! AnttWeakBar texture choose
-		typedef enum {	TEX_COMPOSIT	=	-1,
-						TEX_POSITION	=	 0,
-						TEX_COLOR		=	 1,
-						TEX_NORMAL		=	 2,
-						TEX_MATID		=	 3,
-						TEX_REFL		=	 4,
-						TEX_REFLVEC		=	 5,
-						TEX_DEPTH		=	 6
+		typedef enum {	TEX_COMPOSIT		=	-1,
+						TEX_WORLDPOSITION	=	 0,
+						TEX_VIEWPOSITION	=	 1,
+						TEX_COLOR			=	 2,
+						TEX_NORMAL			=	 3,
+						TEX_MATID			=	 4,
+						TEX_REFL			=	 5,
+						TEX_REFLVEC			=	 6,
+						TEX_DEPTH			=	 7,
+						TEX_SSR				=	 8,
 		} DeferredTexture;
-		#define NUM_TEXS 8
+		#define NUM_TEXS 10
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
@@ -92,6 +94,8 @@ class Renderer
 		float tw_rayStepSize;
 		bool tw_SSR;
 		bool tw_blur;
+		int tw_blurX;
+		int tw_blurY;
 		bool tw_compareDepth;
 		bool tw_reflvec;
 		bool tw_jittering;
@@ -111,11 +115,11 @@ class Renderer
 		glm::mat4 MVPMatrix;
 		//! Lights
 		int tw_currentLight;
-		glm::vec4 LightPosition;
-		GLfloat LightPositions[6];
 		glm::vec3 LightAmbient;
+		glm::vec3 LightPosition;
+		GLfloat LightPositions[3][3];
 		glm::vec3 LightDiffuse;
-		GLfloat LightDiffuses[6];
+		GLfloat LightDiffuses[3][3];
 		glm::vec3 LightSpecular;
 		//! Camera
 		glm::vec3 CameraPosition;

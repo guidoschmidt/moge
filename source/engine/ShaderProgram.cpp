@@ -252,10 +252,10 @@ void ShaderProgram::SetUniform(const std::string name, const glm::vec3 &vec)
 }
 
 //! Sets an uniform array of vectors
-void ShaderProgram::SetUniform(const std::string name, const GLfloat vec[])
+void ShaderProgram::SetUniform(const std::string name, int count, GLfloat* value_ptr)
 {
 	GLint glslVectorID = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
-	glUniform3fv(glslVectorID, 2, vec);
+	glUniform3fv(glslVectorID, count, value_ptr);
 }
 
 //! Set a uniform vector (4 components)

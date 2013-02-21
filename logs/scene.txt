@@ -1,6 +1,6 @@
 LOGFILE
 SCENE & SCENEGRAPH
-#Meshes: 9
+#Meshes: 36
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
@@ -8,4 +8,17 @@ Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
-Scene Processing was successfull
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Scene Processing was successfull:

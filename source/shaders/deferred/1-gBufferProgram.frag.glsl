@@ -8,27 +8,28 @@ struct MaterialInfo
 };
 
 /*** Input ********************************************************************/
-in vec3 vert_Position;
+in vec3 vert_wsPosition;
+in vec3 vert_vsPosition;
 in vec3 vert_Normal;
 in vec2 vert_UV;
-in vec3 vert_Camera;
-in vec3 vert_ReflectDirection;
 in vec3 vert_EyePosition;
-in float Z;
 
 /*** Output *******************************************************************/
-layout (location = 0) out vec3 Position;
-layout (location = 1) out vec3 Color;
-layout (location = 2) out vec3 Normal;
-layout (location = 3) out vec3 MaterialIDs;
-layout (location = 4) out vec4 Reflectance;
-layout (location = 5) out vec3 ReflectVec;
-//layout (location = 6) is DepthBuffer
+layout (location = 0) out vec3 WorldPosition;
+layout (location = 1) out vec3 ViewPosition;
+layout (location = 2) out vec3 Color;
+layout (location = 3) out vec3 Normal;
+layout (location = 4) out vec3 MaterialIDs;
+layout (location = 5) out vec4 Reflectance;
+layout (location = 6) out vec3 ReflectVec;
+//layout (location = 6) out vec3 Depth (DepthBuffer)
 
 /*** Uniforms *****************************************************************/
+uniform MaterialInfo Material;
+
 uniform bool useNormalMapping;
 
-uniform MaterialInfo Material;
+uniform vec3 lightColor;
 
 uniform sampler2D colorTex;
 uniform sampler2D normalTex;
@@ -70,7 +71,8 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 void main(void)
 {
 	// G-Buffer: Positions, Colors (Albedo), Normals
-	Position = vert_Position;
+	WorldPosition = vert_wsPosition;
+	ViewPosition = vert_vsPosition;
 	Color = texture(colorTex, vert_UV).rgb;
 	Normal = normalize(vert_Normal);
 	
@@ -86,10 +88,15 @@ void main(void)
 		}
 	}
 	
-	// G-Buffer: Reflections
+	// G-Buffer: Reflection vectors
 	ReflectVec = normalize( reflect(-vert_EyePosition, Normal) ); 
-	vec3 cubeMapColor = texture(cubeMapTex, vert_ReflectDirection.xyz).rgb;
-	Reflectance.rgb = cubeMapColor.rgb;
+	
+	// Cubemap reflections
+	vec3 cubeMapColor = texture(cubeMapTex, ReflectVec).rgb; 
+
+
+	Reflectance.rgb = cubeMapColor;
+	// G-Buffer: Reflectance
 	Reflectance.a = texture(colorTex, vert_UV).a;
 	
 	// G-Buffer: Materials
@@ -99,7 +106,7 @@ void main(void)
 			MaterialIDs.r = 0.0f;
 			MaterialIDs.g = 0.0f;
 			MaterialIDs.b = 0.0f;
-			Reflectance.a = 0.0f;
+			Color *= lightColor;
 			break;
 		case 0:
 			MaterialIDs.r = 1.0f;
