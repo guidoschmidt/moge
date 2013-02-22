@@ -64,6 +64,7 @@ namespace scene {
 
 			//! Movement
 			void Move(float x, float y, float z);
+			void Pan(float x, float y, float z);
 			void Yaw(float angle);
 			void Pitch(float angle);
 			void Reset(void);

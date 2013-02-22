@@ -66,57 +66,8 @@ float linearizeDepth(float depth)
 /*** Main *********************************************************************/
 void main(void)
 {	
-	vec4 color = vec4(0.0f);
-	float stepSize = 0.0f;
-
-	vec3 position = texture(deferredPositionTex, vert_UV).xyz;
-	position.z = linearizeDepth( texture(deferredDepthTex, vert_UV).z );;
-
-	vec3 normal = texture(deferredNormalTex, vert_UV).xyz;
-
-	vec4 reflectionVec = texture( deferredReflectionVecTex,vert_UV);
-	reflectionVec *= inverse(ProjectionMatrix);
-	reflectionVec.z += Camera.NearPlane;
-
-	// Ray equation: R = O + d * D
-	vec3 tracedRay = position + (stepSize * reflectionVec.xyz);
-
-	//
-	vec2 samplePosition2D = vert_UV +  reflectionVec.xy;
-	float sampleDepth = linearizeDepth( texture(deferredDepthTex, samplePosition2D).z ); 
-	float rayDepth = tracedRay.z; 
-
-	vec3 rayStep = reflectionVec.xyz * stepSize;
-	vec2 rayStep2D = ((ProjectionMatrix) * vec4(rayStep, 1.0f)).xy;
-
-	float reflectance = texture(deferredReflectanceTex, vert_UV).a;
-
-	if(reflectance < 0.0f)
-	{
-		int count = 0;
-		while(count < 500)
-		{
-			rayStep += reflectionVec.xyz * stepSize;
-			rayStep2D = (ProjectionMatrix * vec4(rayStep, 0.0f)).xy;
-			tracedRay = position + rayStep.xyz;
-			samplePosition2D = vert_UV + rayStep2D.xy;
-
-			sampleDepth = linearizeDepth( texture(deferredDepthTex, samplePosition2D).z );
-			rayDepth = tracedRay.z;
-
-			if(rayDepth > sampleDepth)
-			{
-				float delta = abs(rayDepth - sampleDepth);
-				if(delta < 0.005f)
-					color = texture(deferredDiffuseTex, samplePosition2D, 5);					
-			}
-
-			stepSize += 0.00025f;
-			count++;
-		}
-	}
-
-	FragColor = color;
+	vec4 shaded = vec4(0.0f);
 
 
+	FragColor = shaded;
 }

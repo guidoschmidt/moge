@@ -1,6 +1,53 @@
 LOGFILE
 SCENE & SCENEGRAPH
-#Meshes: 36
+#Meshes: 83
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
+Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!
 Mesh #0 was added to the scenegraph!

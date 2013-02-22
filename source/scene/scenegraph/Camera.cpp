@@ -177,6 +177,17 @@ namespace scene {
 		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
 	}
 
+	//!
+	void Camera::Pan(float x, float y, float z)
+	{
+		m_position += glm::vec3(x, y, z);
+		m_lookAt += glm::vec3(x, y, z);
+
+		//! TODO movement of camera
+		//m_translationMatrix = glm::translate(m_position);
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
+	}
+
 	//! Yaw is rotation around up vector
 	void Camera::Yaw(float angle)
 	{

@@ -65,7 +65,7 @@ vec3 blur(in vec2 uv)
 	color = texture(deferredDiffuseTex, uv).rgb;
 	for(int x = -kernelSize.x; x <= kernelSize.x; x++)
 	{
-		for(int y = kernelSize.y; y <= 2 * kernelSize.y; y++)
+		for(int y = -kernelSize.y; y <= kernelSize.y; y++)
 		{
 			pos = uv + ( vec2(x, y) * pixelSize );
 			color += texture(deferredSSRTex, pos).rgb * kernel[x + 6];

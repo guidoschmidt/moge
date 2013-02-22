@@ -131,7 +131,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOLCPP, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
 	//! SSR parameters
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.0001' value='0.005' step='0.001' group='SSR' label='Step size'");
+	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.00001' value='0.005' step='0.001' group='SSR' label='Step size'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
 	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='8' label='Kernel X'");
 	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='8' label='Kernel Y'");
@@ -429,6 +429,14 @@ void Renderer::CameraMovement()
 	{
 		scenegraph_ptr->GetActiveCamera()->Move(0, -m_speed, 0);
 	}
+	if(glfwGetKey('I')) //! Up All
+	{
+		scenegraph_ptr->GetActiveCamera()->Pan(0, m_speed, 0);
+	}
+	if(glfwGetKey('K')) //! Down All
+	{
+		scenegraph_ptr->GetActiveCamera()->Pan(0, -m_speed, 0);
+	}
 
 	/* Reset *************************************************/
 	if(glfwGetKey('E'))
@@ -707,7 +715,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			deferredProgram_Pass3_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Colorattachments
-			deferredProgram_Pass3_ptr->SetUniformSampler("deferredPositionTex", gBuffer_ptr->GetTexture(1), 0);
+			deferredProgram_Pass3_ptr->SetUniformSampler("deferredViewPositionTex", gBuffer_ptr->GetTexture(1), 0);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredNormalTex", gBuffer_ptr->GetTexture(3), 1);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectanceTex", gBuffer_ptr->GetTexture(5), 2);
 			deferredProgram_Pass3_ptr->SetUniformSampler("deferredReflectionVecTex", gBuffer_ptr->GetTexture(6), 3);

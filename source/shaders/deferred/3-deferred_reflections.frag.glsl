@@ -44,7 +44,7 @@ uniform	mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 	
 uniform sampler2D deferredNormalTex;
-uniform sampler2D deferredPositionTex;
+uniform sampler2D deferredViewPositionTex;
 uniform sampler2D deferredReflectanceTex;
 uniform sampler2D deferredDiffuseTex;
 uniform sampler2D deferredDepthTex;
@@ -77,15 +77,14 @@ float rand(vec2 co)
 vec3 raytrace(in vec3 reflectionVector, in float startDepth)
 {
 	vec3 color = vec3(0.0f);
-	float stepSize = rayStepSize; 
+	float stepSize = rayStepSize/10.0f; 
 
-	float size = length(reflectionVector.xy);
-	reflectionVector = normalize(reflectionVector/size);
-	reflectionVector = reflectionVector * stepSize;
+	reflectionVector = reflectionVector;
+	reflectionVector = reflectionVector * stepSize / startDepth;
 
 	vec2 sampledPosition = vert_UV;
-	float currentDepth = startDepth - reflectionVector.z;
-	float sampledDepth = linearizeDepth( texture(deferredDepthTex, sampledPosition).z );
+	float currentDepth   = startDepth - reflectionVector.z;
+	float sampledDepth   = linearizeDepth( texture(deferredDepthTex, sampledPosition).z );
 
 	vec2 jitter = vec2(0.0f);
 	if(jittering)
@@ -98,6 +97,8 @@ vec3 raytrace(in vec3 reflectionVector, in float startDepth)
 	while(sampledPosition.x <= 1.0 && sampledPosition.x >= 0.0 &&
 	      sampledPosition.y <= 1.0 && sampledPosition.y >= 0.0)
 	{
+		reflectionVector += reflectionVector * stepSize;
+		
 		if(jittering)
 		{
 			sampledPosition.x = sampledPosition.x + reflectionVector.x + jitter.x;
@@ -106,17 +107,18 @@ vec3 raytrace(in vec3 reflectionVector, in float startDepth)
 		else
 			sampledPosition = sampledPosition + reflectionVector.xy;
 		
-		currentDepth = currentDepth + reflectionVector.z * startDepth;
+		currentDepth = currentDepth + (reflectionVector.z * startDepth);
 		float sampledDepth = linearizeDepth( texture(deferredDepthTex, sampledPosition).z );
 
-		if(currentDepth > sampledDepth)
+		if(currentDepth >= sampledDepth)
 		{
 			float delta = (currentDepth - sampledDepth);
-			if(delta < 0.003f )
+			if(delta <  0.003f)
 			{
 				color = texture(deferredDiffuseTex, sampledPosition).rgb;
 				break;
 			}
+			
 		}
 
 		//! Manual break, better performance
@@ -152,19 +154,15 @@ vec4 SSR()
 	vec3 reflectedColor = vec3(0.0f);
 
 	vec3 normal = normalize( texture(deferredNormalTex, vert_UV) ).xyz;
-	vec3 position = texture(deferredPositionTex, vert_UV).xyz;
-	/*
-	vec3 position = vec3(gl_FragCoord.xy/vec2(Screen.Width, Screen.Height), 0.0f);
-	position.z = texture(deferredDepthTex, vert_UV).z;
-	position = (vec4(position, 1.0f) * transpose(ProjectionMatrix) ).xyz;
-	position = 0.5f * position + 1.0f;
-	*/
+	vec4 position = texture(deferredViewPositionTex, vert_UV);
+	position.z = linearizeDepth( texture(deferredDepthTex, vert_UV).z ) - Camera.FarPlane;	
+	position = 0.5f * position + 0.5f;
 
 	// Depth at current fragment
 	float currDepth = linearizeDepth( texture(deferredDepthTex, vert_UV).z ) ;
 
 	// Eye position, camera is at (0, 0, 0), we look along negative z, add near plane to correct parallax
-	vec3 eyePosition = vec3(position.x, position.y, Camera.FarPlane);
+	vec3 eyePosition = vec3(position.x, position.y, position.z);
 	vec4 reflectionVector = normalize( reflect( vec4(eyePosition, 0), vec4(normal, 0) ) );
 	reflectionVector = ProjectionMatrix * reflectionVector;
 	reflectionVector.xyz = reflectionVector.xyz / reflectionVector.w;
@@ -200,5 +198,5 @@ void main(void)
 	shaded.a = reflectance;
 	
 	if(toggleSSR)
-		FragColor = shaded;
+		FragColor = reflectance * shaded;
 }
