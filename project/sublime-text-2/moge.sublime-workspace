@@ -4,20 +4,176 @@
 		"selected_items":
 		[
 			[
-				"nea",
+				"rf",
+				"reflectionVector"
+			],
+			[
+				"defe",
+				"deferredDiffuseTex"
+			],
+			[
+				"sa",
+				"samplePosition"
+			],
+			[
+				"de",
+				"deferredDiffuseTex"
+			],
+			[
+				"c",
+				"currentDepth"
+			],
+			[
+				"sam",
+				"sampledDepth"
+			],
+			[
+				"vs",
+				"vsReflectedVec"
+			],
+			[
+				"sample",
+				"samplePosition"
+			],
+			[
+				"ray",
+				"rayDepth"
+			],
+			[
+				"def",
+				"deferredDepthTex"
+			],
+			[
+				"for",
+				"FragColor"
+			],
+			[
+				"cu",
+				"currDepth"
+			],
+			[
+				"ne",
 				"NearPlane"
 			],
 			[
 				"ref",
-				"reflectance"
+				"reflectionVector"
+			],
+			[
+				"ste",
+				"stepSize"
+			],
+			[
+				"re",
+				"reflectedColor"
+			],
+			[
+				"curr",
+				"currDepth"
+			],
+			[
+				"s",
+				"startDepth"
+			],
+			[
+				"vec",
+				"vector"
+			],
+			[
+				"ver",
+				"vertex"
+			],
+			[
+				"w",
+				"Width"
+			],
+			[
+				"Sc",
+				"Screen"
+			],
+			[
+				"fra",
+				"fragment"
+			],
+			[
+				"xy",
+				"xyz"
+			],
+			[
+				"defer",
+				"deferredEyeVecTex"
+			],
+			[
+				"sampl",
+				"sampledDepth"
+			],
+			[
+				"li",
+				"linearizeDepth"
+			],
+			[
+				"Ver",
+				"vert_UV"
+			],
+			[
+				"nor",
+				"normalize"
+			],
+			[
+				"proje",
+				"projReflectedVec"
+			],
+			[
+				"no",
+				"normal"
+			],
+			[
+				"eye",
+				"eyeVector"
+			],
+			[
+				"refl",
+				"Reflected"
+			],
+			[
+				"trac",
+				"tracedRayVS"
+			],
+			[
+				"frag",
+				"fragmentDepth"
+			],
+			[
+				"sh",
+				"shaded"
+			],
+			[
+				"samp",
+				"sampledDepth"
+			],
+			[
+				"dfe",
+				"deferredDepthTex"
+			],
+			[
+				"vert",
+				"vert_UV"
+			],
+			[
+				"vert_e",
+				"vert_EyeVector"
+			],
+			[
+				"vert_E",
+				"vert_EyePosition"
+			],
+			[
+				"nea",
+				"NearPlane"
 			],
 			[
 				"st",
 				"stepSize"
-			],
-			[
-				"de",
-				"delta"
 			],
 			[
 				"x",
@@ -26,10 +182,6 @@
 			[
 				"F",
 				"FarPlane"
-			],
-			[
-				"defe",
-				"deferredDepthTex"
 			],
 			[
 				"light",
@@ -68,20 +220,12 @@
 				"diffuse"
 			],
 			[
-				"li",
-				"lightVector"
-			],
-			[
 				"ligh",
 				"lightVector"
 			],
 			[
 				"node",
 				"node_name"
-			],
-			[
-				"no",
-				"node"
 			],
 			[
 				"node_",
@@ -92,64 +236,20 @@
 				"deferredViewPositionTex"
 			],
 			[
-				"ver",
-				"vert_EyePosition"
-			],
-			[
-				"nor",
-				"normal"
-			],
-			[
 				"cub",
 				"cubemapReflectVec"
-			],
-			[
-				"re",
-				"reflectance"
 			],
 			[
 				"r",
 				"rayStep"
 			],
 			[
-				"dfe",
-				"deferredReflectionVecTex"
-			],
-			[
-				"ray",
-				"rayStep"
-			],
-			[
-				"sa",
-				"samplePosition2D"
-			],
-			[
 				"pro",
 				"projRay"
 			],
 			[
-				"s",
-				"sampleDepth"
-			],
-			[
-				"def",
-				"deferredDepthTex"
-			],
-			[
-				"sam",
-				"samplePosition3D"
-			],
-			[
-				"defer",
-				"deferredReflectionVecTex"
-			],
-			[
 				"u",
 				"vert_UV"
-			],
-			[
-				"refl",
-				"refl"
 			],
 			[
 				"ker",
@@ -212,20 +312,8 @@
 				"refineSamplePosition"
 			],
 			[
-				"cu",
-				"currentDepth"
-			],
-			[
 				"to",
 				"toggleSSR"
-			],
-			[
-				"vert",
-				"vert_UV"
-			],
-			[
-				"vec",
-				"vec4"
 			],
 			[
 				"raytra",
@@ -234,10 +322,6 @@
 			[
 				"refe",
 				"reflectionVector"
-			],
-			[
-				"sh",
-				"showReflVecs"
 			],
 			[
 				"dep",
@@ -276,14 +360,6 @@
 				"localPosition"
 			],
 			[
-				"vs",
-				"vsReflectVec"
-			],
-			[
-				"fra",
-				"fragment"
-			],
-			[
 				"ss",
 				"ssPosition"
 			],
@@ -296,10 +372,6 @@
 				"normalAtPos"
 			],
 			[
-				"curr",
-				"currPosition"
-			],
-			[
 				"del",
 				"delta"
 			],
@@ -310,14 +382,6 @@
 			[
 				"tex",
 				"texture"
-			],
-			[
-				"frag",
-				"fragmentColor"
-			],
-			[
-				"c",
-				"color"
 			],
 			[
 				"colo",
@@ -362,10 +426,6 @@
 			[
 				"norma",
 				"normalize"
-			],
-			[
-				"ste",
-				"stepSize"
 			],
 			[
 				"S",
@@ -454,92 +514,40 @@
 			[
 				"depth",
 				"depthAtFragment"
-			],
-			[
-				"samplin",
-				"samplingPosition"
-			],
-			[
-				"init",
-				"initialRay"
-			],
-			[
-				"sampling",
-				"samplingPosition"
-			],
-			[
-				"ssPO",
-				"ssPosition3D"
-			],
-			[
-				"vsPo",
-				"vsPosition"
-			],
-			[
-				"View",
-				"ViewMatrix"
-			],
-			[
-				"ssPo",
-				"ssPosition2D"
-			],
-			[
-				"Ca",
-				"Camera"
-			],
-			[
-				"nr",
-				"normalmap"
-			],
-			[
-				"normal",
-				"normalTex"
-			],
-			[
-				"vert_",
-				"vert_EyePosition"
-			],
-			[
-				"Refle",
-				"Reflection"
-			],
-			[
-				"wor",
-				"worldPos"
-			],
-			[
-				"cube",
-				"cubeMapColor"
-			],
-			[
-				"world",
-				"worldNormal"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
+			"settings":
+			{
+				"buffer_size": 1078,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
+			"settings":
+			{
+				"buffer_size": 3905,
+				"line_ending": "Windows"
+			}
+		},
+		{
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 5231,
+				"buffer_size": 5330,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
+			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 3277,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 1671,
+				"buffer_size": 3766,
 				"line_ending": "Windows"
 			}
 		}
@@ -547,15 +555,35 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 110.0,
+		"height": 285.0,
 		"selected_items":
 		[
 			[
-				"Install",
-				"Package Control: Install Package"
+				"Remoe",
+				"Package Control: Remove Package"
+			],
+			[
+				"COlor Sheme",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"COlor She",
+				"ColorSchemeSelector: Select Color Scheme"
+			],
+			[
+				"COlor",
+				"ColorSchemeSelector: Select Color Scheme"
 			],
 			[
 				"Insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Color",
+				"Color picker"
+			],
+			[
+				"Install",
 				"Package Control: Install Package"
 			],
 			[
@@ -608,25 +636,43 @@
 	},
 	"file_history":
 	[
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
-		"/c/Users/guidoschmidt/Development/code/c++/moge/LICENSE.md",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.frag.glsl",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EMReflection.fx",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_new.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Temp/Whole_10.7/brd.nfo",
+		"/c/Users/guidoschmidt/.profile",
+		"/C/Users/guidoschmidt/.profile",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflectionsnewfrag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
+		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/contents/files/shaders/gbuffers_water.fsh",
+		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/contents/files/shaders/gbuffers_water.vsh",
+		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/source/Hooks.java",
+		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/source/Shaders.java",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionVert.vert",
+		"/c/Users/guidoschmidt/Development/code/c++/moge/.gitignore",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Impostor.cs",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Reflector.cs",
+		"/c/Users/guidoschmidt/Development/code/c++/moge/LICENSE.md",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/LICENSE",
 		"/C/Users/guidoschmidt/Downloads/Console-2.00b148-Beta_32bit/Console2/console.xml",
 		"/c/Users/guidoschmidt/Development/code/c++/moge/README.md",
-		"/c/Users/guidoschmidt/.profile",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
 		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/include/fast_lbf.h",
 		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/cross_bilateral_filter.cpp",
 		"/D/Studium/Hiwi West/Informatik 2013/hotels/hotels.html",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/4-deferred_compositing.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/4-deferred_compositing.frag.glsl",
@@ -638,7 +684,6 @@
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.fs",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections2.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/postShader.vs",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-SSR-gBufferProgram.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-SSR-gBufferProgram.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/CMakeLists.txt",
@@ -646,12 +691,10 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW2.frag.glsl",
 		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/ogl-samples/samples/gl-330-primitive-front-face.cpp",
 		"/C/Program Files (x86)/Console2/console.xml",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW2.frag.glsl",
-		"/C/Users/guidoschmidt/.profile",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
@@ -736,6 +779,39 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"impostorTex",
+			"m_gBufferProgram_ptr",
+			"sampledPosition",
+			"currentDepth",
+			"sampledDepth",
+			"currentDepth",
+			"sampledDepth",
+			"rayDepth",
+			"sampledDepth",
+			"rayDepth",
+			"sampledDepth",
+			"rayDepth",
+			"sampledDepth",
+			"rayDepth",
+			"sampledDepth",
+			"deferredProgram_Pass4_ptr",
+			"normal",
+			"eyePosition",
+			"currDepth",
+			"fragmentDepth",
+			"rayDepth",
+			"ref",
+			"rayDepth",
+			"sampledDepth",
+			"vsReflectVec",
+			"currentDepth",
+			"sampledDepth",
+			"currentDepth",
+			"fragmentDepth",
+			"currentDepth",
+			"sampledDepth",
+			"currentDepth",
+			"vert_EyePosition",
 			";\n",
 			"lightPos",
 			"shaded",
@@ -830,38 +906,7 @@
 			"layout (location=0) in vec3 vertex;\nlayout (location=1) in vec3 normal;\nlayout (location=2) in vec2 uv;",
 			"else",
 			"deferredReflectanceTex",
-			"vec3 viewSpaceToScreenSpace(vec3 vector)\n{\n	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);\n	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;\n	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;\n	\n	return screenSpace;\n}",
-			"deferredReflectanceTex",
-			"reflectance",
-			"));\n",
-			"bool",
-			"*\n",
-			");\n",
-			"\n",
-			"SSR",
-			"newSSR",
-			"Window",
-			"Render",
-			" (",
-			";\n",
-			"return",
-			"position",
-			"015f",
-			";\n",
-			"sampledPosition",
-			"sampledDepth",
-			"()",
-			"Convert",
-			"vec3",
-			"FragColor",
-			"wsViewVec",
-			";\n",
-			" \n",
-			" )",
-			"geometry",
-			"GEOMETRY",
-			"geometry",
-			"BOOST"
+			"vec3 viewSpaceToScreenSpace(vec3 vector)\n{\n	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);\n	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;\n	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;\n	\n	return screenSpace;\n}"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -879,23 +924,23 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
 					"settings":
 					{
-						"buffer_size": 5231,
+						"buffer_size": 1078,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2370,
-								2370
+								672,
+								672
 							]
 						],
 						"settings":
@@ -990,29 +1035,28 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1296.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 3277,
+						"buffer_size": 3905,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1651,
-								1651
+								2709,
+								2709
 							]
 						],
 						"settings":
@@ -1107,29 +1151,28 @@
 								"Ruby on Rails": "ruby"
 							},
 							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 810.0,
+						"translation.y": 1350.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 1671,
+						"buffer_size": 5330,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1645,
-								1645
+								1619,
+								1619
 							]
 						],
 						"settings":
@@ -1228,7 +1271,124 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 738.0,
+						"translation.y": 979.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
+					"settings":
+					{
+						"buffer_size": 3766,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3153,
+								3153
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+								"css": "C:/Program Files/nodejs/node.exe",
+								"javascript": "C:/Program Files/nodejs/node.exe"
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2052.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1282,16 +1442,32 @@
 		"selected_items":
 		[
 			[
-				"scene",
-				"source/scene/scenegraph/SceneGraph.cpp"
+				"5",
+				"source/shaders/deferred/5-deferred_compositing.frag.glsl"
+			],
+			[
+				"4",
+				"source/shaders/deferred/4-deferred_bb.frag.glsl"
 			],
 			[
 				"3",
 				"source/shaders/deferred/3-deferred_reflections.frag.glsl"
 			],
 			[
-				"4",
+				"1",
+				"source/shaders/deferred/1-gBufferProgram.frag.glsl"
+			],
+			[
+				"render",
+				"source/engine/Renderer.cpp"
+			],
+			[
+				"defe",
 				"source/shaders/deferred/4-deferred_compositing.frag.glsl"
+			],
+			[
+				"scene",
+				"source/scene/scenegraph/SceneGraph.cpp"
 			],
 			[
 				"inde",
@@ -1318,12 +1494,12 @@
 		"selected_items":
 		[
 			[
-				"bach",
+				"",
 				"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/project/bachelorarbeit.sublime-project"
 			],
 			[
-				"",
-				"/C/Users/guidoschmidt/Development/code/web/juli/project/juli.sublime-project"
+				"bach",
+				"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/project/bachelorarbeit.sublime-project"
 			],
 			[
 				"ju",
@@ -1336,6 +1512,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 297.0,
+	"side_bar_width": 292.0,
 	"status_bar_visible": true
 }

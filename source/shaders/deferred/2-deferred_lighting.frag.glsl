@@ -98,7 +98,7 @@ vec3 phongShading(in vec3 lightVector, in vec3 normal, in vec3 materialColor, in
 void main(void)
 {	
 	// Gather G-Buffer information from textures
-	vec3 position = vec3( texture(deferredViewPositionTex, vert_UV) );
+	vec4 position = texture(deferredWoldPositionTex, vert_UV);
 	vec3 normal = vec3( texture(deferredNormalTex, vert_UV) );
 	vec3 materialID = texture(deferredMaterialIDTex, vert_UV).rgb;
 	vec3 materialColorD = texture(deferredColorTex, vert_UV).rgb;
@@ -115,7 +115,7 @@ void main(void)
 		if(materialID == 0.0f)
 			shaded = vec4(materialColorD, 1.0f);
 		else
-			lightVector = normalize(Light.Position[i] - position).xyz;
+			lightVector = ( normalize( vec4(Light.Position[i], 1.0f) - position) ).xyz;
 			shaded += vec4( phongShading(lightVector, normal, materialColorD, Light.Diffuse[i].rgb, Light.Specular.rgb, Shininess), 1.0f );
 	}
 	

@@ -60,7 +60,9 @@ namespace scene {
 	 */
 	void SceneGraph::LoadSceneFromFile(const std::string filename)
 	{
+		//! Set the scene's name
 		m_scene_name = "museum";
+
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
@@ -91,9 +93,11 @@ namespace scene {
 	{
 		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
+		//! Standard Camera
 		glm::vec3 position(0.0f, 1.8f, 5.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
+
 		Camera* camera = new Camera(position, lookAt, up);
 		m_activeCamera_ptr = camera;
 		m_root.AddChild(camera);
@@ -102,6 +106,7 @@ namespace scene {
 		//! Materials
 		for(unsigned int mat = 0; mat < scene->mNumMaterials; mat++)
 		{
+			//! Get current material
 			aiMaterial* material = scene->mMaterials[mat];
 			//! Get material's name
 			aiString ai_mat_name;
@@ -110,78 +115,90 @@ namespace scene {
 
 			//! Check if material is Light
 			std::string contains_light("Light");
+			std::string isLight;
 			if(mat_name.find(contains_light) != std::string::npos)
 			{
+				//! Light material
 				m_lightMatIndex = mat;
+				size_t foundLight = mat_name.find_first_of("_");
+				isLight = mat_name.substr(0, foundLight);
 			}
 
+			//! Get material's diffuse color
+			aiColor3D aiDiffuse;
+			material->Get(AI_MATKEY_COLOR_SPECULAR, aiDiffuse);
+			glm::vec3 difColor = glm::vec3(aiDiffuse.r, aiDiffuse.g, aiDiffuse.b);
+
 			//! Get material's textures
+			//! File-extension and folder of textures
+			std::string fileextension = "tga";
 			aiString ai_tex_path;
 			std::vector<texture> textures;
 			std::string tex_name;
 			float reflectance = 0.0f;
 
-			//! File-extension and folder of textures
-			std::string fileextension = "tga";
+			//! Diffuse texture
 			if(AI_SUCCESS == material->GetTexture(aiTextureType_DIFFUSE, 0, &ai_tex_path))
 			{
+				//! extract texture name from path
 				std::string diffuseTex_path = &(ai_tex_path.data[0]);
 				size_t foundname = diffuseTex_path.find_last_of("/");
 				std::string tex_name_temp = diffuseTex_path.substr(foundname+1);
 				unsigned extPos = tex_name_temp.find("." + fileextension);
+
 				tex_name = tex_name_temp.erase(extPos);
 			}
+			//! Handle texture errors
 			else
 			{
-				tex_name = "none";
+				tex_name = "common/none";
 			}
-
-			//! Light material
-			size_t foundLight = mat_name.find_first_of("_");
-
-			std::string isLight = mat_name.substr(0, foundLight);
-			aiColor3D aiDiffuse;
-			material->Get(AI_MATKEY_COLOR_SPECULAR, aiDiffuse);
-			glm::vec3 difColor = glm::vec3(aiDiffuse.r, aiDiffuse.g, aiDiffuse.b);
-
+			//! Texture if material is a light
 			if(isLight == "Light")
 			{
 				texture light;
-				light.m_filename = "./assets/texture/light/Light.tga";
+				light.m_filename = "./assets/texture/common/Light_White.tga";
 				light.m_type = LIGHT;
 				textures.push_back(light);
 			}
+			//! Textures for other materials
+			else
+			{
+				//! Diffuse maps
+				texture diffuse;
+				diffuse.m_filename = "./assets/texture/scene-" + m_scene_name + "/" + fileextension + "/" + tex_name + "." + fileextension;
+				diffuse.m_type = DIFFUSE;
+				textures.push_back(diffuse);
 
-			//! Other materials
-			//! Diffuse maps
-			texture diffuse;
-			diffuse.m_filename = "./assets/texture/" + m_scene_name + "/" + fileextension + "/" + tex_name + "." + fileextension;
-			diffuse.m_type = DIFFUSE;
-			textures.push_back(diffuse);
+				//! Normal maps
+				if( mat_name == "Street" 		||
+					mat_name == "Skin" 			||
+					mat_name == "Tiles"			||
+					mat_name == "Cobblestone" 	||
+					mat_name == "Museum"		||
+					mat_name == "Rusty_Metall"
+				   )
+				{
+					texture normal;
+					normal.m_filename = "./assets/texture/scene-" + m_scene_name + "/" + fileextension + "/" + tex_name + "_normal." + fileextension;
+					normal.m_type = NORMAL;
+					textures.push_back(normal);
+					std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
+				}
 
 			//! Console output
 			std::cout << "\nMaterial " << mat << ":" << mat_name << std::endl;
+			std::cout << "	Diffuse Color: (" << difColor.r << ", " << difColor.g << ", " << difColor.b << ")" << std::endl;
 			std::cout << "	Textures: " << std::endl;
 			std::cout << "	" << diffuse.m_type << ": " << diffuse.m_filename << std::endl;
-			//! Normal maps
-			if(
-					mat_name == "Street" || mat_name == "Skin" || mat_name == "Tiles" ||
-					mat_name == "Cobblestone" || mat_name == "Museum"
-			   )
-			{
-				texture normal;
-				normal.m_filename = "./assets/texture/" + m_scene_name + "/" + fileextension + "/" + tex_name + "_normal." + fileextension;
-				normal.m_type = NORMAL;
-				textures.push_back(normal);
-				std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
 			}
 
-			std::cout << "	" << "Diffuse Color " << difColor.r << ", " << difColor.g << ", " << difColor.b << std::endl;
+			//! Add material to material manager
 			m_materialman_ptr->AddMaterial(mat_name, difColor, reflectance, textures);
 		}
 
 		/* CUBEMAPS ****************************************************************/
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/skybox");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/museum/museum");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
@@ -264,11 +281,11 @@ namespace scene {
 
 					//! Add mesh to scenegraph
 					m_root.AddChild(mesh);
-					m_logfile << "Mesh #" << m << " was added to the scenegraph!" << std::endl;
+					std::cout << "Mesh #" << m << " was added to the scenegraph!" << std::endl;
 				}
-				//! Billboards
 				else if(node_type == "Billboard")
 				{
+					//Billboard* billboard = new Billboard();
 					Billboard* billboard = new Billboard(scene->mMeshes[meshID]);
 					billboard->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
 
@@ -282,10 +299,8 @@ namespace scene {
 					//! Rotation
 					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
 					billboard->RotateQuat(rotation);
-
-					//! Add billboard to scenegraph
-					m_root.AddChild(billboard);
-					m_logfile << "Billboard #" << m << " was added to the scenegraph!" << std::endl;
+					m_impostors.push_back(billboard);
+					std::cout << "Billboard #" << m << " was added to the scenegraph!" << std::endl;
 				}
 			}
 		}
@@ -328,6 +343,17 @@ namespace scene {
 	Node* SceneGraph::GetNode(int i)
 	{
 		return m_root.GetChild(i);
+	}
+
+	//! Returns the billboard at position i
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
+	Billboard* SceneGraph::GetImpostor(int i)
+	{
+		return m_impostors[i];
 	}
 
 	//!

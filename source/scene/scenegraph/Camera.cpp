@@ -90,6 +90,16 @@ namespace scene {
 	//void UpdateProjectionMatrix(void);
 
 /* GETTER ***********************************************************/
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	glm::vec3 Camera::GetLookAt(void)
+	{
+		return m_lookAt;
+	}
+
 	//! Returns the field of view
 	/*!
 	 * @return
@@ -137,6 +147,17 @@ namespace scene {
 	}
 
 /* SETTER ***********************************************************/
+	//!
+	/*!
+	 *
+	 * @param lookAt
+	 */
+	void Camera::SetLookAt(glm::vec3 lookAt)
+	{
+		m_lookAt = lookAt;
+		m_viewMatrix = glm::lookAt(m_position, m_lookAt, m_up);
+	}
+
 	//! Sets the field of view
 	/*!
 	 * @param angle

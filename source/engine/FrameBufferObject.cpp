@@ -55,8 +55,10 @@ void FrameBufferObject::CreateGBuffer(void)
 	AddColorAttachment(5);
 	//! Reflection vector
 	AddColorAttachment(6);
+	//! Eye vector
+	AddColorAttachment(7);
 	//! Depth
-	AddDepthAttachment_Texture(7);
+	AddDepthAttachment_Texture(8);
 
 	std::cout << "# Attachments" << m_attachmentCounter << std::endl;
 	m_isGBuffer = true;
@@ -149,7 +151,7 @@ void FrameBufferObject::Use(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-		glDrawBuffers(7, &m_drawBuffers[0]);
+		glDrawBuffers(8, &m_drawBuffers[0]);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 	}

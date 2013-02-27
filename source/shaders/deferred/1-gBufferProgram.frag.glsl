@@ -7,33 +7,49 @@ struct MaterialInfo
 	float reflectance;
 };
 
+struct ImpostorInfo
+{
+	vec4 WVP;
+	vec3 vertex;
+	vec3 normal;
+};
+
 /*** Input ********************************************************************/
 in vec3 vert_wsPosition;
 in vec3 vert_vsPosition;
-in vec3 vert_Normal;
+in vec3 vert_vsNormal;
+in vec3 vert_wsNormal;
 in vec2 vert_UV;
-in vec3 vert_EyePosition;
+in vec3 vert_vsEyeVector;
+in vec3 vert_wsEyeVector;
 
 /*** Output *******************************************************************/
 layout (location = 0) out vec3 WorldPosition;
 layout (location = 1) out vec3 ViewPosition;
 layout (location = 2) out vec3 Color;
-layout (location = 3) out vec3 Normal;
+layout (location = 3) out vec3 vsNormal;
 layout (location = 4) out vec3 MaterialIDs;
 layout (location = 5) out vec4 Reflectance;
 layout (location = 6) out vec3 ReflectVec;
-//layout (location = 6) out vec3 Depth (DepthBuffer)
+layout (location = 7) out vec3 EyeVec;
+//layout (location = 8) out vec3 Depth (DepthBuffer)
 
 /*** Uniforms *****************************************************************/
+uniform ImpostorInfo Impostor;
+
 uniform MaterialInfo Material;
 
 uniform bool useNormalMapping;
 
 uniform vec3 lightColor;
+uniform vec3 CameraPosition;
 
 uniform sampler2D colorTex;
+uniform sampler2D impostorTex;
 uniform sampler2D normalTex;
 uniform samplerCube cubeMapTex;
+
+uniform mat4 MVPMatrix;
 
 /*** Functions ****************************************************************/
 // @source: http://www.thetenthplanet.de/archives/1180
@@ -74,27 +90,33 @@ void main(void)
 	WorldPosition = vert_wsPosition;
 	ViewPosition = vert_vsPosition;
 	Color = texture(colorTex, vert_UV).rgb;
-	Normal = normalize(vert_Normal);
+	vsNormal = normalize(vert_vsNormal);
+	vec3 wsNormal = normalize(vert_wsNormal);
 	
+
 	// Normal mapping
 	vec3 normalmap = texture(normalTex, vert_UV).rgb;
 	if(useNormalMapping)
 	{
 		if(normalmap.r != 0 && normalmap.g != 0 && normalmap.b != 0){
-			vec3 N = normalize(vert_Normal.xyz);
-		  	vec3 V = normalize(vert_EyePosition.xyz);
+			vec3 N = normalize(vert_vsNormal.xyz);
+		  	vec3 V = normalize(vert_vsEyeVector.xyz);
 		  	vec3 PN = perturb_normal(N, V, vert_UV);
-			Normal = PN;
+			vsNormal = PN;
 		}
 	}
+
+	// G-Buffer: Eye vectors
+	EyeVec = normalize(vert_vsEyeVector);
 	
 	// G-Buffer: Reflection vectors
-	ReflectVec = normalize( reflect(-vert_EyePosition, Normal) ); 
-	
+	ReflectVec = normalize( reflect(vert_vsEyeVector, vsNormal) ); 
+
+	vec3 wsFromEyeVec = normalize(WorldPosition - CameraPosition); 
+	vec3 wsReflectVec = reflect(wsFromEyeVec, wsNormal);
+
 	// Cubemap reflections
-	vec3 cubeMapColor = texture(cubeMapTex, ReflectVec).rgb; 
-
-
+	vec3 cubeMapColor = texture(cubeMapTex, wsReflectVec).rgb; 
 	Reflectance.rgb = cubeMapColor;
 	// G-Buffer: Reflectance
 	Reflectance.a = texture(colorTex, vert_UV).a;

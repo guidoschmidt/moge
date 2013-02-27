@@ -54,6 +54,13 @@ namespace scene {
 		return m_modelMatrix;
 	}
 
+
+
+	void Transformation::SetPosition(glm::vec3 position)
+	{
+		m_position = position;
+	}
+
 	//! Returns the position
 	/*!
 	 *
@@ -64,10 +71,24 @@ namespace scene {
 		return m_position;
 	}
 
-
-	void Transformation::SetPosition(glm::vec3 position)
+	//! Returns the rotation
+	/*!
+	 *
+	 * @return
+	 */
+	glm::quat Transformation::GetRotation(void)
 	{
-		m_position = position;
+		return m_rotation;
+	}
+
+	//! Returns the scale
+	/*!
+	 *
+	 * @return
+	 */
+	glm::vec3 Transformation::GetScale(void)
+	{
+		return m_scale;
 	}
 
 } //! namespace scene

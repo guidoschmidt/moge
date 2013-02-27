@@ -58,8 +58,9 @@ class Renderer
 						*m_gBufferProgram_ptr,
 						*deferredProgram_Pass2_ptr,
 						*deferredProgram_Pass3_ptr,
-						*deferredProgram_Pass4_ptr;
-		FrameBufferObject* gBuffer_ptr, *lighting_fbo_ptr, *reflection_fbo_ptr;
+						*deferredProgram_Pass4_ptr,
+						*deferredProgram_Pass5_ptr;
+		FrameBufferObject* gBuffer_ptr, *lighting_fbo_ptr, *reflection_fbo_ptr, *bb_fbo_ptr;
 		float m_angle;
 		float m_fieldOfView;
 
@@ -74,12 +75,14 @@ class Renderer
 						TEX_COLOR			=	 2,
 						TEX_NORMAL			=	 3,
 						TEX_MATID			=	 4,
-						TEX_REFL			=	 5,
-						TEX_REFLVEC			=	 6,
-						TEX_DEPTH			=	 7,
-						TEX_SSR				=	 8,
+						TEX_ENVMAP			=	 5,
+						TEX_REFLECTANCE		=	 6,
+						TEX_REFLVEC			=	 7,
+						TEX_EYEVEC			=	 8,
+						TEX_DEPTH			=	 9,
+						TEX_SSR				=	 10,
 		} DeferredTexture;
-		#define NUM_TEXS 10
+		#define NUM_TEXS 12
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
@@ -102,7 +105,7 @@ class Renderer
 		bool tw_drawSkyBox;
 		bool tw_boundingbox;
 		//! Passes
-		bool tw_pass1, tw_pass2, tw_pass3, tw_pass4;
+		bool tw_pass1, tw_pass2, tw_pass3, tw_pass4, tw_pass5;
 
 		int x_pos, y_pos;
 		int correct_x_pos, correct_y_pos;

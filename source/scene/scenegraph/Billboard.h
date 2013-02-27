@@ -18,11 +18,13 @@ namespace scene {
 			glm::vec3 m_normal;
 
 			aiMesh* m_mesh_ptr;
+
+			glm::vec3 m_center;
 			std::vector<GLfloat> m_vertices;
 			std::vector<GLint> m_indices;
 			std::vector<GLfloat> m_normals;
 			std::vector<GLfloat> m_uvs;
-			//BoundingBox m_boundingBox;
+			BoundingBox m_boundingBox;
 
 			//! Buffer handlers
 			GLenum ErrorCheckMesh;
@@ -31,22 +33,18 @@ namespace scene {
 
 		protected:
 			void CalculateNormal(void);
+			void Initialize(void);
+			void CreateBuffers(void);
 
 		public:
 			Billboard();
-			Billboard(aiMesh * m);
+			Billboard(aiMesh* mesh);
 			virtual ~Billboard();
 
-			//! Material inherited from Mesh
-			//! Texture inherited from Mesh
-
-			// Getter
-			glm::vec3 GetMin(void);
-			glm::vec3 GetMax(void);
 			glm::vec3 GetNormal(void);
 
 			void Draw(void);
-			void DrawBoundingBox(void);
+
 	};
 
 } //! namespace scene

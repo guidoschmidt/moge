@@ -50,6 +50,7 @@ namespace scene {
 			virtual ~Camera();
 
 			//! Getter
+			glm::vec3 GetLookAt(void);
 			float GetFieldOfView(void);
 			float GetNearPlane(void);
 			float GetFarPlane(void);
@@ -58,6 +59,7 @@ namespace scene {
 			glm::mat4 GetProjectionMatrix(void);
 
 			//! Setter
+			void SetLookAt(glm::vec3 lookAt);
 			void SetFielOfView(float angle);
 			void SetNearPlane(float near);
 			void SetFarPlane(float far);

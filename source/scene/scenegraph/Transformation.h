@@ -49,6 +49,8 @@ namespace scene {
 			//! Getter
 			glm::mat4 GetModelMatrix(void);
 			glm::vec3 GetPosition(void);
+			glm::quat GetRotation(void);
+			glm::vec3 GetScale(void);
 	};
 
 } //! namespace scene

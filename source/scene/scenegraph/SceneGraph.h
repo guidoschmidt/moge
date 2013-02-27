@@ -50,6 +50,7 @@ namespace scene {
 			//! Node hierachry
 			Node m_root;
 			std::vector<Light*> m_lights;
+			std::vector<Billboard*> m_impostors;
 
 			//! Material manager
 			scene::MaterialManager* m_materialman_ptr;
@@ -83,6 +84,7 @@ namespace scene {
 			unsigned int NodeCount(void);
 
 			Node* GetNode(int i);
+			Billboard* GetImpostor(int i);
 			Camera* GetActiveCamera(void);
 			Light* GetActiveLight(void);
 			Light* GetLight(int i);

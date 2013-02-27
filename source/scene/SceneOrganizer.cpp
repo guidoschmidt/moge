@@ -50,6 +50,9 @@ namespace scene {
 					if(node_mat_id == sort_mat_id)
 						m_renderQ.push_back(m_scenegraph_ptr->GetNode(i));
 				}
+				//! Billboard TODO: simply add them
+				if(m_scenegraph_ptr->GetNode(i)->GetType() == "Billboard")
+					m_renderQ.push_back(m_scenegraph_ptr->GetNode(i));
 			}
 		}
 

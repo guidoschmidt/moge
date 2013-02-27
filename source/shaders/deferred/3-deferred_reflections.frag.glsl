@@ -49,9 +49,11 @@ uniform sampler2D deferredReflectanceTex;
 uniform sampler2D deferredDiffuseTex;
 uniform sampler2D deferredDepthTex;
 
+uniform samplerCube cubeMapTex;
+
 // Variables for displaying 2 textures with divider on screen 
 float divider = Mouse.X/Screen.Width;
-float offset = 0.0009f;
+float offset = 0.0009;
 
 /*** Functions ****************************************************************/ 
 /*
@@ -59,7 +61,7 @@ float offset = 0.0009f;
  */
 float linearizeDepth(float depth)
 {
-	return (2.0f * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
+	return (Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
 
@@ -74,30 +76,32 @@ float rand(vec2 co)
 /*
  * Raytracing to get reflected color
  */
-vec3 raytrace(in vec3 reflectionVector, in float startDepth)
+vec3 raytrace(in vec4 position, in vec3 reflectionVector, in float startDepth)
 {
-	vec3 color = vec3(0.0f);
-	float stepSize = rayStepSize/10.0f; 
+	vec3 color = vec3(0.0);
+	vec2 pixelSize = 1.0/vec2(Screen.Width, Screen.Height);
+	float stepSize = pixelSize.x;//rayStepSize/10.0;
+	float initalStep = 0.001;
 
-	reflectionVector = reflectionVector;
-	reflectionVector = reflectionVector * stepSize / startDepth;
+	reflectionVector = (initalStep * reflectionVector) / startDepth;
 
 	vec2 sampledPosition = vert_UV;
 	float currentDepth   = startDepth - reflectionVector.z;
 	float sampledDepth   = linearizeDepth( texture(deferredDepthTex, sampledPosition).z );
 
-	vec2 jitter = vec2(0.0f);
+	vec2 jitter = vec2(0.0);
 	if(jittering)
 	{
-		jitter.x = rand( (vert_UV.xy - 0.5f) * gl_FragCoord.xy) / (20.0f * Screen.Width);
-		jitter.y = rand( (vert_UV.yx - 0.5f) * gl_FragCoord.yx) / (20.0f * Screen.Height);
+		jitter.x = rand( (vert_UV.xy - 0.5) * gl_FragCoord.xy) / (20.0 * Screen.Width);
+		jitter.y = rand( (vert_UV.yx - 0.5) * gl_FragCoord.yx) / (20.0 * Screen.Height);
 	}
 
 	int count = 0;
-	while(sampledPosition.x <= 1.0 && sampledPosition.x >= 0.0 &&
-	      sampledPosition.y <= 1.0 && sampledPosition.y >= 0.0)
+	while(reflectionVector.x <= 1.0 && reflectionVector.x >= -1.0 &&
+	      reflectionVector.y <= 1.0 && reflectionVector.y >= -1.0 && 
+	      reflectionVector.z <= 1.0 && reflectionVector.z >= -1.0)
 	{
-		reflectionVector += reflectionVector * stepSize;
+		reflectionVector += (stepSize * reflectionVector) / startDepth;
 		
 		if(jittering)
 		{
@@ -113,13 +117,14 @@ vec3 raytrace(in vec3 reflectionVector, in float startDepth)
 		if(currentDepth >= sampledDepth)
 		{
 			float delta = (currentDepth - sampledDepth);
-			if(delta <  0.003f)
+			if(delta <  0.002)
 			{
 				color = texture(deferredDiffuseTex, sampledPosition).rgb;
 				break;
 			}
-			
 		}
+		else
+			color = texture(deferredReflectanceTex, sampledPosition).rgb;
 
 		//! Manual break, better performance
 		if(count == 200)
@@ -132,7 +137,7 @@ vec3 raytrace(in vec3 reflectionVector, in float startDepth)
 	if(mouseSlider && compareDepth)
 	{
 		if((vert_UV.x <= (divider + offset)) && (vert_UV.x >= (divider - offset)))
-			color = vec3(1.0f, 0.0f, 0.0f);
+			color = vec3(1.0, 0.0, 0.0);
 		// Right side
 		else if(vert_UV.x > (divider + offset))
 			color = vec3(sampledDepth);
@@ -151,19 +156,23 @@ vec3 raytrace(in vec3 reflectionVector, in float startDepth)
  */
 vec4 SSR()
 {
-	vec3 reflectedColor = vec3(0.0f);
-
-	vec3 normal = normalize( texture(deferredNormalTex, vert_UV) ).xyz;
-	vec4 position = texture(deferredViewPositionTex, vert_UV);
-	position.z = linearizeDepth( texture(deferredDepthTex, vert_UV).z ) - Camera.FarPlane;	
-	position = 0.5f * position + 0.5f;
+	vec3 reflectedColor = vec3(0.0);
 
 	// Depth at current fragment
 	float currDepth = linearizeDepth( texture(deferredDepthTex, vert_UV).z ) ;
 
+	vec4 normal = normalize( texture(deferredNormalTex, vert_UV) );
+	vec4 position = texture(deferredViewPositionTex, vert_UV);
+	
+	position.xy = (2.0 * vert_UV - 1.0) * currDepth;
+	position.z = (1.0 - currDepth) / Camera.NearPlane;
+
+
+	vec3 ssPosition = ( ProjectionMatrix * position ).xyz / position.w;
+
 	// Eye position, camera is at (0, 0, 0), we look along negative z, add near plane to correct parallax
-	vec3 eyePosition = vec3(position.x, position.y, position.z);
-	vec4 reflectionVector = normalize( reflect( vec4(eyePosition, 0), vec4(normal, 0) ) );
+	vec3 eyePosition = position.xyz;
+	vec4 reflectionVector = normalize( reflect( vec4(eyePosition, 0), normal ) );
 	reflectionVector = ProjectionMatrix * reflectionVector;
 	reflectionVector.xyz = reflectionVector.xyz / reflectionVector.w;
 
@@ -171,10 +180,10 @@ vec4 SSR()
 	if(mouseSlider && showReflVecs)
 	{
 		if((vert_UV.x <= (divider + offset)) && (vert_UV.x >= (divider - offset)))
-			reflectedColor = vec3(1.0f, 0.0f, 0.0f);
+			reflectedColor = vec3(1.0, 0.0, 0.0);
 		// Right side
 		else if(vert_UV.x > (divider + offset))
-			reflectedColor = normal;
+			reflectedColor = normal.xyz;
 		// Left side
 		else
 			reflectedColor = reflectionVector.xyz;	
@@ -182,10 +191,10 @@ vec4 SSR()
 	// No debugging
 	else
 	{
-		reflectedColor = raytrace(reflectionVector.xyz, currDepth);	
+		reflectedColor = raytrace(position, reflectionVector.xyz, currDepth);	
 	}
 
-	return vec4(reflectedColor, 1.0f);
+	return vec4(reflectedColor, 1.0);
 }
 
 /*** Main *********************************************************************/

@@ -9,33 +9,182 @@
 namespace scene {
 
 	//! Constructor
-	Billboard::Billboard() {
+	Billboard::Billboard()
+	{
 		m_type = "Billboard";
-		m_translationMatrix = glm::mat4(1.0f);
-		m_rotationMatrix = glm::mat4(0.0f);
-		m_scaleMatrix = glm::mat4(1.0f);
-		m_modelMatrix = glm::mat4(1.0f);
 
 		m_mesh_ptr = 0;
 
+		VAO_id = 0;
+		BBVAO_id = 0;
+		VBO_id = 0;
+		IBO_id = 0;
+		NBO_id = 0;
+		UVBO_id = 0;
+		BBO_id = 0;
+		BBIO_id = 0;
+
+		m_position = glm::vec3(0, 0, 0);
+		m_rotation = glm::quat(0, 0, 0, 0);
+		m_scale = glm::vec3(1, 1, 1);
+
+		ErrorCheckMesh = 0;
+
+		Initialize();
+		CreateBuffers();
 	}
 
-	Billboard::Billboard(aiMesh* m)
+	//! Constructor
+	Billboard::Billboard(aiMesh* mesh)
 	{
-		m_mesh_ptr = m;
+		m_type = "Billboard";
+
+		m_mesh_ptr = mesh;
+
+		VAO_id = 0;
+		BBVAO_id = 0;
+		VBO_id = 0;
+		IBO_id = 0;
+		NBO_id = 0;
+		UVBO_id = 0;
+		BBO_id = 0;
+		BBIO_id = 0;
+
+		m_position = glm::vec3(0, 0, 0);
+		m_rotation = glm::quat(0, 0, 0, 0);
+		m_scale = glm::vec3(1, 1, 1);
+
+		ErrorCheckMesh = 0;
+
+		Initialize();
+		CreateBuffers();
 	}
 
 	//! Destructor
-	Billboard::~Billboard() {
+	Billboard::~Billboard()
+	{
 		// TODO Auto-generated destructor stub
+	}
+
+
+	//! Initialize
+	void Billboard::Initialize(void)
+	{
+		if(m_mesh_ptr == 0)
+		{
+			//! Vertex list
+			//! Upper left corner
+			m_vertices.push_back( 0.5f);
+			m_vertices.push_back( 0.0f);
+			m_vertices.push_back( 0.5f);
+			//! Lower left corner
+			m_vertices.push_back(-0.5f);
+			m_vertices.push_back( 0.0f);
+			m_vertices.push_back( 0.5f);
+			//! Lower right corner
+			m_vertices.push_back(-0.5f);
+			m_vertices.push_back( 0.0f);
+			m_vertices.push_back(-0.5f);
+			//! Upper right corner
+			m_vertices.push_back( 0.5f);
+			m_vertices.push_back( 0.0f);
+			m_vertices.push_back(-0.5f);
+
+			//! Index list
+			//! First triangle
+			m_indices.push_back(0);
+			m_indices.push_back(1);
+			m_indices.push_back(3);
+			//! Second triangle
+			m_indices.push_back(1);
+			m_indices.push_back(2);
+			m_indices.push_back(3);
+
+			//! UV coordinates
+			m_uvs.push_back(1.0f);
+			m_uvs.push_back(0.0f);
+
+			m_uvs.push_back(0.0f);
+			m_uvs.push_back(0.0f);
+
+			m_uvs.push_back(0.0f);
+			m_uvs.push_back(1.0f);
+
+			m_uvs.push_back(1.0f);
+			m_uvs.push_back(1.0f);
+		}
+		else
+		{
+			//! Topology initialization
+			for(unsigned int v=0; v < m_mesh_ptr->mNumVertices; v++)
+			{
+				//! Write vertices
+				m_vertices.push_back(m_mesh_ptr->mVertices[v].x);
+				m_vertices.push_back(m_mesh_ptr->mVertices[v].y);
+				m_vertices.push_back(m_mesh_ptr->mVertices[v].z);
+				//! Write normals
+				m_normals.push_back(m_mesh_ptr->mNormals[v].x);
+				m_normals.push_back(m_mesh_ptr->mNormals[v].y);
+				m_normals.push_back(m_mesh_ptr->mNormals[v].z);
+				//! Write uv coordinates/texture coordinates if they exist
+				if(m_mesh_ptr->HasTextureCoords(0)){
+					m_uvs.push_back(m_mesh_ptr->mTextureCoords[0][v].x);
+					m_uvs.push_back(m_mesh_ptr->mTextureCoords[0][v].y);
+				}
+			}
+			for(unsigned int f=0; f < m_mesh_ptr->mNumFaces; f++)
+			{
+				for(unsigned int i=0; i < m_mesh_ptr->mFaces[f].mNumIndices; i++){
+					m_indices.push_back(m_mesh_ptr->mFaces[f].mIndices[i]);
+				}
+			}
+		}
+
+
+		CalculateNormal();
+	}
+
+
+	void Billboard::CreateBuffers(void)
+	{
+		ErrorCheckMesh = glGetError();
+
+		glGenVertexArrays(1, &VAO_id);
+		glBindVertexArray(VAO_id);
+
+		//! Create vertex buffer
+		glGenBuffers(1, &VBO_id);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_id);
+		glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(GLfloat), &m_vertices[0], GL_STATIC_DRAW);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+
+		//! Create index buffer
+		glGenBuffers(1, &IBO_id);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO_id);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(GLint), &m_indices[0], GL_STATIC_DRAW);
+
+		//! Create uv buffer
+		glGenBuffers(1, &UVBO_id);
+		glBindBuffer(GL_ARRAY_BUFFER, UVBO_id);
+		glBufferData(GL_ARRAY_BUFFER, m_uvs.size() * sizeof(GLfloat), &m_uvs[0], GL_STATIC_DRAW);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+		glEnableVertexAttribArray(2);
 	}
 
 	//!
 	void Billboard::CalculateNormal(void)
 	{
-
+		glm::vec3 a = glm::vec3(m_vertices[0], m_vertices[1], m_vertices[2]);
+		glm::vec3 b = glm::vec3(m_vertices[3], m_vertices[4], m_vertices[5]);
+		m_normal = glm::cross(a, b);
 	}
 
+	//!
+	/*!
+	 *
+	 * @return
+	 */
 	glm::vec3 Billboard::GetNormal(void)
 	{
 		return m_normal;
