@@ -67,6 +67,9 @@ namespace scene {
 			Mesh* m_pointLightMesh;
 			Mesh* m_spotLightMesh;
 
+			//! Scene approximation for parallax-corrected cubemaps
+			BoundingBox* m_approx;
+
 		protected:
 			void ProcessScene(const aiScene* scene);
 
@@ -83,6 +86,7 @@ namespace scene {
 
 			unsigned int NodeCount(void);
 
+			//! Getter
 			Node* GetNode(int i);
 			Billboard* GetImpostor(int i);
 			Camera* GetActiveCamera(void);
@@ -90,7 +94,11 @@ namespace scene {
 			Light* GetLight(int i);
 			Mesh* GetLightMesh(lighttype type);
 			int GetLightCount(void);
+			BoundingBox* GetSceneApproximation(void);
+
+			//! Setter
 			void SetActiveLight(int i);
+			void SetActiveCamera(Camera* camera);
 
 			//! Drawing
 			glm::mat4 DrawNodes(void);

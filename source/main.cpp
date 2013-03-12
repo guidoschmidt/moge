@@ -10,7 +10,7 @@ Renderer* renderer;
 int main(int argc, char* argv[])
 {
 	//! Create a renderer instance
-	renderer = new Renderer(960, 720);
+	renderer = new Renderer(800, 800);
 	//! Start the render loop
 	renderer->RenderLoop();
 

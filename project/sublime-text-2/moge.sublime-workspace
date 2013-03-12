@@ -4,558 +4,526 @@
 		"selected_items":
 		[
 			[
-				"rf",
-				"reflectionVector"
+				"Scree",
+				"ScreenSpaceReflections"
 			],
 			[
-				"defe",
-				"deferredDiffuseTex"
+				"in",
+				"informations"
 			],
 			[
-				"sa",
-				"samplePosition"
+				"ma",
+				"mapping"
 			],
 			[
-				"de",
-				"deferredDiffuseTex"
+				"parall",
+				"Parallax-corrected"
 			],
 			[
-				"c",
-				"currentDepth"
+				"ws",
+				"wsReflectVec"
 			],
 			[
-				"sam",
-				"sampledDepth"
-			],
-			[
-				"vs",
-				"vsReflectedVec"
-			],
-			[
-				"sample",
-				"samplePosition"
-			],
-			[
-				"ray",
-				"rayDepth"
-			],
-			[
-				"def",
-				"deferredDepthTex"
-			],
-			[
-				"for",
-				"FragColor"
-			],
-			[
-				"cu",
-				"currDepth"
-			],
-			[
-				"ne",
-				"NearPlane"
-			],
-			[
-				"ref",
-				"reflectionVector"
-			],
-			[
-				"ste",
-				"stepSize"
-			],
-			[
-				"re",
-				"reflectedColor"
-			],
-			[
-				"curr",
-				"currDepth"
-			],
-			[
-				"s",
-				"startDepth"
-			],
-			[
-				"vec",
-				"vector"
-			],
-			[
-				"ver",
-				"vertex"
-			],
-			[
-				"w",
-				"Width"
-			],
-			[
-				"Sc",
-				"Screen"
-			],
-			[
-				"fra",
-				"fragment"
-			],
-			[
-				"xy",
-				"xyz"
-			],
-			[
-				"defer",
-				"deferredEyeVecTex"
-			],
-			[
-				"sampl",
-				"sampledDepth"
-			],
-			[
-				"li",
-				"linearizeDepth"
-			],
-			[
-				"Ver",
-				"vert_UV"
-			],
-			[
-				"nor",
-				"normalize"
-			],
-			[
-				"proje",
-				"projReflectedVec"
-			],
-			[
-				"no",
-				"normal"
-			],
-			[
-				"eye",
-				"eyeVector"
-			],
-			[
-				"refl",
-				"Reflected"
-			],
-			[
-				"trac",
-				"tracedRayVS"
-			],
-			[
-				"frag",
-				"fragmentDepth"
-			],
-			[
-				"sh",
-				"shaded"
-			],
-			[
-				"samp",
-				"sampledDepth"
-			],
-			[
-				"dfe",
-				"deferredDepthTex"
-			],
-			[
-				"vert",
-				"vert_UV"
-			],
-			[
-				"vert_e",
-				"vert_EyeVector"
-			],
-			[
-				"vert_E",
-				"vert_EyePosition"
-			],
-			[
-				"nea",
-				"NearPlane"
-			],
-			[
-				"st",
-				"stepSize"
-			],
-			[
-				"x",
-				"xy"
-			],
-			[
-				"F",
-				"FarPlane"
-			],
-			[
-				"light",
-				"lightVector"
-			],
-			[
-				"C",
-				"Count"
-			],
-			[
-				"L",
-				"Light"
-			],
-			[
-				"mat",
-				"materialColor"
-			],
-			[
-				"materi",
-				"materialColorD"
-			],
-			[
-				"spec",
-				"specularCooef"
-			],
-			[
-				"dif",
-				"diffuseCooef"
-			],
-			[
-				"diff",
-				"diffuseColor"
-			],
-			[
-				"di",
-				"diffuse"
-			],
-			[
-				"ligh",
-				"lightVector"
-			],
-			[
-				"node",
-				"node_name"
-			],
-			[
-				"node_",
-				"node_name"
-			],
-			[
-				"deferredV",
-				"deferredViewPositionTex"
+				"Cub",
+				"CubeMapColor"
 			],
 			[
 				"cub",
-				"cubemapReflectVec"
+				"cube"
 			],
 			[
-				"r",
-				"rayStep"
+				"cu",
+				"CubeMapColor"
 			],
 			[
-				"pro",
-				"projRay"
+				"refl",
+				"reflectedColor"
 			],
 			[
-				"u",
-				"vert_UV"
+				"ref",
+				"reflectedColor"
 			],
 			[
-				"ker",
-				"kernelY"
+				"vs",
+				"vsReflectionVector"
 			],
 			[
-				"refle",
-				"reflectance"
-			],
-			[
-				"ji",
-				"jitter"
-			],
-			[
-				"deferr",
-				"deferredSSRTex"
-			],
-			[
-				"lin",
-				"linearizeDepth"
-			],
-			[
-				"posi",
-				"position"
-			],
-			[
-				"vet",
-				"vert_UV"
-			],
-			[
-				"scre",
-				"screenPos"
-			],
-			[
-				"sc",
-				"screenPos"
-			],
-			[
-				"v",
-				"vert_UV"
-			],
-			[
-				"tw_ligh",
-				"tw_currentLight"
-			],
-			[
-				"Ligh",
-				"LightDiffuses"
-			],
-			[
-				"refineSa",
-				"refineSampledDepth"
-			],
-			[
-				"refine",
-				"refineCurrDepth"
-			],
-			[
-				"refineS",
-				"refineSamplePosition"
-			],
-			[
-				"to",
-				"toggleSSR"
-			],
-			[
-				"raytra",
-				"Raytracing"
-			],
-			[
-				"refe",
-				"reflectionVector"
-			],
-			[
-				"dep",
-				"depthDelta"
-			],
-			[
-				"str",
-				"startDepth"
-			],
-			[
-				"co",
+				"c",
 				"color"
 			],
 			[
-				"lo",
-				"localPosition"
+				"P",
+				"Position"
 			],
 			[
-				"N",
-				"NearPlane"
+				"Scr",
+				"ScreenSpaceReflections"
 			],
 			[
-				"loca",
-				"localPosition"
+				"vsN",
+				"vsNormal"
 			],
 			[
-				"reflec",
-				"reflectionVector"
+				"Par",
+				"ParallaxCorrecteCubeMapping"
 			],
 			[
-				"Cam",
-				"Camera"
+				"cube",
+				"cubeMapColor"
 			],
 			[
-				"loc",
-				"localPosition"
+				"line",
+				"linearDepth"
 			],
 			[
-				"ss",
-				"ssPosition"
+				"de",
+				"depth"
 			],
 			[
-				"fr",
-				"fragment"
-			],
-			[
-				"n",
-				"normalAtPos"
-			],
-			[
-				"del",
-				"delta"
+				"Sc",
+				"ScreenSpaceReflections"
 			],
 			[
 				"cur",
-				"currDepth"
+				"currentSamplePosition"
 			],
 			[
-				"tex",
-				"texture"
+				"sa",
+				"sampledDepth"
 			],
 			[
-				"colo",
-				"colorTex"
+				"curr",
+				"currentSamplePosition"
 			],
 			[
-				"ts",
-				"tsph"
+				"ss",
+				"ssReflectionVector"
 			],
 			[
-				"ra",
-				"rayO"
+				"cs",
+				"csPosition"
 			],
 			[
-				"mO",
-				"ModelMatrix"
-			],
-			[
-				"vie",
-				"viewVector"
-			],
-			[
-				"view",
-				"vsViewVec"
-			],
-			[
-				"vsr",
-				"vsReflectVec2D"
-			],
-			[
-				"vsRe",
-				"vsReflectVec2D"
-			],
-			[
-				"deferre",
-				"deferredReflecVecTex"
-			],
-			[
-				"divi",
-				"divider"
-			],
-			[
-				"norma",
-				"normalize"
-			],
-			[
-				"S",
-				"Screen"
-			],
-			[
-				"fragm",
-				"fragmentSize"
-			],
-			[
-				"m",
-				"mouseSlider"
-			],
-			[
-				"d",
-				"deferredDepthTex"
-			],
-			[
-				"step",
-				"initalStep"
-			],
-			[
-				"deferredReflec",
-				"deferredReflecVecTex"
-			],
-			[
-				"norm",
-				"normalize"
-			],
-			[
-				"Ref",
-				"ReflectVec"
+				"vsR",
+				"vsReflectionVector"
 			],
 			[
 				"ini",
 				"initalStep"
 			],
 			[
-				"cs",
-				"csReflectVec"
+				"initalStepSi",
+				"initalStepSize"
 			],
 			[
-				"No",
-				"NormalMatrix"
+				"ver",
+				"vert_UV"
 			],
 			[
-				"Hei",
-				"Height"
+				"cubeMa",
+				"cubeMapTex"
 			],
 			[
-				"Projec",
+				"tex",
+				"texture"
+			],
+			[
+				"to",
+				"togglePCCM"
+			],
+			[
+				"u",
+				"uMax"
+			],
+			[
+				"Im",
+				"Impostor"
+			],
+			[
+				"Pos",
+				"Position"
+			],
+			[
+				"nor",
+				"normalize"
+			],
+			[
+				"sam",
+				"sampledPosition"
+			],
+			[
+				"ste",
+				"stepSize"
+			],
+			[
+				"cr",
+				"currPosition"
+			],
+			[
+				"pixelSiz",
+				"pixelSize"
+			],
+			[
+				"start",
+				"startDepth"
+			],
+			[
+				"vsRef",
+				"vsReflectionVectorTex"
+			],
+			[
+				"wsEy",
+				"vert_wsEyePosition"
+			],
+			[
+				"vec",
+				"vector2"
+			],
+			[
+				"t",
+				"thetenthplanet"
+			],
+			[
+				"colo",
+				"color"
+			],
+			[
+				"vsRe",
+				"vsReflectVecTex"
+			],
+			[
+				"C",
+				"Color"
+			],
+			[
+				"Impos",
+				"Impostors"
+			],
+			[
+				"d",
+				"distance"
+			],
+			[
+				"Impo",
+				"Impostors"
+			],
+			[
+				"wsIm",
+				"wsImpostorPosition"
+			],
+			[
+				"M",
+				"ModelMatrix"
+			],
+			[
+				"wsPo",
+				"wsPosToImposPosition"
+			],
+			[
+				"Diffu",
+				"DiffuseTex"
+			],
+			[
+				"proje",
+				"projIntersection"
+			],
+			[
+				"vC",
+				"vCurrOffset"
+			],
+			[
+				"Proje",
 				"ProjectionMatrix"
 			],
 			[
-				"ssP",
-				"ssPosition"
+				"co",
+				"count"
 			],
 			[
-				"Proj",
+				"dep",
+				"depths"
+			],
+			[
+				"sampl",
+				"sampledDepth"
+			],
+			[
+				"refin",
+				"refineStep"
+			],
+			[
+				"re",
+				"refine"
+			],
+			[
+				"vsp",
+				"vspReflectionVector"
+			],
+			[
+				"De",
+				"DepthTex"
+			],
+			[
+				"vsP",
+				"vsPosition"
+			],
+			[
+				"pro",
 				"ProjectionMatrix"
 			],
 			[
-				"line",
+				"F",
+				"FOV"
+			],
+			[
+				"wsP",
+				"wsPosition"
+			],
+			[
+				"fr",
+				"fragDepth"
+			],
+			[
+				"x",
+				"xRand"
+			],
+			[
+				"ray",
+				"rayStep"
+			],
+			[
+				"lin",
 				"linearizeDepth"
 			],
 			[
-				"ssVe",
-				"ssVecPos"
+				"DE",
+				"DepthTex"
 			],
 			[
-				"dee",
-				"deferredNormalTex"
+				"wsN",
+				"wsNormal"
 			],
 			[
-				"vsPos",
-				"vsPosReflect"
+				"refe",
+				"reflectance"
 			],
 			[
-				"vsReflectV",
-				"vsReflectVec"
+				"Ref",
+				"ReflectanceTex"
 			],
 			[
-				"dept",
-				"depthAtFragment"
+				"vCu",
+				"vCurrOffset"
+			],
+			[
+				"vCUr",
+				"vCurrSample"
+			],
+			[
+				"W",
+				"Width"
+			],
+			[
+				"No",
+				"vsNormalTex"
+			],
+			[
+				"sampe",
+				"sampleVector"
+			],
+			[
+				"pix",
+				"pixelSize"
+			],
+			[
+				"Sa",
+				"sampleVector"
+			],
+			[
+				"vsNormalT",
+				"vsNormalTex"
+			],
+			[
+				"vr",
+				"vert_UV"
+			],
+			[
+				"f",
+				"float"
+			],
+			[
+				"li",
+				"lightColor"
+			],
+			[
+				"Lin",
+				"LinearDepthTex"
+			],
+			[
+				"Ca",
+				"Camera"
+			],
+			[
+				"vert_ws",
+				"vert_wsPosition"
+			],
+			[
+				"vert",
+				"vert_LinearDepth"
+			],
+			[
+				"refle",
+				"reflection"
+			],
+			[
+				"toggleC",
+				"toggleCM"
+			],
+			[
+				"r",
+				"rgb"
+			],
+			[
+				"title",
+				"titlePattern"
+			],
+			[
+				"pa",
+				"pathAndFilename"
+			],
+			[
+				"I",
+				"ImpostorNormal"
+			],
+			[
+				"Re",
+				"ReflectanceTex"
+			],
+			[
+				"En",
+				"EnvMapColor"
+			],
+			[
+				"reflec",
+				"Reflectance"
+			],
+			[
+				"uni",
+				"uniform"
+			],
+			[
+				"vert_Im",
+				"vert_ImpostorPosition"
+			],
+			[
+				"unf",
+				"Uniform"
+			],
+			[
+				"st",
+				"startDepth"
+			],
+			[
+				"SS",
+				"ssPosition"
 			],
 			[
 				"depth",
-				"depthAtFragment"
+				"DepthTex"
+			],
+			[
+				"pos",
+				"position"
+			],
+			[
+				"poso",
+				"Position"
+			],
+			[
+				"CUR",
+				"currentPosition"
+			],
+			[
+				"orgP",
+				"orgPosition"
+			],
+			[
+				"defe",
+				"deferredReflectVecTex"
+			],
+			[
+				"lat",
+				"lastPosition"
+			],
+			[
+				"View",
+				"ViewMatrix"
+			],
+			[
+				"def",
+				"deferredDiffuseTex"
+			],
+			[
+				"linea",
+				"linearizeDepth"
+			],
+			[
+				"fra",
+				"fragmentDepth"
+			],
+			[
+				"ra",
+				"rayDepth"
+			],
+			[
+				"sample",
+				"samplePosition"
+			],
+			[
+				"samp",
+				"sampledPosition"
+			],
+			[
+				"view",
+				"viewVector"
+			],
+			[
+				"norm",
+				"normalize"
+			],
+			[
+				"sc",
+				"screenSpace"
+			],
+			[
+				"get",
+				"getScreenSpacePosition"
+			],
+			[
+				"tra",
+				"transpose"
+			],
+			[
+				"col",
+				"color"
+			],
+			[
+				"pr",
+				"projIntersection"
+			],
+			[
+				"te",
+				"texCoord"
 			]
 		]
 	},
 	"buffers":
 	[
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
-			"settings":
-			{
-				"buffer_size": 1078,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 3905,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 5330,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 3766,
-				"line_ending": "Windows"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 285.0,
+		"height": 60.0,
 		"selected_items":
 		[
 			[
@@ -636,39 +604,88 @@
 	},
 	"file_history":
 	[
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.frag.glsl",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EMReflection.fx",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_new.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneOrganizer.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneOrganizer.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/MaterialManager.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/MaterialManager.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/gbuffer/gbuffer.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-working.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/ssr/shader.frag.glsl",
+		"/C/Program Files (x86)/gdipp/gdipp_setting.xml",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
+		"/C/Users/guidoschmidt/Development/code/web/juli/package.json",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/DeferredGeometryPassFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EMReflection.fx",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/ssr/shader.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/KoRE/src/KoRE/Components/Camera.h",
+		"/C/Users/guidoschmidt/Development/code/c++/KoRE/src/KoRE/Components/Camera.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.frag.glsl",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
+		"/C/Users/guidoschmidt/.profile",
+		"/C/Temp/SSR.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
+		"/C/Users/guidoschmidt/Development/scripts/python/batch_rename.py",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_bb.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-WIP.frag.glsl",
+		"/D/Textures/Spheremaps/Night_Sky.jpg",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_running01.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/assets/texture/cubemaps/mask/1.als",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/DeferredGeometryPassVert.vert",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/test.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_new.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Impostor.cs",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/BillboardImpostors.cs",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/LaTeXTools Preferences.sublime-settings",
+		"/C/Users/guidoschmidt/Development/code/glsl/raytracing/raytracing_starter.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EnvironmentMap.fx",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.vert.glsl",
 		"/C/Temp/Whole_10.7/brd.nfo",
 		"/c/Users/guidoschmidt/.profile",
-		"/C/Users/guidoschmidt/.profile",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflectionsnewfrag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/4-deferred_compositing.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
 		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/contents/files/shaders/gbuffers_water.fsh",
 		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/contents/files/shaders/gbuffers_water.vsh",
 		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/source/Hooks.java",
 		"/C/Users/guidoschmidt/Downloads/Sonic Ethers Unbelievable Shaders v08 1.2.4 and 1.2.5 (Windows)/Sonic Ether's Unbelievable Shaders v08 (Windows)/mods/shaders/source/Shaders.java",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionFrag.frag",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/data/shaders/ReflectionVert.vert",
 		"/c/Users/guidoschmidt/Development/code/c++/moge/.gitignore",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Impostor.cs",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Reflector.cs",
 		"/c/Users/guidoschmidt/Development/code/c++/moge/LICENSE.md",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/SceneGraph.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/LICENSE",
 		"/C/Users/guidoschmidt/Downloads/Console-2.00b148-Beta_32bit/Console2/console.xml",
 		"/c/Users/guidoschmidt/Development/code/c++/moge/README.md",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/2-deferred_lighting.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_2.vert.glsl",
 		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/include/fast_lbf.h",
 		"/C/Users/guidoschmidt/Downloads/cross_bf/CROSS_BILATERAL_FILTER/cross_bilateral_filter.cpp",
@@ -690,7 +707,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections_old.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections-NEW2.frag.glsl",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/ogl-samples/samples/gl-330-primitive-front-face.cpp",
 		"/C/Program Files (x86)/Console2/console.xml",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW.frag.glsl",
@@ -698,22 +714,12 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Temp/ssr.hlsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/Mesh.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/demos/MainGLFW/CMakeLists.txt",
 		"/C/Temp/test.html",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
 		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
@@ -724,44 +730,8 @@
 		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
 		"/C/Users/guidoschmidt/Development/code/glsl/bilateral filter/bilateralFilter.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.vert.glsl",
-		"/C/Users/guidoschmidt/.gitconfig",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/img/bsc09.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Camera.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Common.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/utilities/Singleton.h",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Markdown Preview/sample.md",
-		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kusntgeschichte 4.MD",
-		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/Kunstgeschichte 4.MD",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/README.md",
-		"/C/Users/guidoschmidt/Development/MinGW/lib/libassimp.dll.a",
-		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwAdvanced1.cpp",
-		"/D/Development/libraries-frameworks/c++/AntTweakBar/examples/TwSimpleGLFW.c",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Node.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/SceneGraph.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Transformation.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Scene.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
-		"/C/Windows/System32/drivers/etc/hosts",
-		"/D/Temp/CS6 Master Collection/KEYGEN-XFORCE [WIN OSX]/x-force.nfo",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/project/sublime-text",
-		"/C/Users/guidoschmidt/Websites/Uni Koblenz/css/style.css",
-		"/C/Users/guidoschmidt/Websites/Uni Koblenz/index.html",
-		"/D/Development/libraries-frameworks/c++/assimp--3.0.1270-sdk/CMakeLists.txt",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Gist.sublime-settings",
-		"/C/Users/guidoschmidt/Websites/Uni Koblenz/img/cmake-installation.PNG",
-		"/C/Program Files (x86)/CMake 2.8/share/cmake-2.8/Modules/FindBoost.cmake",
-		"/D/Development/libraries-frameworks/c++/boost_1_52_0/INSTALL",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/SideBarEnhancements/messages/11.13.2012.1305.0.txt"
+		"/C/Users/guidoschmidt/.gitconfig"
 	],
 	"find":
 	{
@@ -769,9 +739,10 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 92.0,
 		"where_history":
 		[
+			"gbuffer.frag.glsl"
 		]
 	},
 	"find_state":
@@ -779,134 +750,134 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"impostorTex",
-			"m_gBufferProgram_ptr",
-			"sampledPosition",
-			"currentDepth",
-			"sampledDepth",
-			"currentDepth",
-			"sampledDepth",
-			"rayDepth",
-			"sampledDepth",
-			"rayDepth",
-			"sampledDepth",
-			"rayDepth",
-			"sampledDepth",
-			"rayDepth",
-			"sampledDepth",
-			"deferredProgram_Pass4_ptr",
-			"normal",
-			"eyePosition",
-			"currDepth",
-			"fragmentDepth",
-			"rayDepth",
-			"ref",
-			"rayDepth",
-			"sampledDepth",
-			"vsReflectVec",
-			"currentDepth",
-			"sampledDepth",
-			"currentDepth",
-			"fragmentDepth",
-			"currentDepth",
-			"sampledDepth",
-			"currentDepth",
-			"vert_EyePosition",
-			";\n",
-			"lightPos",
-			"shaded",
-			"deferredWorlPositionTex",
-			"Pos",
-			";\n",
-			"vert_Position",
-			" \n",
-			"rayDepth",
-			"sampleDepth",
-			"rayDepth",
-			"sampleDepth",
-			"sampledPosition",
-			"stepX",
-			"mesh",
-			"	reflectionVector",
-			"	position.xy = 0.5f * position.xy + 0.5f;\n",
-			"currentDepth",
-			"\n				",
-			"materialID",
-			";\n",
-			"\n		",
-			"localDepth",
-			"lookVector",
-			"uv",
-			"UV",
-			"uv",
-			"localNormal",
-			"traceReflection",
-			"rayDepth",
-			"screenSpaceVector",
-			"screenSpaceVectorPosition",
-			"cameraSpaceVectorPosition",
-			"screenSpacePosition",
-			"cameraSpaceVector",
-			"	\n",
-			"cameraSpaceViewDir",
-			"cameraSpaceNormal",
-			"cameraSpacePosition",
-			"screenSpacePosition2D",
-			"m_gBufferProgram_ptr",
-			"fragmentDepth",
-			"ssPosition.z",
-			"rayDepth",
-			"sampledDepth",
-			"fragmentDepth",
-			"sampledDepth",
-			"divider1",
-			"ssRevlectVec",
-			"currSamplingPosition",
-			"lastSamplingPosition",
+			"\"***/\"",
+			"***/",
 			"Normal",
 			"normal",
-			"Normal",
-			"normal",
-			"fragmentDepth",
-			"rayDepth",
-			"fragmentDepth",
-			"currSamplingPosition",
-			"samplingPosition",
-			"curSamplingPosition",
-			"samplingPosition",
-			"ssPosition2",
-			"reflect",
-			"ssPositionSelf",
-			"screenSpaceVectorPosition",
-			"cameraSpaceVectorPosition",
-			"vsReflectVec",
-			"screenSpacePosition",
-			"cameraSpacePosition",
-			"cameraSpaceNormal",
-			"cameraSpaceViewDir",
-			"cameraSpaceVector",
-			"screenSpacePosition2D",
-			"sampledDepth",
-			"Projec",
-			"mintty",
-			"{\n",
-			"0",
-			";\n",
-			"ssReflectVector",
-			"0f",
-			"	// Flipping z axis of screen space reflection vector for debugging (e.g. rendering in rgb)\n	//ssReflectVec.z *= -1;",
-			"0",
-			");\n",
-			"vsReflectVec",
-			"cygwin",
-			";\n",
-			"&&)\n",
-			");\n",
-			"vec3 L = normalize(vert_LightDir.xyz);",
-			"layout (location=0) in vec3 vertex;\nlayout (location=1) in vec3 normal;\nlayout (location=2) in vec2 uv;",
-			"else",
+			"position",
+			"Position",
+			"position",
+			"vsPosition",
+			"vsReflectVecTex",
+			"));\n",
+			"vsPosition",
+			"vsPo",
+			"getForward",
+			"paramsChanged",
+			"vFinalResult",
+			"sspReflect",
+			"sspPosReflect",
+			"vspPosReflect",
+			"vspReflect",
+			"vsEyePosition",
+			"Position",
+			"position",
+			"Position",
+			"position",
+			"wsReflect",
+			"LinearDe",
+			"linear",
+			"linearizeDepth",
+			"DepthTex",
+			"vsEyePos",
+			"box",
+			"Box",
+			"box",
+			"id =",
+			"= 0.1",
+			");",
+			"0.0)",
+			"wsFromEyeVec",
+			"vsEyeVec",
 			"deferredReflectanceTex",
-			"vec3 viewSpaceToScreenSpace(vec3 vector)\n{\n	vec4 clipSpace = ProjectionMatrix * ViewMatrix * vec4(vector, 1.0f);\n	vec3 canonicVolumeSpace = clipSpace.xyz / clipSpace.w;\n	vec3 screenSpace = 0.5f * canonicVolumeSpace + 0.5f;\n	\n	return screenSpace;\n}"
+			"deferredMaterialIDTex",
+			"deferredNormalTex",
+			"eferredColorTex",
+			"deferredWoldPositionTex",
+			"deferredViewPositionTex",
+			"Impostors",
+			"Impostors[0]",
+			"deferredDepthTex",
+			"deferredDiffuseTex",
+			"deferredReflecVecTex",
+			"deferredReflectanceTex",
+			"deferredMaterialIDTex",
+			"deferredNormalTex",
+			"deferredColorTex",
+			"deferredPositionTex",
+			"sampledPosition",
+			"Normal",
+			"normal",
+			"position",
+			"vsReflecVecTex",
+			"deferredDepthTex",
+			"deferredDiffuseTex",
+			"deferredReflecVecTex",
+			"deferredReflectanceTex",
+			"deferredMaterialIDTex",
+			"deferredNormalTex",
+			"deferredColorTex",
+			"deferredPositionTex",
+			"EyeVec",
+			"ReflectVec",
+			"vsNormal",
+			"ViewPosition",
+			"WorldPosition",
+			"deferredDepthTex",
+			"deferredDiffuseTex",
+			"deferredReflectVecTex",
+			"deferredReflectanceTex",
+			"deferredViewPositionTex",
+			"deferredNormalTex",
+			"deferredSSRTex",
+			"deferredDiffuseTex",
+			"deferredDepthTex",
+			"deferredEyeVecTex",
+			"deferredReflecVecTex",
+			"deferredReflectanceTex",
+			"deferredMaterialIDTex",
+			"deferredNormalTex",
+			"deferredColorTex",
+			"deferredViewPositionTex",
+			"deferredWorldPositionTex",
+			"defer",
+			"def",
+			"defer",
+			"def",
+			"deferr",
+			"defe",
+			"def",
+			"defe",
+			"defer",
+			"deferredSSRTex",
+			"deferredDiffuseTex",
+			"deferred",
+			"deferredDiffuseTex",
+			"deferredDepthTex",
+			"deferredEyeVecTex",
+			"deferredReflecVecTex",
+			"deferredReflectanceTex",
+			"deferredMaterialIDTex",
+			"deferredNormalTex",
+			"deferredColorTex",
+			"deferredViewPositionTex",
+			"deferredWorldPositionTex",
+			"ViewPosition",
+			"WorldPosition",
+			"depth",
+			"Depth",
+			"depth",
+			"ReflectVec",
+			"def",
+			"sampledDepth",
+			"currDepth",
+			"samplePos",
+			"currDepth",
+			"WorldInvTrans",
+			"vert_Normal",
+			"vert_Position",
+			"Mesh",
+			"Impostor.vertex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -914,6 +885,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"",
+			".live"
 		],
 		"reverse": true,
 		"show_context": true,
@@ -924,475 +897,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.vert.glsl",
-					"settings":
-					{
-						"buffer_size": 1078,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								672,
-								672
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 3905,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2709,
-								2709
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1350.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 5330,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1619,
-								1619
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 979.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 3766,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3153,
-								3153
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2052.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -1442,20 +948,32 @@
 		"selected_items":
 		[
 			[
-				"5",
-				"source/shaders/deferred/5-deferred_compositing.frag.glsl"
+				"2",
+				"source/shaders/deferred/2-deferred_lighting.frag.glsl"
+			],
+			[
+				"1",
+				"source/shaders/deferred/1-gBufferProgram.frag.glsl"
+			],
+			[
+				"shader",
+				"source/shaders/ssr/shader.frag.glsl"
+			],
+			[
+				"3",
+				"source/shaders/deferred/3-deferred_reflections-working.frag.glsl"
 			],
 			[
 				"4",
 				"source/shaders/deferred/4-deferred_bb.frag.glsl"
 			],
 			[
-				"3",
-				"source/shaders/deferred/3-deferred_reflections.frag.glsl"
+				"5",
+				"source/shaders/deferred/5-deferred_compositing.frag.glsl"
 			],
 			[
-				"1",
-				"source/shaders/deferred/1-gBufferProgram.frag.glsl"
+				"scene",
+				"source/scene/scenegraph/SceneGraph.cpp"
 			],
 			[
 				"render",
@@ -1464,10 +982,6 @@
 			[
 				"defe",
 				"source/shaders/deferred/4-deferred_compositing.frag.glsl"
-			],
-			[
-				"scene",
-				"source/scene/scenegraph/SceneGraph.cpp"
 			],
 			[
 				"inde",
@@ -1495,7 +1009,7 @@
 		[
 			[
 				"",
-				"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/project/bachelorarbeit.sublime-project"
+				"/C/Users/guidoschmidt/Development/code/web/juli-couchapp/project/juli.sublime-project"
 			],
 			[
 				"bach",
@@ -1512,6 +1026,6 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 292.0,
+	"side_bar_width": 231.0,
 	"status_bar_visible": true
 }

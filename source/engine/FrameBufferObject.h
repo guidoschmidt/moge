@@ -39,6 +39,7 @@ class FrameBufferObject
 		void AddColorAttachment(int textureUnit);
 		void AddDepthAttachment_Buffer();
 		void AddDepthAttachment_Texture(int textureUnit);
+		void AddDepthAttachment_MultisampleTexture(int textureUnit);
 
 		void CreateGBuffer(void);
 		void CreateBuffers(int count);

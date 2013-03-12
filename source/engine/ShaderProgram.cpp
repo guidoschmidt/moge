@@ -153,10 +153,9 @@ void ShaderProgram::AddShader(GLSL::GLSLShaderType shaderType, std::string filen
 	m_shader_IDs.push_back(Shader_ID);
 }
 
-
-//!
+//! Reloads all shaders
 /*!
- *
+ *	Reloads and compiles the source code for all attached shaders
  */
 void ShaderProgram::ReloadAllShaders(void)
 {
@@ -171,10 +170,9 @@ void ShaderProgram::ReloadAllShaders(void)
 	Link();
 }
 
-
-//!
+//! Reloads a shader
 /*!
- *
+ *	Reloads and compiles the source code of one single shader
  */
 void ShaderProgram::ReloadShader(int i)
 {
@@ -186,11 +184,7 @@ void ShaderProgram::ReloadShader(int i)
 	Link();
 }
 
-
 //! Links the shader program
-/*!
- * Links the shader program.
- */
 void ShaderProgram::Link(void)
 {
 	glLinkProgram(m_shaderProgram_ID);
@@ -240,10 +234,10 @@ void ShaderProgram::SetUniform(std::string name, const glm::mat4 &mat)
 
 //! Set a uniform vector (3 components)
 /*!
- * Binds a vector with 3 components to the shader program as uniform.
+ *	Binds a vector with 3 components to the shader program as uniform.
  *
- * @param name uniform's name
- * @param vec vector to bind
+ *	@param name uniform's name
+ *	@param vec vector to bind
  */
 void ShaderProgram::SetUniform(const std::string name, const glm::vec3 &vec)
 {
@@ -251,7 +245,27 @@ void ShaderProgram::SetUniform(const std::string name, const glm::vec3 &vec)
 	glUniform3f(glslVectorID, vec[0], vec[1], vec[2]);
 }
 
+//! Set a uniform vector (2 components)
+/*!
+ *	Binds a vector with 2 components to the shader program as uniform.
+ *
+ *	@param name uniform's name
+ *	@param vec vector to bind
+ */
+void ShaderProgram::SetUniform(const std::string name, const glm::vec2 &vec)
+{
+	GLint glslVectorID = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
+	glUniform2f(glslVectorID, vec[0], vec[1]);
+}
+
 //! Sets an uniform array of vectors
+/*!
+ *	Binds a set of vectors to the shader program as uniform.
+ *
+ *	@param name
+ *	@param count
+ *	@param value_ptr
+ */
 void ShaderProgram::SetUniform(const std::string name, int count, GLfloat* value_ptr)
 {
 	GLint glslVectorID = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
@@ -260,10 +274,10 @@ void ShaderProgram::SetUniform(const std::string name, int count, GLfloat* value
 
 //! Set a uniform vector (4 components)
 /*!
- * Binds a vector with 4 components to the shader program as uniform.
+ *	Binds a vector with 4 components to the shader program as uniform.
  *
- * @param name uniform's name
- * @param vec vector to bind
+ *	@param name uniform's name
+ *	@param vec vector to bind
  */
 void ShaderProgram::SetUniform(const std::string name, const glm::vec4 &vec)
 {
@@ -273,10 +287,10 @@ void ShaderProgram::SetUniform(const std::string name, const glm::vec4 &vec)
 
 //! Set a uniform integer
 /*!
- * Binds a vector with 3 components to the shader program as uniform.
+ *	Binds a vector with 3 components to the shader program as uniform.
  *
- * @param name uniform's name
- * @param val integer to bind
+ *	@param name uniform's name
+ *	@param val integer to bind
  */
 void ShaderProgram::SetUniform(const std::string name, int val)
 {
@@ -286,10 +300,10 @@ void ShaderProgram::SetUniform(const std::string name, int val)
 
 //! Set a uniform float
 /*!
- * Binds a float to the shader program as uniform.
+ *	Binds a float to the shader program as uniform.
  *
- * @param name uniform's name
- * @param val float to bind
+ *	@param name uniform's name
+ *	@param val float to bind
  */
 void ShaderProgram::SetUniform(const std::string name, float val)
 {
@@ -297,14 +311,13 @@ void ShaderProgram::SetUniform(const std::string name, float val)
 	glUniform1f(glslFloatID, val);
 }
 
-
 //! Set a uniform texture
 /*!
- * Set a texture to the shader program as a uniform.
+ *	Set a texture to the shader program as a uniform.
  *
- * @param name uniform's name
- * @param texture texture to bind
- * @param textureUnit texture unit to read from
+ *	@param name uniform's name
+ *	@param texture texture to bind
+ *	@param textureUnit texture unit to read from
  */
 void ShaderProgram::SetUniformSampler(std::string name, GLuint texture, GLint textureUnit)
 {
@@ -314,14 +327,29 @@ void ShaderProgram::SetUniformSampler(std::string name, GLuint texture, GLint te
 	glUniform1i(loc, textureUnit);
 }
 
+//! Set a uniform multisampled texture
+/*!
+ *	Set a texture to the shader program as a uniform.
+ *
+ *	@param name uniform's name
+ *	@param texture texture to bind
+ *	@param textureUnit texture unit to read from
+ */
+void ShaderProgram::SetUniformSampler2DMS(std::string name, GLuint texture, GLint textureUnit)
+{
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
+	int loc = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
+	glUniform1i(loc, textureUnit);
+}
 
 //! Set a uniform texture
 /*!
- * Set a texture to the shader program as a uniform.
+ *	Set a texture to the shader program as a uniform.
  *
- * @param name uniform's name
- * @param texture texture to bind
- * @param textureUnit texture unit to read from
+ *	@param name uniform's name
+ *	@param texture texture to bind
+ *	@param textureUnit texture unit to read from
  */
 void ShaderProgram::SetUniformCubemap(std::string name, GLuint texture, GLint textureUnit)
 {
@@ -331,9 +359,8 @@ void ShaderProgram::SetUniformCubemap(std::string name, GLuint texture, GLint te
 	glUniform1i(loc, textureUnit);
 }
 
-//!
+//! Associate a vertex attribute location with a named variable
 /*!
- *
  * @param location
  * @param name
  */
@@ -342,9 +369,9 @@ void ShaderProgram::BindAttributeLocation(GLuint location, std::string name)
 	glBindAttribLocation(m_shaderProgram_ID, location, name.c_str());
 }
 
-//!
+//! Prints all active used attributes
 /*!
- *
+ *	Prints all active and used attributes of a shader 
  */
 void ShaderProgram::PrintActiveAttributes(void)
 {
@@ -369,9 +396,9 @@ void ShaderProgram::PrintActiveAttributes(void)
 	}
 }
 
-//!
+//! Prints all active uniforms
 /*!
- *
+ *	Prints all active and used uniforms of a shader 
  */
 void ShaderProgram::PrintActiveUniforms(void)
 {
@@ -396,11 +423,10 @@ void ShaderProgram::PrintActiveUniforms(void)
 	}
 }
 
-
-//!
+//!	Returns the program handle
 /*!
- *
- * @return
+ *	
+ *	@return 
  */
 GLint ShaderProgram::GetHandle(void)
 {

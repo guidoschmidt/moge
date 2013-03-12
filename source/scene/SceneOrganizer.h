@@ -24,14 +24,11 @@ namespace scene {
 			std::vector<Node*> m_renderQ;
 			std::vector<Node*> m_renderQ_Lights;
 
-		protected:
-
 		public:
 			SceneOrganizer();
 			virtual ~SceneOrganizer();
 
 			std::vector<Node*>* OrganizeByMaterial(void);
-
 		};
 
 } //! namespace scene

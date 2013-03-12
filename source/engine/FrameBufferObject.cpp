@@ -36,35 +36,34 @@ FrameBufferObject::~FrameBufferObject()
 
 //! Creates a G-Buffer for deferred rendering.
 /*!
- * Creates a G-Buffer = Attaches three color attachments (position, color, normal) and one
- * depth attachment texture to the frame buffer object.
+ * Creates a G-Buffer
  */
 void FrameBufferObject::CreateGBuffer(void)
 {
-	//! World Positions
+	//! World Space Positions
 	AddColorAttachment(0);
 	//! View Positions
 	AddColorAttachment(1);
 	//! Colors
 	AddColorAttachment(2);
-	//! Normals
+	//! World Space Normals
 	AddColorAttachment(3);
-	//! MaterialIDs
+	//! View Space Normals
 	AddColorAttachment(4);
 	//! Reflectance
 	AddColorAttachment(5);
 	//! Reflection vector
 	AddColorAttachment(6);
-	//! Eye vector
+	//! Linear Depth
 	AddColorAttachment(7);
 	//! Depth
 	AddDepthAttachment_Texture(8);
 
-	std::cout << "# Attachments" << m_attachmentCounter << std::endl;
+	std::cout << "FrameBuffer: Attachment count: " << m_attachmentCounter << std::endl;
 	m_isGBuffer = true;
 }
 
-
+//! Adds a single color attachment to the framebuffer object
 void FrameBufferObject::CreateBuffers(int count)
 {
 	//! Color attachment 0
@@ -83,13 +82,9 @@ void FrameBufferObject::AddColorAttachment(GLint textureUnit)
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glGenTextures(1, &renderTexture);
 	glBindTexture(GL_TEXTURE_2D, renderTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, m_width, m_height, 0, GL_RGBA, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
 	//! Bind texture to color attachment point
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + m_attachmentCounter, GL_TEXTURE_2D, renderTexture, 0);
 
@@ -129,11 +124,33 @@ void FrameBufferObject::AddDepthAttachment_Texture(int textureUnit)
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
 	glGenTextures(1, &m_depthTexture);
 	glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_width, m_height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT, m_width, m_height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
+}
+
+//! Adds a depth map to the framebuffer object
+/*!
+ * Adds a depth map to the framebuffer object, using a renderbuffer and a generated texture as render target.
+ * @param textureUnit
+ */
+void FrameBufferObject::AddDepthAttachment_MultisampleTexture(int textureUnit)
+{
+	//! Create depth texture
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glGenTextures(1, &m_depthTexture);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_depthTexture);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_DEPTH_COMPONENT32F, m_width, m_height, false);
+	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
 	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT, m_width, m_height);

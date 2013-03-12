@@ -24,7 +24,6 @@ namespace scene {
 		Initialize();
 	}
 
-
 	//! Destructor
 	SceneGraph::~SceneGraph()
 	{
@@ -32,11 +31,7 @@ namespace scene {
 			m_logfile.close();
 	}
 
-
 	//! Initializes the scenegraph
-	/*!
-	 *	TODO Add MaterialManager
-	 */
 	void SceneGraph::Initialize(void)
 	{
 		m_materialman_ptr = Singleton<scene::MaterialManager>::Instance();
@@ -52,16 +47,15 @@ namespace scene {
 		}
 	}
 
-
 	//! Loads a scene from a file
 	/*!
 	 *
-	 * @param filename
+	 *	@param filename
 	 */
 	void SceneGraph::LoadSceneFromFile(const std::string filename)
 	{
 		//! Set the scene's name
-		m_scene_name = "museum";
+		m_scene_name = "testscene";
 
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
@@ -83,11 +77,10 @@ namespace scene {
 		infile.close();
 	}
 
-
 	//! Processes an assimp scene
 	/*!
-	 *
-	 * @param scene
+	 *	
+	 *	@param scene
 	 */
 	void SceneGraph::ProcessScene(const aiScene* scene)
 	{
@@ -176,7 +169,8 @@ namespace scene {
 					mat_name == "Tiles"			||
 					mat_name == "Cobblestone" 	||
 					mat_name == "Museum"		||
-					mat_name == "Rusty_Metall"
+					mat_name == "Rusty_Metall"	||
+					mat_name == "Building0"
 				   )
 				{
 					texture normal;
@@ -185,12 +179,6 @@ namespace scene {
 					textures.push_back(normal);
 					std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
 				}
-
-			//! Console output
-			std::cout << "\nMaterial " << mat << ":" << mat_name << std::endl;
-			std::cout << "	Diffuse Color: (" << difColor.r << ", " << difColor.g << ", " << difColor.b << ")" << std::endl;
-			std::cout << "	Textures: " << std::endl;
-			std::cout << "	" << diffuse.m_type << ": " << diffuse.m_filename << std::endl;
 			}
 
 			//! Add material to material manager
@@ -198,7 +186,7 @@ namespace scene {
 		}
 
 		/* CUBEMAPS ****************************************************************/
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/museum/museum");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene_prefiltered");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
@@ -283,24 +271,67 @@ namespace scene {
 					m_root.AddChild(mesh);
 					std::cout << "Mesh #" << m << " was added to the scenegraph!" << std::endl;
 				}
+				//! Billboards
 				else if(node_type == "Billboard")
 				{
-					//Billboard* billboard = new Billboard();
 					Billboard* billboard = new Billboard(scene->mMeshes[meshID]);
+					Mesh* billboardMesh = new Mesh(scene->mMeshes[meshID]);
 					billboard->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
+					billboardMesh ->SetMaterial(m_materialman_ptr->GetMaterial(material_index));
 
 					//! Convert the aiNode's transformation and store them in mesh
 					//! Translation
 					glm::vec3 position(aiPosition.x, aiPosition.y, aiPosition.z);
 					billboard->Translate(position);
+					billboardMesh ->Translate(position);
 					//! Scale
 					glm::vec3 scale(aiScale.x, aiScale.y, aiScale.z);
 					billboard->Scale(scale);
+					billboardMesh ->Scale(scale);
 					//! Rotation
 					glm::quat rotation(aiRotation.w, aiRotation.x, aiRotation.y, aiRotation.z);
 					billboard->RotateQuat(rotation);
+					billboardMesh->RotateQuat(rotation);
+
 					m_impostors.push_back(billboard);
+					std::cout << "Billboard #" << m << " was added to the imposters list!" << std::endl;
+					m_root.AddChild(billboardMesh);
 					std::cout << "Billboard #" << m << " was added to the scenegraph!" << std::endl;
+				}
+				else if(node_type == "Approx")
+				{
+					m_approx = new BoundingBox();
+					m_approx->max = glm::vec3(0, 0, 0);
+					m_approx->min = glm::vec3(0, 0, 0);
+					for(int v=0; v < scene->mMeshes[meshID]->mNumVertices; v++)
+					{
+						glm::vec3 vertex = glm::vec3(scene->mMeshes[meshID]->mVertices[v].x,
+													 scene->mMeshes[meshID]->mVertices[v].y,
+													 scene->mMeshes[meshID]->mVertices[v].z);
+						//! AABB maximum
+						if(vertex.x > m_approx->max.x)
+							m_approx->max.x = scene->mMeshes[meshID]->mVertices[v].x;
+						if(vertex.y > m_approx->max.y)
+							m_approx->max.y = scene->mMeshes[meshID]->mVertices[v].y;
+						if(vertex.z > m_approx->max.z)
+							m_approx->max.z = scene->mMeshes[meshID]->mVertices[v].z;
+
+						//! AABB minimum
+						if(vertex.x < m_approx->min.x)
+							m_approx->min.x = scene->mMeshes[meshID]->mVertices[v].x;
+						if(vertex.y < m_approx->min.y)
+							m_approx->min.y = scene->mMeshes[meshID]->mVertices[v].y;
+						if(vertex.z < m_approx->min.z)
+							m_approx->min.z = scene->mMeshes[meshID]->mVertices[v].z;
+
+						m_approx->vertices.push_back(scene->mMeshes[meshID]->mVertices[v].x);
+						m_approx->vertices.push_back(scene->mMeshes[meshID]->mVertices[v].y);
+						m_approx->vertices.push_back(scene->mMeshes[meshID]->mVertices[v].z);
+					}
+
+					std::cout << "Scene approximation: " << std::endl;
+					std::cout << "	max: " << m_approx->max.x << ", " << m_approx->max.y << ", " << m_approx->max.z << std::endl;
+					std::cout << "	min: " << m_approx->min.x << ", " << m_approx->min.y << ", " << m_approx->min.z << std::endl;
 				}
 			}
 		}
@@ -311,34 +342,31 @@ namespace scene {
 		m_setupComplete = true;
 	}
 
-
-	//!
+	//! Sets logging to console or to file
 	/*!
 	 *
-	 * @param logging
+	 *	@param logging
 	 */
 	void SceneGraph::Logging(bool logging)
 	{
 		m_writeLogFile = logging;
 	}
 
-
 	//! Returns the number of nodes
 	/*!
 	 *
-	 * @return
+	 *	@return
 	 */
 	unsigned int SceneGraph::NodeCount(void)
 	{
 		return m_root.ChildrenCount();
 	}
 
-
 	//! Returns the node at position i
 	/*!
 	 *
-	 * @param i
-	 * @return
+	 *	@param i
+	 *	@return
 	 */
 	Node* SceneGraph::GetNode(int i)
 	{
@@ -348,8 +376,8 @@ namespace scene {
 	//! Returns the billboard at position i
 	/*!
 	 *
-	 * @param i
-	 * @return
+	 *	@param i
+	 *	@return
 	 */
 	Billboard* SceneGraph::GetImpostor(int i)
 	{
@@ -359,8 +387,8 @@ namespace scene {
 	//!
 	/*!
 	 *
-	 * @param type
-	 * @return
+	 *	@param type
+	 *	@return
 	 */
 	Mesh* SceneGraph::GetLightMesh(lighttype type)
 	{
@@ -377,8 +405,7 @@ namespace scene {
 		return mesh;
 	}
 
-
-	//!
+	//! Returns the active camera
 	/*!
 	 *
 	 * @return
@@ -392,7 +419,7 @@ namespace scene {
 	}
 
 
-	//!
+	//! Returns the active light
 	/*!
 	 *
 	 * @return
@@ -405,7 +432,7 @@ namespace scene {
 			return new Light();
 	}
 
-	//!
+	//! Returns the count of lights
 	/*!
 	 *
 	 */
@@ -415,7 +442,7 @@ namespace scene {
 	}
 
 
-	//!
+	//! Returns a light by it's index i
 	/*!
 	 *
 	 * @param i
@@ -426,9 +453,20 @@ namespace scene {
 		return m_lights[i];
 	}
 
-	//!
+	//! Returns a AABB proxy geometry of the scene
 	/*!
-	 *
+	 *	Used for parallax-corrected cube mapping
+	 * @return
+	 */
+	BoundingBox* SceneGraph::GetSceneApproximation(void)
+	{
+		return m_approx;
+	}
+
+	//! Sets light at index i as the active light
+	/*!
+	 *	Active lights can be changed (color, position)
+	 * 
 	 * @param i
 	 */
 	void SceneGraph::SetActiveLight(int i)
@@ -436,6 +474,15 @@ namespace scene {
 		m_activeLight_ptr = i;
 	}
 
+	//! Sets the active camera
+	/*!
+	 *
+	 * @param camera
+	 */
+	void SceneGraph::SetActiveCamera(Camera* camera)
+	{
+		m_activeCamera_ptr = camera;
+	}
 
 	//! Draws all drawable nodes
 	/*!

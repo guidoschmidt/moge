@@ -25,7 +25,7 @@ namespace scene {
 
 	//! Organizes the render queue
 	/*!
-	 * Sorts the render queue by materials
+	 *	Sorts the render queue by materials
 	 */
 	std::vector<Node*>* SceneOrganizer::OrganizeByMaterial(void)
 	{
@@ -68,6 +68,5 @@ namespace scene {
 
 		return &m_renderQ;
 	}
-
 
 } //! namespace scene

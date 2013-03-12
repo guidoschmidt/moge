@@ -73,20 +73,22 @@ class Renderer
 						TEX_WORLDPOSITION	=	 0,
 						TEX_VIEWPOSITION	=	 1,
 						TEX_COLOR			=	 2,
-						TEX_NORMAL			=	 3,
-						TEX_MATID			=	 4,
-						TEX_ENVMAP			=	 5,
-						TEX_REFLECTANCE		=	 6,
-						TEX_REFLVEC			=	 7,
-						TEX_EYEVEC			=	 8,
+						TEX_MATERIALID		=	 3,
+						TEX_WSNORMAL		=	 4,
+						TEX_VSNORMAL		=	 5,
+						TEX_ENVMAP			=	 6,
+						TEX_REFLECTANCE		=	 7,
+						TEX_REFLVEC			=	 8,
 						TEX_DEPTH			=	 9,
-						TEX_SSR				=	 10,
+						TEX_LINDEPTH		=	 10,
+						TEX_SSR				=	 11,
+						TEX_BB				=	 12
 		} DeferredTexture;
-		#define NUM_TEXS 12
+		#define NUM_TEXS 14
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {HEAD=0, GEOMETRY=1, CONFERENCE=2, BUDDHA=3, TEAPOT=4} Scenes;
-		#define NUM_SCENES 2
+		typedef enum {HEAD=0} Scenes;
+		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 
 		float tw_rotSpeed;
@@ -96,6 +98,9 @@ class Renderer
 		bool tw_mouseSlider;
 		float tw_rayStepSize;
 		bool tw_SSR;
+		bool tw_CM;
+		bool tw_BB;
+		bool tw_PCCM;
 		bool tw_blur;
 		int tw_blurX;
 		int tw_blurY;
@@ -104,6 +109,9 @@ class Renderer
 		bool tw_jittering;
 		bool tw_drawSkyBox;
 		bool tw_boundingbox;
+		bool tw_blockCamera;
+		bool tw_cameraMouseButton;
+		bool tw_cameraOrtho;
 		//! Passes
 		bool tw_pass1, tw_pass2, tw_pass3, tw_pass4, tw_pass5;
 

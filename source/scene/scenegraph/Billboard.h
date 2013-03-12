@@ -8,6 +8,7 @@
 #define BILLBOARD_H_
 
 #include "Mesh.h"
+#include "Camera.h"
 
 namespace scene {
 
@@ -15,6 +16,8 @@ namespace scene {
 		private:
 			glm::vec3 m_min;
 			glm::vec3 m_max;
+			glm::vec3 m_u;
+			glm::vec3 m_v;
 			glm::vec3 m_normal;
 
 			aiMesh* m_mesh_ptr;
@@ -25,6 +28,8 @@ namespace scene {
 			std::vector<GLfloat> m_normals;
 			std::vector<GLfloat> m_uvs;
 			BoundingBox m_boundingBox;
+
+			Camera* m_camera_ptr;
 
 			//! Buffer handlers
 			GLenum ErrorCheckMesh;
@@ -42,6 +47,12 @@ namespace scene {
 			virtual ~Billboard();
 
 			glm::vec3 GetNormal(void);
+			Camera* GetCamera(void);
+			glm::vec3 GetVertex(int i);
+			glm::vec3 GetUMax(void);
+			glm::vec3 GetVMax(void);
+
+			void SetCamera(Camera* camera);
 
 			void Draw(void);
 

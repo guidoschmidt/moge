@@ -9,16 +9,13 @@
 namespace scene {
 
 	//! Constructor
-	/*!
-	 *
-	 */
 	MaterialManager::MaterialManager()
 	{
 		m_textureCounter = 0; //0 is black texture
 		m_textures.push_back(new texture());
 		LoadTexture("./assets/texture/Black.png");
 		m_textureCounter = 1;
-		m_materialCounter = 0;
+		m_materialCounter = 1;
 
 		ErrorCheckTexture = 0;
 		Image_id = 0;
@@ -26,9 +23,6 @@ namespace scene {
 
 
 	//! Destructor
-	/*!
-	 *
-	 */
 	MaterialManager::~MaterialManager()
 	{
 		// TODO Auto-generated destructor stub
@@ -37,8 +31,8 @@ namespace scene {
 	//! Adds a new material to the material-stock
 	/*!
 	 *
-	 * @param name
-	 * @param texturefile
+	 *	@param name
+	 *	@param texturefile
 	 */
 	void MaterialManager::AddMaterial(std::string name)
 	{
@@ -50,8 +44,8 @@ namespace scene {
 	//! Adds a new material to the material-stock
 	/*!
 	 *
-	 * @param name
-	 * @param texturefile
+	 *	@param name
+	 *	@param texturefile
 	 */
 	void MaterialManager::AddMaterial(std::string name, glm::vec3 diffuse, float reflectivity, std::vector<texture> textures)
 	{
@@ -65,86 +59,62 @@ namespace scene {
 			LoadTexture(m_textures[m_textureCounter]->m_filename);
 
 			textureRef texref(m_textureCounter, m_textures[m_textureCounter]->m_type);
-			m_materials[m_materialCounter]->AddTexture(texref);
-			m_materials[m_materialCounter]->SetReflectance(reflectivity);
+			m_materials[m_materialCounter-1]->AddTexture(texref);
+			m_materials[m_materialCounter-1]->SetReflectance(reflectivity);
 
 			m_textureCounter++;
 		}
-		m_materials[m_materialCounter]->SetDiffuseColor(diffuse);
+		m_materials[m_materialCounter-1]->SetDiffuseColor(diffuse);
+
+		std::cout << "Material " << name << " has been added:" << std::endl;
+		std::cout << "	ID:	" << m_materialCounter << std::endl;
+		std::cout << "	Diffuse Color:	" << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << std::endl;
+		std::cout << "	Reflectance:	" << reflectivity << std::endl;
+		for(int i=0; i < textures.size(); i++)
+		{
+			std::cout << "	Texture:	" << textures[i].m_type << ": " << textures[i].m_filename << std::endl;
+		}
+
 		m_materialCounter++;
 	}
 
-
-	//!
+	//! Adds a cube map to the material-stack
 	/*!
 	 *
-	 * @param filename
+	 *	@param filename
 	 */
 	void MaterialManager::AddCubeMap(std::string filename)
 	{
 		LoadCubeMap(filename);
 	}
 
-
 	//! Loads a texture
 	/*!
 	 *
-	 * @param filename
-	 * @return
+	 *	@param filename
+	 *	@return
 	 */
 	void MaterialManager::LoadTexture(std::string filename)
 	{
-		//ILboolean loadSuccess = ilLoadImage(filename.c_str());
+		ActiveTexture(GL_TEXTURE0);
+		glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
+		glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
 
-		//if(loadSuccess)
-		//{
-			glActiveTexture(GL_TEXTURE0);
-			glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
-			glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
-
-			//! New gflw texture loading
-			glfwLoadTexture2D(&filename[0], GLFW_BUILD_MIPMAPS_BIT);
-			//! OLd devIL texture loading
-			/*!
-			//! Load image into texture
-			glTexImage2D(	GL_TEXTURE_2D,
-							0,
-							ilGetInteger(IL_IMAGE_BPP),
-							ilGetInteger(IL_IMAGE_WIDTH),
-							ilGetInteger(IL_IMAGE_HEIGHT),
-							0,
-							ilGetInteger(IL_IMAGE_FORMAT),
-							GL_UNSIGNED_BYTE,
-							ilGetData());
-			//! Build mipmaps
-			//ILboolean ilutOglBuildMipmaps();
-			*/
-
-			//! Set texture's clamping
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			//! Set texture's filtering
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-			/*!
-			//! Delete image
-			ilDeleteImages(1, &Image_id);
-			std::cout << "DeVIL: texture was generated from " << filename << "!" << std::endl;
-			*/
-		//}
-		//else if(!loadSuccess)
-		//{
-		//	ErrorCheckTexture = ilGetError();
-		//	std::cout << "ERROR | DeVIL: Image load error " << iluErrorString(ErrorCheckTexture) << std::endl;
-		//}
+		glfwLoadTexture2D(&filename[0], GLFW_BUILD_MIPMAPS_BIT);
+		//! Set texture's clamping
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		//! Set texture's filtering
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	}
 
-
-	//!
+	//! Loads a cube map
 	/*!
+	 *	Loads a cube map texture consisting of 6 textures, one for every spatial direction.
+	 *	+X, -X, +Y, -Y, +Z, -Z
 	 *
-	 * @return
+	 *	@return
 	 */
 	void MaterialManager::LoadCubeMap(std::string filename)
 	{
@@ -199,12 +169,11 @@ namespace scene {
 		m_cubemapCounter++;
 	}
 
-
-	//!
+	//! Returns a material by it's name
 	/*!
 	 *
-	 * @param name
-	 * @return
+	 *	@param name
+	 *	@return
 	 */
 	Material* MaterialManager::GetMaterial(std::string searchname)
 	{
@@ -216,11 +185,11 @@ namespace scene {
 		return 0;
 	}
 
-	//!
+	//! Returns a material by it's index
 	/*!
 	 *
-	 * @param index
-	 * @return
+	 *	@param index
+	 *	@return
 	 */
 	Material* MaterialManager::GetMaterial(unsigned int index)
 	{
@@ -228,28 +197,24 @@ namespace scene {
 	}
 
 
-	//!
+	//! Returns the count of materials
 	unsigned int MaterialManager::MaterialCount(void)
 	{
 		return m_materials.size();
 	}
 
 
-	//!
-	/*!
-	 *
-	 */
+	//! Returns a texture handle by it's ID
 	GLuint* MaterialManager::GetTextureByID(int i)
 	{
 		return &(m_textures[i]->m_handle);
 	}
 
-
-	//!
+	//! Returns a cube map texture handle by it's ID
 	/*!
 	 *
-	 * @param i
-	 * @return
+	 *	@param i
+	 *	@return
 	 */
 	GLuint* MaterialManager::GetCubeMapByID(int i)
 	{

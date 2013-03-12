@@ -73,6 +73,7 @@ class ShaderProgram
 		void BindFragDataLocation(GLuint location, std::string* name);
 
 		//! Uniforms bindings
+		void SetUniform(const std::string name, const glm::vec2 &vec);
 		void SetUniform(const std::string name, const glm::vec3 &vec);
 		void SetUniform(const std::string name, const glm::vec4 &vec);
 		void SetUniform(const std::string name, int count, GLfloat* value_ptr);
@@ -81,6 +82,7 @@ class ShaderProgram
 		void SetUniform(const std::string name, int val);
 
 		void SetUniformSampler(const std::string name, GLuint texture, int textureUnit);
+		void SetUniformSampler2DMS(const std::string name, GLuint texture, int textureUnit);
 		void SetUniformCubemap(const std::string name, GLuint texture, int textureUnit);
 
 		void PrintActiveUniforms(void);

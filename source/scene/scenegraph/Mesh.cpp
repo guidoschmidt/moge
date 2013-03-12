@@ -168,8 +168,8 @@ namespace scene {
 	void Mesh::CreateBoundingBox(void)
 	{
 		//! Bounding box offset, so cuboids bounding boxes can bee seen
-		m_boundingBox.max += 0.25f;
-		m_boundingBox.min -= 0.25f;
+		m_boundingBox.max += 0.05f;
+		m_boundingBox.min -= 0.05f;
 
 		//! Create bounding box
 		//! Vertex list
@@ -273,14 +273,9 @@ namespace scene {
 	 */
 	void Mesh::DrawBoundingBox(void)
 	{
-		AccumulateMatrices();
-		glDisableClientState(GL_LIGHTING);
-
 		glBindVertexArray(BBVAO_id);
 		glDrawElements(GL_LINES, m_boundingBox.indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-
-		glEnableClientState(GL_LIGHTING);
 	}
 
 

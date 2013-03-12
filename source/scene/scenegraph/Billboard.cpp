@@ -116,12 +116,14 @@ namespace scene {
 		else
 		{
 			//! Topology initialization
+			std::cout << "Billboard has " << m_mesh_ptr->mNumVertices << " Vertices" << std::endl;
 			for(unsigned int v=0; v < m_mesh_ptr->mNumVertices; v++)
 			{
 				//! Write vertices
 				m_vertices.push_back(m_mesh_ptr->mVertices[v].x);
 				m_vertices.push_back(m_mesh_ptr->mVertices[v].y);
 				m_vertices.push_back(m_mesh_ptr->mVertices[v].z);
+				std::cout << m_mesh_ptr->mVertices[v].x << " | " << m_mesh_ptr->mVertices[v].y << " | " << m_mesh_ptr->mVertices[v].z << std::endl;
 				//! Write normals
 				m_normals.push_back(m_mesh_ptr->mNormals[v].x);
 				m_normals.push_back(m_mesh_ptr->mNormals[v].y);
@@ -141,10 +143,17 @@ namespace scene {
 		}
 
 
+		m_u = glm::vec3(m_vertices[0], m_vertices[1], m_vertices[2]) - glm::vec3(m_vertices[3], m_vertices[4], m_vertices[5]);
+		std::cout << "Billboard m_u = " << m_u.x << " | " << m_u.y << " | " << m_u.z << std::endl;
+		m_v = glm::vec3(m_vertices[6], m_vertices[7], m_vertices[8]) - glm::vec3(m_vertices[3], m_vertices[4], m_vertices[5]);
+		std::cout << "Billboard m_v = " << m_v.x << " | " << m_v.y << " | " << m_v.z << std::endl;
 		CalculateNormal();
 	}
 
-
+	//!
+	/*!
+	 *
+	 */
 	void Billboard::CreateBuffers(void)
 	{
 		ErrorCheckMesh = glGetError();
@@ -175,9 +184,8 @@ namespace scene {
 	//!
 	void Billboard::CalculateNormal(void)
 	{
-		glm::vec3 a = glm::vec3(m_vertices[0], m_vertices[1], m_vertices[2]);
-		glm::vec3 b = glm::vec3(m_vertices[3], m_vertices[4], m_vertices[5]);
-		m_normal = glm::cross(a, b);
+		m_normal = glm::normalize(glm::cross(m_v, m_u));
+		std::cout << "Billboard normal = " << m_normal.x << " | " << m_normal.y << " | " << m_normal.z << std::endl;
 	}
 
 	//!
@@ -188,6 +196,63 @@ namespace scene {
 	glm::vec3 Billboard::GetNormal(void)
 	{
 		return m_normal;
+	}
+
+	//!
+	/*!
+	 *
+	 * @param i
+	 * @return
+	 */
+	glm::vec3 Billboard::GetVertex(int i)
+	{
+		glm::vec3 vertex;
+		if(i <= 4)
+			vertex = glm::vec3(m_vertices[i], m_vertices[i+1], m_vertices[i+2]);
+		else
+			vertex = glm::vec3(0.0, 0.0, 0.0);
+
+		return vertex;
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	glm::vec3 Billboard::GetUMax(void)
+	{
+		return m_u;
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	glm::vec3 Billboard::GetVMax(void)
+	{
+		return m_v;
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	Camera* Billboard::GetCamera(void)
+	{
+		return m_camera_ptr;
+	}
+
+	//!
+	/*!
+	 *
+	 * @param camera
+	 */
+	void Billboard::SetCamera(Camera* camera)
+	{
+		m_camera_ptr = camera;
 	}
 
 	//!

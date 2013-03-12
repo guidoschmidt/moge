@@ -70,9 +70,7 @@ namespace scene {
 			unsigned int MaterialCount(void);
 			GLuint* GetTextureByID(int i);
 			GLuint* GetCubeMapByID(int i);
-
 	};
-
 
 } //! namespace scene
 #endif //! MATERIALMANAGER_H_
