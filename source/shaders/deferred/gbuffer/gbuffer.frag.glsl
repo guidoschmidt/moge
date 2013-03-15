@@ -28,10 +28,7 @@ struct AABBInfo
 //
 struct ImpostorInfo
 {
-	vec3 vertex[4];
-	vec3 normal;
-	vec3 uMax;
-	vec3 vMax;
+	mat4 ModelMatrix;
 };
 
 //*** Input ********************************************************************
@@ -58,10 +55,11 @@ layout (location = 7) out vec3 LinearDepth;
 
 //*** Uniforms *****************************************************************
 uniform CameraInfo Camera;
-uniform ImpostorInfo Impostor;
+uniform ImpostorInfo Impostor[2];
 uniform AABBInfo AABB;
 uniform MaterialInfo Material;
 
+uniform int impostorCount;
 uniform bool useNormalMapping;
 uniform bool toggleCM;
 uniform bool togglePCCM;
@@ -75,9 +73,9 @@ uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 uniform mat4 MVPMatrix;
 
-uniform sampler2D colorTex;
-uniform sampler2D impostorTex;
-uniform sampler2D normalTex;
+uniform sampler2D ColorTex;
+uniform sampler2D ImpostorTex[2];
+uniform sampler2D NormalTex;
 uniform samplerCube CubeMapTex;
 
 //*** Functions ****************************************************************
@@ -105,6 +103,31 @@ vec3 ParallaxCorrecteCubeMapping(in vec3 wsPosition, in vec3 wsReflectionVector)
 	return reflectedColor; 
 }
 
+vec2 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in vec3 vert1, in vec3 vert2)
+{
+	float t, u, v;
+
+	vec3 edge1, edge2, edge3;
+	float det, inv_det;
+
+	edge1 = vert1 - vert0;
+	edge2 = vert2 - vert0;
+
+	vec3 pvec = cross(rayDirect, edge2);
+	det = dot(edge1, pvec);
+
+	inv_det = 1.0 / det;
+	vec3 tvec = rayOrigin - vert0;
+	u = dot(tvec, pvec) * inv_det;
+
+	vec3 qvec = cross(tvec, edge1);
+	v = dot(rayDirect, qvec) * inv_det;
+
+	t = dot(edge2, qvec) * inv_det;
+
+	return vec2(u, v);
+}
+
 // @source: http://www.thetenthplanet.de/archives/1180
 mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
 {
@@ -130,7 +153,7 @@ vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 {
     // assume N, the interpolated vertex normal and 
     // V, the view vector (vertex to eye)
-    vec3 map = texture(normalTex, vert_UV).xyz;
+    vec3 map = texture(NormalTex, vert_UV).xyz;
     map = map * 255./127. - 128./127.;
     mat3 TBN = cotangent_frame(N, V, vert_UV);
     return normalize(TBN * map);
@@ -147,11 +170,11 @@ void main(void)
 	vsNormal = normalize(vert_vsNormal);
 	wsNormal = normalize(vert_wsNormal);
 	// Colors (Albedo) 
-	Color.rgb = texture(colorTex, vert_UV).rgb;
+	Color.rgb = texture(ColorTex, vert_UV).rgb;
 	// Linear Depth
 	LinearDepth = vec3(vert_LinearDepth);
 	// Reflectance
-	Reflectance.a = texture(colorTex, vert_UV).a;
+	Reflectance.a = texture(ColorTex, vert_UV).a;
 	if(Material.id == 0.09)
 	{
 		// Bounding boxes
@@ -168,6 +191,7 @@ void main(void)
 	if(Material.id == 0.00)
 	{
 		Color.rgb = lightColor;
+		Reflectance.a = 0.0;
 	}
 	// Eye vectors
 	vec3 wsEyeVec = normalize(vert_wsEyeVector); 
@@ -175,7 +199,7 @@ void main(void)
 	
 
 	//*** Normal mapping ***
-	vec3 normalmap = texture(normalTex, vert_UV).rgb;
+	vec3 normalmap = texture(NormalTex, vert_UV).rgb;
 	if(useNormalMapping)
 	{
 		if(normalmap.r != 0 && normalmap.g != 0 && normalmap.b != 0){
@@ -200,49 +224,54 @@ void main(void)
 	{
 		vec3 CubeMapColor = vec3(0.0);
 		CubeMapColor = CubeMapping(wsReflectVec);
-		Reflectance.rgb = CubeMapColor;
 		
+		//** Parallax-corrected cube mapping ***
 		if(togglePCCM)
 		{
-			/*** Parallax-corrected cube mapping ***/
 			CubeMapColor = ParallaxCorrecteCubeMapping(wsPosition, wsReflectVec);
-			Reflectance.rgb = CubeMapColor;
 		}
+		
+		CubeMapColor *= lightColor;
+		Reflectance.rgb = CubeMapColor;
 	}
 
 
-	//*** Billboard stuff ***
-	vec3 color;
+	//*** Billboard reflections ***
+	vec3 reflectedColor = vec3(0.0, 0.0, 0.0);
 	if(toggleBB)
 	{
-		color = vec3(0.0, 0.0, 0.0);
 
-		float orthogonality = abs(dot(-wsReflectVec, vec3(0.0, 0.0, -1.0)));
-
-		// if less than this, the ray is nearly or entirely parallel to the plane
-		if(orthogonality > 0.001)
+		// Every Billboard
+		for(int i = 0; i < 2; i++)
 		{
-			color.x = 0.0;
-			
-			vec3 uAxis = Impostor.uMax - Impostor.vertex[1].x;
-			vec3 vAxis = Impostor.vMax - Impostor.vertex[1].y;
+			// Inital Billboard
+			vec3 vert0 = vec3( 0.5, 0.0, -0.5);
+			vec3 vert1 = vec3( 0.5, 0.0,  0.5);
+			vec3 vert2 = vec3(-0.5, 0.0, -0.5);
+			vec3 vert3 = vec3(-0.5, 0.0,  0.5);
 
-			vec3 vector = Impostor.vertex[1] - wsPosition;
-			float distance = -dot(vector, Impostor.normal);
-			
-			vec3 intersection = wsPosition + distance * normalize(wsReflectVec);
+			// Build ray
+			vec3 rayOrigin = wsPosition;
+			vec3 rayDirect = wsReflectVec;
 
-			if(intersection.x > Impostor.vertex[1].x && intersection.x < Impostor.vertex[1].x + Impostor.uMax.x &&
-			   intersection.y > Impostor.vertex[1].y && intersection.y < Impostor.vertex[1].y - Impostor.vMax.y &&
-			   intersection.z > -distance)
+			// Transform billboard to world space
+			vert0 = ( Impostor[i].ModelMatrix * vec4(vert0, 1.0) ).xyz;
+			vert1 = ( Impostor[i].ModelMatrix * vec4(vert1, 1.0) ).xyz;
+			vert2 = ( Impostor[i].ModelMatrix * vec4(vert2, 1.0) ).xyz;
+			vert3 = ( Impostor[i].ModelMatrix * vec4(vert3, 1.0) ).xyz;
+
+			// Intersect the billboard and get texture coordinates
+			vec2 uv = IntersectTriangle(rayOrigin, rayDirect, vert3, vert1, vert2);
+			
+			// Check if texture coordinates are valid between 0.0 and 1.0
+			if(uv.x > 0.0 && uv.x < 1.0 &&
+			   uv.y > 0.0 && uv.y < 1.0)
 			{
-				vec2 texcoord;
-				texcoord.x = dot(intersection.x, uAxis.x) * 0.025 - 0.2;
-				texcoord.y = dot(intersection.y, vAxis.y) * -0.025 - 0.08;
-				color = texture(impostorTex, texcoord).rgb;
-			}						
+				// If so, get texture for billboard
+				reflectedColor = texture(ImpostorTex[i], uv).rgb;
+			}
 		}
+		// Write to texture
+		Reflectance.rgb += reflectedColor;
 	}
-
-	Color.rgb += color;
 }

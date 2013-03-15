@@ -35,7 +35,7 @@ Renderer::Renderer(int width, int height)
 
 	loaded = false;
 
-	tw_currentScene = HEAD;
+	tw_currentScene = MUSEUM;
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
@@ -139,16 +139,14 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRO(context_ptr->GetBar(), "mousex", TW_TYPE_INT16, &correct_x_pos, "group='Mouse' label='X'");
 	TwAddVarRO(context_ptr->GetBar(), "mousey", TW_TYPE_INT16, &correct_y_pos, "group='Mouse' label='Y'");
 	TwAddVarRW(context_ptr->GetBar(), "mouselight", TW_TYPE_BOOLCPP, &tw_mouseLight, "key='m' group='Light' label='Mouse controlled'");
-	//! SSR parameters
+	//! Screen space reflections
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
-	TwAddVarRW(context_ptr->GetBar(), "raystepsize", TW_TYPE_FLOAT, &tw_rayStepSize, "min='0.00001' value='0.005' step='0.001' group='SSR' label='Step size'");
+	TwAddVarRW(context_ptr->GetBar(), "stepsize", TW_TYPE_INT16, &tw_rayStepSize, "min='1' value='5' step='1' group='SSR' label='Step size (pixels)'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
 	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='8' label='Kernel X'");
 	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='8' label='Kernel Y'");
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
-	TwAddVarRW(context_ptr->GetBar(), "comparedepth", TW_TYPE_BOOLCPP, &tw_compareDepth, "group='SSR' label='Debug depht'");
-	TwAddVarRW(context_ptr->GetBar(), "showvecs", TW_TYPE_BOOLCPP, &tw_reflvec, "group='SSR' label='Debug reflection vector'");
-	TwAddVarRW(context_ptr->GetBar(), "mouseslider", TW_TYPE_BOOLCPP, &tw_mouseSlider, "group='SSR' label='Debugging'");
+	TwAddVarRW(context_ptr->GetBar(), "fadetoscreenedge", TW_TYPE_BOOLCPP, &tw_fadeToEdges, "group='SSR' label='Fade to screen edges'");
 	//! Parallax corrected cube mapping
 	TwAddVarRW(context_ptr->GetBar(), "cm", TW_TYPE_BOOLCPP, &tw_CM, "group='PCCM' label='Switch Environment Mapping'");
 	TwAddVarRW(context_ptr->GetBar(), "pccm", TW_TYPE_BOOLCPP, &tw_PCCM, "group='PCCM' label='Switch PCCM'");
@@ -169,7 +167,6 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "pass3", TW_TYPE_BOOLCPP, &tw_pass3, "group='Renderer' label='Pass 03'");
 	TwAddVarRW(context_ptr->GetBar(), "pass4", TW_TYPE_BOOLCPP, &tw_pass4, "group='Renderer' label='Pass 04'");
 	TwAddVarRW(context_ptr->GetBar(), "pass5", TW_TYPE_BOOLCPP, &tw_pass5, "group='Renderer' label='Pass 05'");
-
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -401,6 +398,10 @@ void Renderer::KeyboardFunction(void)
 	{
 		tw_drawLights = !tw_drawLights;
 	}
+	if(glfwGetKey('R'))
+	{
+		loaded = !loaded;
+	}
 	if(tw_mouseLight)
 	{
 		LightPosition.x = 50.0f * (correct_x_pos/float(context_ptr->GetWidth()));
@@ -493,10 +494,16 @@ void Renderer::RenderLoop(void){
 		//! Scene loading and organizing
 		if(!loaded){
 			switch (tw_currentScene) {
-				case HEAD:
-					scenegraph_ptr->LoadSceneFromFile("./assets/scenes/collada/testscene/TestScene.dae");
+				case TESTSCENE:
+					m_sceneName = "testscene";
+					break;
+				case MUSEUM:
+					m_sceneName = "museum";
 					break;
 			}
+			scenegraph_ptr->LoadScene(m_sceneName);
+
+
 			TwEnumVal lightEV[scenegraph_ptr->GetLightCount()];
 			for(int l = 0; l < scenegraph_ptr->GetLightCount(); l++)
 			{
@@ -596,6 +603,13 @@ void Renderer::RenderLoop(void){
 			//! Museum
 			//m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 12.0, 0));
 
+			//! Billboards
+			m_gBufferProgram_ptr->SetUniform("Impostor[0].ModelMatrix", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
+			m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
+			//! Billboard texture
+			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
+			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
+			m_billboardTexCounter = 2;
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
 				//! Mesh geometry
@@ -614,16 +628,6 @@ void Renderer::RenderLoop(void){
 					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
 					ModelMatrix = glm::mat4(1.0f) * ModelMatrix;
 
-					//! Billboards
-					m_gBufferProgram_ptr->SetUniform("Impostor.vertex[0]", scenegraph_ptr->GetImpostor(0)->GetVertex(0));
-					m_gBufferProgram_ptr->SetUniform("Impostor.vertex[1]", scenegraph_ptr->GetImpostor(0)->GetVertex(1));
-					m_gBufferProgram_ptr->SetUniform("Impostor.vertex[2]", scenegraph_ptr->GetImpostor(0)->GetVertex(2));
-					m_gBufferProgram_ptr->SetUniform("Impostor.vertex[3]", scenegraph_ptr->GetImpostor(0)->GetVertex(3));
-					m_gBufferProgram_ptr->SetUniform("Impostor.normal", scenegraph_ptr->GetImpostor(0)->GetNormal());
-					m_gBufferProgram_ptr->SetUniform("Impostor.uMax", scenegraph_ptr->GetImpostor(0)->GetUMax());
-					m_gBufferProgram_ptr->SetUniform("Impostor.vMax", scenegraph_ptr->GetImpostor(0)->GetVMax());
-					//! Billboard texture
-					m_gBufferProgram_ptr->SetUniformSampler("impostorTex", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
 
 					//! Matrix uniform bindings
 					m_gBufferProgram_ptr->SetUniform("wsNormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
@@ -634,8 +638,8 @@ void Renderer::RenderLoop(void){
 					m_gBufferProgram_ptr->SetUniform("MVPMatrix", ProjectionMatrix * ViewMatrix * ModelMatrix);
 					if(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->HasTexture())
 					{
-						m_gBufferProgram_ptr->SetUniformSampler("colorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), 2);
-						m_gBufferProgram_ptr->SetUniformSampler("normalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), 3);
+						m_gBufferProgram_ptr->SetUniformSampler("ColorTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::DIFFUSE)), ++m_billboardTexCounter);
+						m_gBufferProgram_ptr->SetUniformSampler("NormalTex", *(static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetTextureHandle(scene::NORMAL)), ++m_billboardTexCounter);
 						float materialID = (float)((float)dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetMaterialID()/100.0f);
 						m_gBufferProgram_ptr->SetUniform("Material.id", materialID);
 						m_gBufferProgram_ptr->SetUniform("Material.reflectance", dynamic_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetMaterial()->GetReflectivity());
@@ -753,13 +757,10 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->Use();
 
 			//! *** Screen space reflections ***
-			//! Raytrace uniform parameters
+			//! Screen space reflections: uniform parameters
 			deferredProgram_Pass3_ptr->SetUniform("toggleSSR", tw_SSR);
-			deferredProgram_Pass3_ptr->SetUniform("rayStepSize", tw_rayStepSize);
-			deferredProgram_Pass3_ptr->SetUniform("jittering", tw_jittering);
-			deferredProgram_Pass3_ptr->SetUniform("mouseSlider", tw_mouseSlider);
-			deferredProgram_Pass3_ptr->SetUniform("showReflVecs", tw_reflvec);
-			deferredProgram_Pass3_ptr->SetUniform("compareDepth", tw_compareDepth);
+			deferredProgram_Pass3_ptr->SetUniform("user_pixelStepSize", tw_rayStepSize);
+			deferredProgram_Pass3_ptr->SetUniform("fadeToEdges", tw_fadeToEdges);
 
 			//! Camera uniforms
 			deferredProgram_Pass3_ptr->SetUniform("Camera.FOV", scenegraph_ptr->GetActiveCamera()->GetFOV());
@@ -783,7 +784,8 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass3_ptr->SetUniformSampler("vsNormalTex", 			gBuffer_ptr->GetTexture(4), 3);
 			deferredProgram_Pass3_ptr->SetUniformSampler("ReflectanceTex", 			gBuffer_ptr->GetTexture(5), 4);
 			deferredProgram_Pass3_ptr->SetUniformSampler("LinearDepthTex", 			gBuffer_ptr->GetTexture(7), 6);
-			deferredProgram_Pass3_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 7);
+			deferredProgram_Pass3_ptr->SetUniformSampler("DepthTex",				gBuffer_ptr->GetDepthTexture(), 7);
+			deferredProgram_Pass3_ptr->SetUniformSampler2DMS("DepthTexMS",			gBuffer_ptr->GetDepthMSTexture(), 8);
 			//! Texture uniforms from lighting pass
 			deferredProgram_Pass3_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 8);
 
@@ -872,7 +874,7 @@ void Renderer::RenderLoop(void){
 			deferredProgram_Pass5_ptr->SetUniformSampler("ReflecVecTex", 	gBuffer_ptr->GetTexture(6), 6);
 			deferredProgram_Pass5_ptr->SetUniformSampler("LinearDepthTex", 	gBuffer_ptr->GetTexture(7), 7);
 			deferredProgram_Pass5_ptr->SetUniformSampler("DepthTex",		gBuffer_ptr->GetDepthTexture(), 8);
-			deferredProgram_Pass5_ptr->SetUniformSampler2DMS("DepthMSTex",	gBuffer_ptr->GetDepthTexture(), 9);
+			deferredProgram_Pass5_ptr->SetUniformSampler2DMS("DepthMSTex",	gBuffer_ptr->GetDepthMSTexture(), 9);
 			//! Texture uniforms from lighting pass
 			deferredProgram_Pass5_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 9);
 			//! Texture uniform from SSR pass

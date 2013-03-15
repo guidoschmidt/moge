@@ -47,6 +47,18 @@ namespace scene {
 		}
 	}
 
+	//! Loads a scene from the moge assets directory
+	/*!
+	 *
+	 * @param scenename
+	 */
+	void SceneGraph::LoadScene(const std::string scenename)
+	{
+		m_scene_name = scenename;
+		std::string loadstring = "./assets/scenes/collada/" + scenename + "/" + scenename + ".dae";
+		LoadSceneFromFile(loadstring);
+	}
+
 	//! Loads a scene from a file
 	/*!
 	 *
@@ -54,9 +66,6 @@ namespace scene {
 	 */
 	void SceneGraph::LoadSceneFromFile(const std::string filename)
 	{
-		//! Set the scene's name
-		m_scene_name = "testscene";
-
 		std::ifstream infile(filename.c_str());
 		if(!infile.fail())
 		{
@@ -186,7 +195,7 @@ namespace scene {
 		}
 
 		/* CUBEMAPS ****************************************************************/
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene_prefiltered");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene");
 
 		/* MESHES ****************************************************************/
 		//! Meshes
@@ -382,6 +391,16 @@ namespace scene {
 	Billboard* SceneGraph::GetImpostor(int i)
 	{
 		return m_impostors[i];
+	}
+
+	//!
+	/*!
+	 *
+	 * @return
+	 */
+	int SceneGraph::GetImpostorCount(void)
+	{
+		return m_impostors.size();
 	}
 
 	//!

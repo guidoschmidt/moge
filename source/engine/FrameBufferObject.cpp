@@ -58,6 +58,7 @@ void FrameBufferObject::CreateGBuffer(void)
 	AddColorAttachment(7);
 	//! Depth
 	AddDepthAttachment_Texture(8);
+	AddDepthAttachment_MultisampleTexture(9);
 
 	std::cout << "FrameBuffer: Attachment count: " << m_attachmentCounter << std::endl;
 	m_isGBuffer = true;
@@ -144,8 +145,8 @@ void FrameBufferObject::AddDepthAttachment_MultisampleTexture(int textureUnit)
 {
 	//! Create depth texture
 	glActiveTexture(GL_TEXTURE0 + textureUnit);
-	glGenTextures(1, &m_depthTexture);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_depthTexture);
+	glGenTextures(1, &m_depthMSTexture);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, m_depthMSTexture);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 2, GL_DEPTH_COMPONENT32F, m_width, m_height, false);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -190,7 +191,6 @@ void FrameBufferObject::Unuse(void)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-
 //! Returns a render target texture
 /*!
  * @param index
@@ -204,7 +204,6 @@ GLuint FrameBufferObject::GetTexture(unsigned int index)
 	return m_renderTargets[index];
 }
 
-
 //! Returns the frame buffers depth map
 /*!
  *
@@ -213,4 +212,14 @@ GLuint FrameBufferObject::GetTexture(unsigned int index)
 GLuint FrameBufferObject::GetDepthTexture(void)
 {
 	return m_depthTexture;
+}
+
+//! Returns the frame buffers depth map
+/*!
+ *
+ * @return the framebuffers depth map texture
+ */
+GLuint FrameBufferObject::GetDepthMSTexture(void)
+{
+	return m_depthMSTexture;
 }

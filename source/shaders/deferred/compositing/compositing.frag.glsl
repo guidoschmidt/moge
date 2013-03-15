@@ -1,6 +1,7 @@
+//FRAGMENT SHADER
 #version 400
 
-/*** Uniform block definitions ************************************************/
+//*** Uniform block definitions ************************************************
 struct ScreenInfo
 {
 	float Width;
@@ -15,18 +16,17 @@ struct CameraInfo
 	float FarPlane;
 };
 
-/*** Input ********************************************************************/
+//*** Input ********************************************************************
 in vec2 vert_UV;
 
-/*** Output *******************************************************************/
+//*** Output *******************************************************************
 out vec4 FragColor;
 
-/*** Uniforms *****************************************************************/
+//*** Uniforms *****************************************************************
 uniform ScreenInfo Screen;
 uniform CameraInfo Camera;
 
 uniform int textureID;
-
 uniform bool blurSwitch;
 
 uniform sampler2D wsPositionTex;
@@ -50,18 +50,14 @@ uniform int kernelY;
 float kernel[13];
 ivec2 kernelSize = ivec2(0, 0);
 
-/*** Functions ****************************************************************/
-/*
- * Linearizes a depth value
- */
+//*** Functions ****************************************************************
+// Linearizes a depth value
 float linearizeDepth(float depth)
 {
 	return (2.0f * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-/* 
- *
- */
+//
 vec3 blur(in vec2 uv, in sampler2D blurTex)
 {
 	kernelSize.x = kernelX;
@@ -96,7 +92,7 @@ vec3 blur(in vec2 uv, in sampler2D blurTex)
 	return color;
 }
 
-/*** Main *********************************************************************/
+//*** Main *********************************************************************
 void main(void)
 {
 	vec4 diffuse = texture(DiffuseTex, vert_UV);
@@ -183,7 +179,8 @@ void main(void)
 	// Linear Depth
 	else if(textureID == 10)
 	{
-		FragColor = texture(LinearDepthTex, vert_UV);
+		//vec4 color = texelFetch(DepthMSTex, vert_UV, 0);
+		//FragColor = color;
 	}
 	// SSR Pass
 	else if(textureID == 11)

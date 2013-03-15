@@ -1,5 +1,5 @@
 //FRAGMENT SHADER
-#version 400
+#version 400 core
 
 //*** Uniform block definitions ************************************************
 // Screen/Viewport informations
@@ -29,7 +29,9 @@ out vec4 FragColor;
 uniform ScreenInfo Screen;
 uniform CameraInfo Camera;
 
+uniform int user_pixelStepSize;
 uniform bool toggleSSR;
+uniform bool fadeToEdges;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 
@@ -58,7 +60,7 @@ float linearizeDepth(float depth)
 }
 
 //	Screen space reflections
-vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsReflectionVector)
+vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsReflectionVector)
 {
 	// Variables
 	vec4 reflectedColor = vec4(0.0);
@@ -77,15 +79,20 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsReflectionVector)
 	ssReflectionVector = normalize(ssReflectionVector - ssPosition);
 
 	// Ray trace
-	float initalStep = 0.002;
-	ssReflectionVector *= initalStep;
+	float initalStep = max(pixelsize.x, pixelsize.y);
+	float pixelStepSize = user_pixelStepSize;
+	ssReflectionVector *= initalStep * pixelStepSize;
 
 	vec3 lastSamplePosition = ssPosition + ssReflectionVector;
 	vec3 currentSamplePosition = lastSamplePosition + ssReflectionVector;
 
+	int sampleCount = max(int(Screen.Width), int(Screen.Height));
 	int count = 0;
-	while(count < 500)
+	int refinementCount = 0;
+	int maxRefinements = 3;
+	while(count < sampleCount)
 	{
+		// Out of screen space --> break
 		if(currentSamplePosition.x < 0.0 || currentSamplePosition.x > 1.0 ||
 		   currentSamplePosition.y < 0.0 || currentSamplePosition.y > 1.0)
 		{
@@ -100,8 +107,8 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsReflectionVector)
 		{
 			float delta = abs(currentDepth - sampledDepth);
 			if(delta < 0.005f)
-			{
-				reflectedColor = texture(DiffuseTex, samplingPosition);
+			{	
+				reflectedColor = texture(DiffuseTex, samplingPosition); 
 				break;
 			}
 		}
@@ -109,11 +116,20 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsReflectionVector)
 		// Step ray
 		lastSamplePosition = currentSamplePosition;
 		currentSamplePosition = lastSamplePosition + ssReflectionVector;
-
 		count++;
 	}
 
-	return reflectedColor;
+	// Fading to screen edges
+	vec2 fadeToScreenEdge = vec2(1.0);
+	if(fadeToEdges)
+	{
+		fadeToScreenEdge.x = distance(lastSamplePosition.x , 1.0);
+		fadeToScreenEdge.x *= distance(lastSamplePosition.x , 0.0) * 4.0;
+		fadeToScreenEdge.y = distance(lastSamplePosition.y , 1.0);
+		fadeToScreenEdge.y *= distance(lastSamplePosition.y , 0.0) * 4.0;
+	}
+
+	return reflectedColor * fadeToScreenEdge.x * fadeToScreenEdge.y;
 }
 
 //*** Main *********************************************************************
@@ -123,7 +139,7 @@ void main(void)
 	float reflectance = texture(ReflectanceTex, vert_UV).a;
 	vec3 vsPosition         = texture(vsPositionTex, vert_UV).xyz;
 	vec3 vsNormal           = texture(vsNormalTex, vert_UV).xyz;
-	
+
 	//*** Reflection vector calculation ***
 	// View space calculations
 	vec3 vsEyeVector        = normalize(vsPosition);
@@ -131,5 +147,5 @@ void main(void)
 	
 	//*** Screen space reflections ***
 	if(toggleSSR)
-		FragColor = reflectance * ScreenSpaceReflections(vsPosition, vsReflectionVector);
+		FragColor = reflectance * ScreenSpaceReflections(vsPosition, vsNormal, vsReflectionVector);
 }

@@ -28,6 +28,7 @@ class FrameBufferObject
 
 		GLuint m_depthBuffer;
 		GLuint m_depthTexture;
+		GLuint m_depthMSTexture;
 
 		std::vector<GLuint> m_renderTargets;
 		std::vector<GLenum> m_drawBuffers;
@@ -51,6 +52,7 @@ class FrameBufferObject
 		//! Getters
 		GLuint GetTexture(unsigned int index);
 		GLuint GetDepthTexture(void);
+		GLuint GetDepthMSTexture(void);
 		int GetRenderTargetCound(void);
 };
 

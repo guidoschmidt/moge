@@ -65,6 +65,7 @@ class Renderer
 		float m_fieldOfView;
 
 		double m_speed;
+		std::string m_sceneName;
 
 		float time1, time2, timedif;
 
@@ -87,7 +88,7 @@ class Renderer
 		#define NUM_TEXS 14
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {HEAD=0} Scenes;
+		typedef enum {TESTSCENE=0, MUSEUM=1} Scenes;
 		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 
@@ -96,7 +97,7 @@ class Renderer
 		bool tw_useNormalMapping;
 		bool tw_drawLights;
 		bool tw_mouseSlider;
-		float tw_rayStepSize;
+		int tw_rayStepSize;
 		bool tw_SSR;
 		bool tw_CM;
 		bool tw_BB;
@@ -107,11 +108,13 @@ class Renderer
 		bool tw_compareDepth;
 		bool tw_reflvec;
 		bool tw_jittering;
+		bool tw_fadeToEdges;
 		bool tw_drawSkyBox;
 		bool tw_boundingbox;
 		bool tw_blockCamera;
 		bool tw_cameraMouseButton;
 		bool tw_cameraOrtho;
+		int m_billboardTexCounter;
 		//! Passes
 		bool tw_pass1, tw_pass2, tw_pass3, tw_pass4, tw_pass5;
 

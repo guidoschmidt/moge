@@ -79,21 +79,22 @@ namespace scene {
 			virtual ~SceneGraph();
 
 			void Initialize(void);
-
 			void LoadSceneFromFile(const std::string filename);
-
+			void LoadScene(const std::string scenename);
 			void Logging(bool logging);
-
 			unsigned int NodeCount(void);
 
 			//! Getter
 			Node* GetNode(int i);
-			Billboard* GetImpostor(int i);
 			Camera* GetActiveCamera(void);
 			Light* GetActiveLight(void);
 			Light* GetLight(int i);
 			Mesh* GetLightMesh(lighttype type);
 			int GetLightCount(void);
+			//! Billboard impostors
+			Billboard* GetImpostor(int i);
+			int GetImpostorCount(void);
+			//! Scene proxy geometry
 			BoundingBox* GetSceneApproximation(void);
 
 			//! Setter
