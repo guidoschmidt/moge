@@ -184,7 +184,10 @@ namespace scene {
 					mat_name == "Cobblestone" 	||
 					mat_name == "Museum"		||
 					mat_name == "Rusty_Metall"	||
-					mat_name == "Building0"
+					mat_name == "Building0"		||
+					mat_name == "Kamen"			||
+					mat_name == "Curtain"		||
+					mat_name == "Board10"
 				   )
 				{
 					texture normal;

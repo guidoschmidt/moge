@@ -4,16 +4,24 @@
 		"selected_items":
 		[
 			[
+				"ws",
+				"wsNormal"
+			],
+			[
+				"ma",
+				"materialColorD"
+			],
+			[
+				"ligh",
+				"lightVector"
+			],
+			[
 				"vec",
 				"vec3"
 			],
 			[
 				"ra",
 				"rayOrigin"
-			],
-			[
-				"ws",
-				"wsPosition"
 			],
 			[
 				"ver",
@@ -142,10 +150,6 @@
 			[
 				"Scree",
 				"ScreenSpaceReflections"
-			],
-			[
-				"ma",
-				"mapping"
 			],
 			[
 				"parall",
@@ -510,10 +514,6 @@
 			[
 				"poso",
 				"Position"
-			],
-			[
-				"CUR",
-				"currentPosition"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 7630,
+				"buffer_size": 7556,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 2904,
+				"buffer_size": 3317,
 				"line_ending": "Windows"
 			}
 		},
@@ -929,7 +929,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -937,15 +937,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 7630,
+						"buffer_size": 7556,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1350,
-								1350
+								4940,
+								4940
 							]
 						],
 						"settings":
@@ -1044,7 +1044,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 690.0,
+						"translation.y": 2580.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1054,15 +1054,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 2904,
+						"buffer_size": 3317,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								992,
-								992
+								2557,
+								2557
 							]
 						],
 						"settings":
@@ -1161,7 +1161,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 476.0,
+						"translation.y": 1448.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1178,8 +1178,8 @@
 						"selection":
 						[
 							[
-								4620,
-								4620
+								2522,
+								2522
 							]
 						],
 						"settings":
@@ -1278,7 +1278,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 690.0,
+						"translation.y": 1014.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
