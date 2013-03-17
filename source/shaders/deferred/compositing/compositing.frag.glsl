@@ -47,7 +47,6 @@ uniform sampler2D SSRTex;
 uniform int kernelX;
 uniform int kernelY;
 
-float kernel[13];
 ivec2 kernelSize = ivec2(0, 0);
 
 //*** Functions ****************************************************************
@@ -57,19 +56,19 @@ float linearizeDepth(float depth)
 	return (2.0f * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-//
+
+// Gaussian coefficient
+float GaussianCoef(float x, float y)
+{
+	float sigma = 2.0;
+	return  ( 1 / ( sqrt(2*3.14f) * sigma ) ) * exp( -(x*x+y*y) / (2 * sigma * sigma) );
+}
+
+// Simple Gaussian blur
 vec3 blur(in vec2 uv, in sampler2D blurTex)
 {
 	kernelSize.x = kernelX;
 	kernelSize.y = kernelY;
-
-	kernel[0] = kernel[12] = 0.5000f;
-	kernel[1] = kernel[11] = 0.6179f;
-	kernel[2] = kernel[10] = 0.7257f;
-	kernel[3] = kernel[ 9] = 0.8413f;
-	kernel[4] = kernel[ 8] = 0.9773f;
-	kernel[5] = kernel[ 7] = 0.9918f;
-	kernel[6] = 0.9965f;
 
 	vec2 pixelSize = 1.0f/vec2(Screen.Width, Screen.Height);
 	vec3 color = vec3(0.0f);
@@ -82,8 +81,8 @@ vec3 blur(in vec2 uv, in sampler2D blurTex)
 		for(int y = -kernelSize.y; y <= kernelSize.y; y++)
 		{
 			pos = uv + ( vec2(x, y) * pixelSize );
-			color += texture(blurTex, pos).rgb * kernel[x + 6];
-			count += kernel[x + 6];
+			color += texture(blurTex, pos).rgb * GaussianCoef(x, y);
+			count += GaussianCoef(x, y);
 		}
 	}
 

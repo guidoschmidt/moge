@@ -47,6 +47,8 @@ uniform sampler2D DepthTex;
 uniform sampler2DMS DepthMSTex;
 uniform sampler2D LinearDepthTex;
 
+const float pi = 3.14159265f;
+
 //*** Functions **************************************************************** 
 //	Linearizes a depth value
 //	Source:	http://www.geeks3d.com/20091216/geexlab-how-to-visualize-the-depth-buffer-in-glsl/
@@ -79,7 +81,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 	ssReflectionVector = normalize(ssReflectionVector - ssPosition);
 
 	// Ray trace
-	float initalStep = max(pixelsize.x, pixelsize.y);
+	float initalStep = min(pixelsize.x, pixelsize.y);
 	float pixelStepSize = user_pixelStepSize;
 	ssReflectionVector *= initalStep * pixelStepSize;
 
@@ -147,5 +149,8 @@ void main(void)
 	
 	//*** Screen space reflections ***
 	if(toggleSSR)
-		FragColor = reflectance * ScreenSpaceReflections(vsPosition, vsNormal, vsReflectionVector);
+	{
+		vec4 color = ScreenSpaceReflections(vsPosition, vsNormal, vsReflectionVector);
+		FragColor = reflectance * color;
+	}
 }

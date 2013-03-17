@@ -91,6 +91,13 @@ vec3 phongShading(in vec3 lightVector, in vec3 normal, in vec3 materialColor, in
 	return shaded;
 }
 
+// Jan Sobotass shading
+vec4 getLighted(in vec3 lightVector, vec4 color, vec3 normal)
+{
+	vec4 shadedColor = clamp( dot( lightVector, normal ) * color, 0.0, 1.0 ) * 0.8 + 0.3 * color;
+	return shadedColor;
+}
+
 //*** Main *********************************************************************
 void main(void)
 {	
@@ -106,7 +113,9 @@ void main(void)
 	// Lights are shaded only with light color
 	// Everything else is shaded with diffuse shading	
 	vec3 lightVector;
+	lightVector = normalize( vec4(Light.Position[0], 1.0f) - wsPosition ).xyz;
 	// Perform shading for every light source
+	/*
 	for(int i=0; i < Light.Count; i++)
 	{	
 		if(materialColorD.a == 0.00)
@@ -119,5 +128,7 @@ void main(void)
 			shaded += 1.0/Light.Count * vec4( phongShading(lightVector, wsNormal, materialColorD.rgb, Light.Diffuse[i].rgb, Light.Specular.rgb, Shininess), 1.0f );
 		}
 	}
+	*/
+	shaded = getLighted(lightVector, materialColorD, wsNormal);
 	FragColor = shaded;
 }

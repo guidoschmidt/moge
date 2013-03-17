@@ -35,7 +35,7 @@ Renderer::Renderer(int width, int height)
 
 	loaded = false;
 
-	tw_currentScene = MUSEUM;
+	tw_currentScene = CHURCH;
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
@@ -143,8 +143,8 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
 	TwAddVarRW(context_ptr->GetBar(), "stepsize", TW_TYPE_INT16, &tw_rayStepSize, "min='1' value='5' step='1' group='SSR' label='Step size (pixels)'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
-	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='8' label='Kernel X'");
-	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='8' label='Kernel Y'");
+	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='20' label='Kernel X'");
+	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='20' label='Kernel Y'");
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "fadetoscreenedge", TW_TYPE_BOOLCPP, &tw_fadeToEdges, "group='SSR' label='Fade to screen edges'");
 	//! Parallax corrected cube mapping
@@ -473,6 +473,7 @@ void Renderer::CameraMovement()
 	{
 		scenegraph_ptr->GetActiveCamera()->MoveY(-m_speed);
 	}
+
 }
 
 //! Render loop
@@ -500,9 +501,11 @@ void Renderer::RenderLoop(void){
 				case MUSEUM:
 					m_sceneName = "museum";
 					break;
+				case CHURCH:
+					m_sceneName = "church";
+					break;
 			}
 			scenegraph_ptr->LoadScene(m_sceneName);
-
 
 			TwEnumVal lightEV[scenegraph_ptr->GetLightCount()];
 			for(int l = 0; l < scenegraph_ptr->GetLightCount(); l++)
@@ -605,11 +608,11 @@ void Renderer::RenderLoop(void){
 
 			//! Billboards
 			m_gBufferProgram_ptr->SetUniform("Impostor[0].ModelMatrix", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
-			m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
+			//m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
 			//! Billboard texture
 			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
-			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
-			m_billboardTexCounter = 2;
+			//m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
+			m_billboardTexCounter = 1;
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
 				//! Mesh geometry
@@ -709,8 +712,8 @@ void Renderer::RenderLoop(void){
 
 			//! Light uniforms
 			deferredProgram_Pass2_ptr->SetUniform("ambientColor", LightAmbient);
-			deferredProgram_Pass2_ptr->SetUniform("Light.Position", 3, &LightPositions[0][0]);
-			deferredProgram_Pass2_ptr->SetUniform("Light.Diffuse", 3, &LightDiffuses[0][0]);
+			deferredProgram_Pass2_ptr->SetUniformArray3f("Light.Position", 3, &LightPositions[0][0]);
+			deferredProgram_Pass2_ptr->SetUniformArray3f("Light.Diffuse", 3, &LightDiffuses[0][0]);
 
 			deferredProgram_Pass2_ptr->SetUniform("Light.Specular", LightSpecular);
 			deferredProgram_Pass2_ptr->SetUniform("Light.Count", scenegraph_ptr->GetLightCount());

@@ -55,7 +55,7 @@ layout (location = 7) out vec3 LinearDepth;
 
 //*** Uniforms *****************************************************************
 uniform CameraInfo Camera;
-uniform ImpostorInfo Impostor[2];
+uniform ImpostorInfo Impostor[1];
 uniform AABBInfo AABB;
 uniform MaterialInfo Material;
 
@@ -74,7 +74,7 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 MVPMatrix;
 
 uniform sampler2D ColorTex;
-uniform sampler2D ImpostorTex[2];
+uniform sampler2D ImpostorTex[1];
 uniform sampler2D NormalTex;
 uniform samplerCube CubeMapTex;
 
@@ -87,7 +87,7 @@ vec3 CubeMapping(in vec3 wsReflectionVector)
 	return reflectedColor;
 }
 
-//	Parallax corrected cubemapping
+//	Parallax corrected cube mapping
 vec3 ParallaxCorrecteCubeMapping(in vec3 wsPosition, in vec3 wsReflectionVector)
 {
 	vec3 firstPlaneIntersection  = (AABB.max - wsPosition) / wsReflectionVector;
@@ -103,7 +103,8 @@ vec3 ParallaxCorrecteCubeMapping(in vec3 wsPosition, in vec3 wsReflectionVector)
 	return reflectedColor; 
 }
 
-vec2 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in vec3 vert1, in vec3 vert2)
+// Intersect a triangle with a given ray
+vec3 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in vec3 vert1, in vec3 vert2)
 {
 	float t, u, v;
 
@@ -125,9 +126,10 @@ vec2 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in v
 
 	t = dot(edge2, qvec) * inv_det;
 
-	return vec2(u, v);
+	return vec3(u, v, t);
 }
 
+// Normal mapping: calculate cotangents
 // @source: http://www.thetenthplanet.de/archives/1180
 mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
 {
@@ -148,6 +150,7 @@ mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
     return mat3( T * invmax, B * invmax, N );
 }
 
+// Normal mapping: 
 // @source: http://www.geeks3d.com/20130122/normal-mapping-without-precomputed-tangent-space-vectors/
 vec3 perturb_normal( vec3 N, vec3 V, vec2 texcoord )
 {
@@ -175,11 +178,6 @@ void main(void)
 	LinearDepth = vec3(vert_LinearDepth);
 	// Reflectance
 	Reflectance.a = texture(ColorTex, vert_UV).a;
-	if(Material.id == 0.09)
-	{
-		// Bounding boxes
-		Reflectance.a = 0.0;
-	}
 	// Materials
 	Color.a = Material.id;
 	if(Material.id == 0.99)
@@ -237,13 +235,14 @@ void main(void)
 
 
 	//*** Billboard reflections ***
-	vec3 reflectedColor = vec3(0.0, 0.0, 0.0);
+	vec4 reflectedColor = vec4(0.0);
 	if(toggleBB)
 	{
 
 		// Every Billboard
-		for(int i = 0; i < 2; i++)
+		for(int i = 0; i < 1; i++)
 		{
+			//Reflectance.a = 0.0;
 			// Inital Billboard
 			vec3 vert0 = vec3( 0.5, 0.0, -0.5);
 			vec3 vert1 = vec3( 0.5, 0.0,  0.5);
@@ -261,17 +260,25 @@ void main(void)
 			vert3 = ( Impostor[i].ModelMatrix * vec4(vert3, 1.0) ).xyz;
 
 			// Intersect the billboard and get texture coordinates
-			vec2 uv = IntersectTriangle(rayOrigin, rayDirect, vert3, vert1, vert2);
-			
+			vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert3, vert1, vert2);
+
+			if(uv.z <= 0.001)
+				break;
+
 			// Check if texture coordinates are valid between 0.0 and 1.0
 			if(uv.x > 0.0 && uv.x < 1.0 &&
 			   uv.y > 0.0 && uv.y < 1.0)
 			{
-				// If so, get texture for billboard
-				reflectedColor = texture(ImpostorTex[i], uv).rgb;
+				// Check alpha channel of billboard texture
+				if(texture(ImpostorTex[i], uv.xy).a != 0.0)
+				{
+					// Get texture for billboard
+					reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb;
+				}
 			}
 		}
+
 		// Write to texture
-		Reflectance.rgb += reflectedColor;
+		Reflectance += Reflectance.a * reflectedColor;
 	}
 }

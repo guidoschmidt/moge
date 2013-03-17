@@ -88,7 +88,7 @@ class Renderer
 		#define NUM_TEXS 14
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {TESTSCENE=0, MUSEUM=1} Scenes;
+		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2} Scenes;
 		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 
@@ -96,6 +96,8 @@ class Renderer
 		bool tw_mouseLight;
 		bool tw_useNormalMapping;
 		bool tw_drawLights;
+		glm::vec3 tw_camerapos;
+		glm::vec3 tw_cameralookat;
 		bool tw_mouseSlider;
 		int tw_rayStepSize;
 		bool tw_SSR;
@@ -139,6 +141,9 @@ class Renderer
 		glm::vec3 CameraPosition;
 		glm::vec3 CameraTargetPosition;
 		glm::vec3 CameraUp;
+		//! Billboards
+		glm::mat4 BillboardMatrices[5];
+		GLuint BillboardTextures[5];
 
 		//! Material
 		float m_shininess;

@@ -24,7 +24,7 @@ namespace scene {
 		SetLookAt(m_lookAt);
 		SetPosition(m_position);
 
-		m_fieldOfView = 60.0f;
+		m_fieldOfView = 70.0f;
 		m_width 	  = Singleton<Context>::Instance()->GetWidth();
 		m_height 	  = Singleton<Context>::Instance()->GetHeight();
 		m_aspect 	  = static_cast<float>(m_width) / static_cast<float>(m_height);
@@ -66,7 +66,7 @@ namespace scene {
 		SetLookAt(m_lookAt);
 		SetPosition(m_position);
 
-		m_fieldOfView = 60.0f;
+		m_fieldOfView = 70.0f;
 		m_width 	  = Singleton<Context>::Instance()->GetWidth();
 		m_height 	  = Singleton<Context>::Instance()->GetHeight();
 		m_aspect 	  = static_cast<float>(m_width) / static_cast<float>(m_height);

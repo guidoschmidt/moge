@@ -96,8 +96,13 @@ namespace scene {
 		/* CAMERAS ****************************************************************/
 		//! Manually add a a camera
 		//! Standard Camera
+		/*
 		glm::vec3 position(0.0f, 1.8f, 5.0f);
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
+		glm::vec3 up(0.0f, 1.0f, 0.0f);
+		*/
+		glm::vec3 position(-0.190, 1.184f, -0.112f);
+		glm::vec3 lookAt(-1.190f, 1.847f, -0.112f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 
 		Camera* camera = new Camera(position, lookAt, up);

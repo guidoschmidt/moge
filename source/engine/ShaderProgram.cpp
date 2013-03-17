@@ -266,11 +266,26 @@ void ShaderProgram::SetUniform(const std::string name, const glm::vec2 &vec)
  *	@param count
  *	@param value_ptr
  */
-void ShaderProgram::SetUniform(const std::string name, int count, GLfloat* value_ptr)
+void ShaderProgram::SetUniformArray3f(const std::string name, int count, GLfloat* value_ptr)
 {
 	GLint glslVectorID = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
 	glUniform3fv(glslVectorID, count, value_ptr);
 }
+
+//! Sets an uniform array of matrices
+/*!
+ *	Binds a set of vectors to the shader program as uniform.
+ *
+ *	@param name
+ *	@param count
+ *	@param value_ptr
+ */
+void ShaderProgram::SetUniformArrayMatrix4f(const std::string name, int count, GLfloat* value_ptr)
+{
+	GLint glslID = glGetUniformLocation(m_shaderProgram_ID, name.c_str());
+	glUniformMatrix4fv(glslID, count, false, value_ptr);
+}
+
 
 //! Set a uniform vector (4 components)
 /*!

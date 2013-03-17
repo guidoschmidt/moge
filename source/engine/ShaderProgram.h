@@ -76,10 +76,11 @@ class ShaderProgram
 		void SetUniform(const std::string name, const glm::vec2 &vec);
 		void SetUniform(const std::string name, const glm::vec3 &vec);
 		void SetUniform(const std::string name, const glm::vec4 &vec);
-		void SetUniform(const std::string name, int count, GLfloat* value_ptr);
 		void SetUniform(const std::string name, const glm::mat4 &mat);
 		void SetUniform(const std::string name, float val);
 		void SetUniform(const std::string name, int val);
+		void SetUniformArray3f(const std::string name, int count, GLfloat* value_ptr);
+		void SetUniformArrayMatrix4f(const std::string name, int count, GLfloat* value_ptr);
 
 		void SetUniformSampler(const std::string name, GLuint texture, int textureUnit);
 		void SetUniformSampler2DMS(const std::string name, GLuint texture, int textureUnit);
