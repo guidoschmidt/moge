@@ -106,9 +106,9 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 		float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
 
 		if(currentDepth > sampledDepth)
-		{
+		{	
 			float delta = abs(currentDepth - sampledDepth);
-			if(delta < 0.005f)
+			if(delta < 0.001f)
 			{	
 				reflectedColor = texture(DiffuseTex, samplingPosition); 
 				break;
@@ -118,6 +118,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 		// Step ray
 		lastSamplePosition = currentSamplePosition;
 		currentSamplePosition = lastSamplePosition + ssReflectionVector;
+		
 		count++;
 	}
 

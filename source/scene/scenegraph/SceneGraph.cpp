@@ -178,24 +178,12 @@ namespace scene {
 				textures.push_back(diffuse);
 
 				//! Normal maps
-				if( mat_name == "Street" 		||
-					mat_name == "Skin" 			||
-					mat_name == "Tiles"			||
-					mat_name == "Cobblestone" 	||
-					mat_name == "Museum"		||
-					mat_name == "Rusty_Metall"	||
-					mat_name == "Building0"		||
-					mat_name == "Kamen"			||
-					mat_name == "Curtain"		||
-					mat_name == "Board10"
-				   )
-				{
-					texture normal;
-					normal.m_filename = "./assets/texture/scene-" + m_scene_name + "/" + fileextension + "/" + tex_name + "_normal." + fileextension;
-					normal.m_type = NORMAL;
-					textures.push_back(normal);
-					std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
-				}
+				texture normal;
+				normal.m_filename = "./assets/texture/scene-" + m_scene_name + "/" + fileextension + "/" + tex_name + "_normal." + fileextension;
+				normal.m_type = NORMAL;
+				textures.push_back(normal);
+				std::cout << "	" << normal.m_type << ": " << normal.m_filename << std::endl;
+
 			}
 
 			//! Add material to material manager
@@ -203,7 +191,7 @@ namespace scene {
 		}
 
 		/* CUBEMAPS ****************************************************************/
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene_teapot");
 
 		/* MESHES ****************************************************************/
 		//! Meshes

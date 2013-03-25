@@ -4,8 +4,8 @@
 //*** Uniform block definitions ************************************************
 struct LightInfo
 {
-	vec3[3] Position;
-	vec3[3] Diffuse;
+	vec3[30] Position;
+	vec3[30] Diffuse;
 	vec3 Specular;
 	int Count;
 };
@@ -122,14 +122,16 @@ void main(void)
 	// Perform shading for every light source
 	for(int i=0; i < Light.Count; i++)
 	{	
-		if(materialColorD.a == 0.00)
+		if(materialColorD.a == 0.00 || materialColorD.a == 0.77)
 		{
 			shaded = vec4(materialColorD.rgb, 1.0);
 		}
 		else
 		{
 			lightVector = normalize( vec4(Light.Position[i], 1.0f) - wsPosition ).xyz;
-			shaded += 1.0/Light.Count * vec4( phongShading(lightVector, wsNormal, materialColorD.rgb, Light.Diffuse[i].rgb, Light.Specular.rgb, Shininess), 1.0f );
+			vec3 lightDiffuse = Light.Diffuse[i].rgb;
+			vec3 lightSpecular = Light.Specular.rgb;
+			shaded += 1.0/Light.Count * vec4( phongShading(lightVector, wsNormal, materialColorD.rgb, lightDiffuse, lightSpecular , Shininess), 1.0f );
 		}
 	}
 	FragColor = shaded;

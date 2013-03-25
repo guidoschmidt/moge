@@ -22,6 +22,7 @@ namespace scene {
 			SceneGraph* m_scenegraph_ptr;
 			MaterialManager* m_materialman_ptr;
 			std::vector<Node*> m_renderQ;
+			std::vector<Node*> m_renderQ_Billboards;
 			std::vector<Node*> m_renderQ_Lights;
 
 		public:

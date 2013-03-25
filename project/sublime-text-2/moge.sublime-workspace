@@ -4,16 +4,100 @@
 		"selected_items":
 		[
 			[
+				"sm",
+				"sampledDepthRefine"
+			],
+			[
+				"cu",
+				"currentDepthRefine"
+			],
+			[
+				"sa",
+				"sampledDepthRefine"
+			],
+			[
+				"cur",
+				"currentDepthRefine"
+			],
+			[
+				"ref",
+				"refinementCount"
+			],
+			[
+				"in",
+				"intensity"
+			],
+			[
+				"li",
+				"lightSpecular"
+			],
+			[
+				"C",
+				"Count"
+			],
+			[
+				"ligh",
+				"lightDiffuse"
+			],
+			[
+				"Ref",
+				"Reflectance"
+			],
+			[
+				"vs",
+				"vsNormal"
+			],
+			[
+				"vsN",
+				"vsNormal"
+			],
+			[
+				"Bi",
+				"BillboardRefections"
+			],
+			[
+				"wsR",
+				"wsReflectVec"
+			],
+			[
 				"ws",
-				"wsNormal"
+				"wsPosition"
+			],
+			[
+				"Ou",
+				"OutputColor"
+			],
+			[
+				"Co",
+				"ColorTex"
+			],
+			[
+				"a",
+				"alpha"
+			],
+			[
+				"Nor",
+				"NormalTex"
+			],
+			[
+				"norm",
+				"normalmap"
+			],
+			[
+				"No",
+				"NormalTex"
+			],
+			[
+				"ver",
+				"vert_UV"
+			],
+			[
+				"colo",
+				"ColorTex"
 			],
 			[
 				"ma",
 				"materialColorD"
-			],
-			[
-				"ligh",
-				"lightVector"
 			],
 			[
 				"vec",
@@ -24,10 +108,6 @@
 				"rayOrigin"
 			],
 			[
-				"ver",
-				"vert0"
-			],
-			[
 				"Gau",
 				"GaussianCoef"
 			],
@@ -36,20 +116,12 @@
 				"DepthTex"
 			],
 			[
-				"in",
-				"incrementalGaussian"
-			],
-			[
 				"Dep",
 				"DepthTex"
 			],
 			[
 				"im",
 				"ImpostorTex"
-			],
-			[
-				"ref",
-				"Reflectance"
 			],
 			[
 				"Im",
@@ -92,20 +164,12 @@
 				"cosAngIncidence"
 			],
 			[
-				"vs",
-				"vsPosition"
-			],
-			[
 				"pix",
 				"pixelsize"
 			],
 			[
 				"n",
 				"normalAtPos"
-			],
-			[
-				"sa",
-				"samplingPosition"
 			],
 			[
 				"max",
@@ -164,10 +228,6 @@
 				"cube"
 			],
 			[
-				"cu",
-				"CubeMapColor"
-			],
-			[
 				"refl",
 				"reflectedColor"
 			],
@@ -184,10 +244,6 @@
 				"ScreenSpaceReflections"
 			],
 			[
-				"vsN",
-				"vsNormal"
-			],
-			[
 				"Par",
 				"ParallaxCorrecteCubeMapping"
 			],
@@ -198,10 +254,6 @@
 			[
 				"de",
 				"depth"
-			],
-			[
-				"cur",
-				"currentSamplePosition"
 			],
 			[
 				"curr",
@@ -284,16 +336,8 @@
 				"thetenthplanet"
 			],
 			[
-				"colo",
-				"color"
-			],
-			[
 				"vsRe",
 				"vsReflectVecTex"
-			],
-			[
-				"C",
-				"Color"
 			],
 			[
 				"Impos",
@@ -392,10 +436,6 @@
 				"reflectance"
 			],
 			[
-				"Ref",
-				"ReflectanceTex"
-			],
-			[
 				"vCu",
 				"vCurrOffset"
 			],
@@ -406,10 +446,6 @@
 			[
 				"W",
 				"Width"
-			],
-			[
-				"No",
-				"vsNormalTex"
 			],
 			[
 				"sampe",
@@ -430,10 +466,6 @@
 			[
 				"f",
 				"float"
-			],
-			[
-				"li",
-				"lightColor"
 			],
 			[
 				"Lin",
@@ -482,38 +514,6 @@
 			[
 				"reflec",
 				"Reflectance"
-			],
-			[
-				"uni",
-				"uniform"
-			],
-			[
-				"vert_Im",
-				"vert_ImpostorPosition"
-			],
-			[
-				"unf",
-				"Uniform"
-			],
-			[
-				"st",
-				"startDepth"
-			],
-			[
-				"SS",
-				"ssPosition"
-			],
-			[
-				"depth",
-				"DepthTex"
-			],
-			[
-				"pos",
-				"position"
-			],
-			[
-				"poso",
-				"Position"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 7556,
+				"buffer_size": 7808,
 				"line_ending": "Windows"
 			}
 		},
@@ -531,7 +531,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 3317,
+				"buffer_size": 3424,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 4659,
+				"buffer_size": 4663,
 				"line_ending": "Windows"
 			}
 		},
@@ -547,7 +547,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 4839,
+				"buffer_size": 4843,
 				"line_ending": "Windows"
 			}
 		}
@@ -636,6 +636,8 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
+		"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/tex/cgBA_Latex/cgBA.cls",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/assets/texture/scene-testscene/tga/Billboard_WallE.tga",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EMReflection.fx",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
@@ -663,7 +665,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/gbuffer/gbuffer.frag.glsl",
@@ -762,8 +763,7 @@
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
 		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag",
-		"/C/Users/guidoschmidt/Development/code/glsl/bilateral filter/bilateralFilter.frag.glsl"
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag"
 	],
 	"find":
 	{
@@ -782,6 +782,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"BillboardRefections",
+			"vert3",
+			"vert2",
+			"vert1",
 			"samplePos",
 			"sample",
 			"color",
@@ -905,11 +909,7 @@
 			"deferredReflectanceTex",
 			"deferredMaterialIDTex",
 			"deferredNormalTex",
-			"deferredColorTex",
-			"deferredViewPositionTex",
-			"deferredWorldPositionTex",
-			"ViewPosition",
-			"WorldPosition"
+			"deferredColorTex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -929,7 +929,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -937,15 +937,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 7556,
+						"buffer_size": 7808,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4940,
-								4940
+								2816,
+								2139
 							]
 						],
 						"settings":
@@ -1044,7 +1044,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2580.0,
+						"translation.y": 893.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1054,15 +1054,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 3317,
+						"buffer_size": 3424,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2557,
-								2557
+								3068,
+								3068
 							]
 						],
 						"settings":
@@ -1161,7 +1161,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1448.0,
+						"translation.y": 1295.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1171,15 +1171,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 4659,
+						"buffer_size": 4663,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2522,
-								2522
+								2451,
+								2451
 							]
 						],
 						"settings":
@@ -1278,7 +1278,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1014.0,
+						"translation.y": 1023.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1288,15 +1288,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 4839,
+						"buffer_size": 4843,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2485,
-								2485
+								2439,
+								2439
 							]
 						],
 						"settings":
@@ -1395,7 +1395,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1302.0,
+						"translation.y": 962.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1448,6 +1448,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"gbuff",
+				"source/shaders/deferred/gbuffer/gbuffer.vert.glsl"
+			],
 			[
 				"gbu",
 				"source/shaders/deferred/gbuffer/gbuffer.frag.glsl"

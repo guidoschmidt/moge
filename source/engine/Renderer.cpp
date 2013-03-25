@@ -35,7 +35,7 @@ Renderer::Renderer(int width, int height)
 
 	loaded = false;
 
-	tw_currentScene = CHURCH;
+	tw_currentScene = MUSEUM;
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
@@ -252,7 +252,7 @@ void Renderer::InitializeLight(void)
 {
 	LightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
-	LightSpecular = glm::vec3(0.55f, 0.65f, 0.95f);
+	LightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
 }
 
 //! Initializes the DevIL image loader utility
@@ -419,9 +419,8 @@ void Renderer::CameraMovement()
 	correct_y_pos = y_pos - context_ptr->GetHeight()/2;
 
 	/* Zoom *************************************************/
-	//! TODO Try camera movement instead of fov
 	int x = glfwGetMouseWheel();
-	m_fieldOfView = 50.0f - x;
+	m_fieldOfView = 70.0f - x;
 	scenegraph_ptr->GetActiveCamera()->SetFOV(m_fieldOfView);
 
 	/* Orientation *************************************************/
@@ -448,7 +447,7 @@ void Renderer::CameraMovement()
 		}
 	}
 
-	/* Translation *************************************************/
+	/* Movement *************************************************/
 	if(glfwGetKey('W')) //! Forwards
 	{
 		scenegraph_ptr->GetActiveCamera()->MoveZ(m_speed);
@@ -473,7 +472,6 @@ void Renderer::CameraMovement()
 	{
 		scenegraph_ptr->GetActiveCamera()->MoveY(-m_speed);
 	}
-
 }
 
 //! Render loop
@@ -503,6 +501,9 @@ void Renderer::RenderLoop(void){
 					break;
 				case CHURCH:
 					m_sceneName = "church";
+					break;
+				case STREET:
+					m_sceneName = "street";
 					break;
 			}
 			scenegraph_ptr->LoadScene(m_sceneName);
@@ -608,11 +609,14 @@ void Renderer::RenderLoop(void){
 
 			//! Billboards
 			m_gBufferProgram_ptr->SetUniform("Impostor[0].ModelMatrix", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
-			//m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
+			m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
 			//! Billboard texture
 			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
-			//m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
-			m_billboardTexCounter = 1;
+			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
+
+			m_billboardTexCounter = 2;
+			m_gBufferProgram_ptr->SetUniform("billboardCount", m_billboardTexCounter);
+
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
 			{
 				//! Mesh geometry
@@ -630,7 +634,6 @@ void Renderer::RenderLoop(void){
 					//! Model matrix
 					ModelMatrix = static_cast<scene::Mesh*>((*renderQ_ptr)[n])->GetModelMatrix();
 					ModelMatrix = glm::mat4(1.0f) * ModelMatrix;
-
 
 					//! Matrix uniform bindings
 					m_gBufferProgram_ptr->SetUniform("wsNormalMatrix", glm::transpose(glm::inverse(ModelMatrix)));
@@ -657,7 +660,6 @@ void Renderer::RenderLoop(void){
 						static_cast<scene::Mesh*>((*renderQ_ptr)[n])->DrawBoundingBox();
 					}
 				}
-
 				//! Light geometry
 				/******************************************************************************/
 				else if((*renderQ_ptr)[n]->GetType() == "Light" && tw_drawLights)
@@ -723,10 +725,6 @@ void Renderer::RenderLoop(void){
 			//! Matrix uniforms
 			deferredProgram_Pass2_ptr->SetUniform("ViewMatrix", scenegraph_ptr->GetActiveCamera()->GetViewMatrix());
 			deferredProgram_Pass2_ptr->SetUniform("ProjectionMatrix", scenegraph_ptr->GetActiveCamera()->GetProjectionMatrix());
-			//! Mouse uniforms
-			//deferredProgram_Pass2_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
-			//deferredProgram_Pass2_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
-			//deferredProgram_Pass2_ptr->SetUniform("mouseLight", tw_mouseLight);
 			//! Camera uniforms
 			deferredProgram_Pass2_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			deferredProgram_Pass2_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());

@@ -29,7 +29,7 @@ namespace scene {
 		m_height 	  = Singleton<Context>::Instance()->GetHeight();
 		m_aspect 	  = static_cast<float>(m_width) / static_cast<float>(m_height);
 		m_nearPlane   = 0.1f;
-		m_farPlane 	  = 200.0f;
+		m_farPlane 	  = 500.0f;
 
 		m_viewMatrix	   	= glm::lookAt(m_position, m_lookAt, m_up);
 		m_inverseViewMatrix = glm::inverse(m_viewMatrix);
@@ -71,7 +71,7 @@ namespace scene {
 		m_height 	  = Singleton<Context>::Instance()->GetHeight();
 		m_aspect 	  = static_cast<float>(m_width) / static_cast<float>(m_height);
 		m_nearPlane   = 0.1f;
-		m_farPlane 	  = 200.f;
+		m_farPlane 	  = 500.f;
 
 		m_viewMatrix	   	= glm::lookAt(m_position, m_lookAt, m_up);
 		m_inverseViewMatrix = glm::inverse(m_viewMatrix);

@@ -88,7 +88,7 @@ class Renderer
 		#define NUM_TEXS 14
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2} Scenes;
+		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2, STREET=3} Scenes;
 		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 

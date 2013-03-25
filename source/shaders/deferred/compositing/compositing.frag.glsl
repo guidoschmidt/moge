@@ -105,11 +105,11 @@ void main(void)
 		{
 			vec4 blurredReflections = vec4(blur(vert_UV, SSRTex), 1.0f);
 			vec4 blurredEnvMapColor = vec4(blur(vert_UV, ReflectanceTex), 1.0f);
-			FragColor = diffuse + (reflections.a * blurredReflections) + Reflectance * blurredEnvMapColor;
+			FragColor = diffuse + ((reflections.a * blurredReflections) + Reflectance * blurredEnvMapColor);
 		}
 		else
 		{
-			FragColor = diffuse + reflections + Reflectance * EnvMapColor;
+			FragColor = diffuse + (reflections + Reflectance * EnvMapColor);
 		}
 	}
 	// World space positions

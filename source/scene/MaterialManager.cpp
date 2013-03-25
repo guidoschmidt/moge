@@ -96,7 +96,7 @@ namespace scene {
 	 */
 	void MaterialManager::LoadTexture(std::string filename)
 	{
-		ActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE0);
 		glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
 		glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
 

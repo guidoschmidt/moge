@@ -55,11 +55,11 @@ layout (location = 7) out vec3 LinearDepth;
 
 //*** Uniforms *****************************************************************
 uniform CameraInfo Camera;
-uniform ImpostorInfo Impostor[1];
+uniform ImpostorInfo Impostor[2];
 uniform AABBInfo AABB;
 uniform MaterialInfo Material;
 
-uniform int impostorCount;
+uniform int billboardCount;
 uniform bool useNormalMapping;
 uniform bool toggleCM;
 uniform bool togglePCCM;
@@ -74,7 +74,7 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 MVPMatrix;
 
 uniform sampler2D ColorTex;
-uniform sampler2D ImpostorTex[1];
+uniform sampler2D ImpostorTex[2];
 uniform sampler2D NormalTex;
 uniform samplerCube CubeMapTex;
 
@@ -129,6 +129,48 @@ vec3 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in v
 	return vec3(u, v, t);
 }
 
+// Billboard reflections
+vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
+{
+	vec4 reflectedColor = vec4(0.0);
+
+	// Every Billboard
+	for(int i = 0; i < billboardCount; i++)
+	{
+		//Reflectance.a = 0.0;
+		vec3 vert0 = vec3( 0.5, 0.0,  0.5);
+		vec3 vert1 = vec3(-0.5, 0.0, -0.5);
+		vec3 vert2 = vec3(-0.5, 0.0,  0.5);
+
+		// Build ray
+		vec3 rayOrigin = wsPosition;
+		vec3 rayDirect = wsReflectVec;
+
+		// Transform billboard to world space
+		vert0 = ( Impostor[i].ModelMatrix * vec4(vert0, 1.0) ).xyz;
+		vert1 = ( Impostor[i].ModelMatrix * vec4(vert1, 1.0) ).xyz;
+		vert2 = ( Impostor[i].ModelMatrix * vec4(vert2, 1.0) ).xyz;
+
+		// Intersect the billboard and get texture coordinates
+		vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert2, vert0, vert1);
+
+		if(uv.z <= 0.001)
+			break;
+
+		// Check if texture coordinates are valid between 0.0 and 1.0
+		if(uv.x > 0.0 && uv.x < 1.0 &&
+		   uv.y > 0.0 && uv.y < 1.0)
+		{
+			// Check alpha channel of billboard texture
+			float alpha = texture(ImpostorTex[i], uv.xy).a;
+			// Get texture for billboard
+			reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb * alpha;
+		}
+	}
+
+	return reflectedColor;
+}
+
 // Normal mapping: calculate cotangents
 // @source: http://www.thetenthplanet.de/archives/1180
 mat3 cotangent_frame(vec3 N, vec3 p, vec2 uv)
@@ -172,12 +214,18 @@ void main(void)
 	// Normals
 	vsNormal = normalize(vert_vsNormal);
 	wsNormal = normalize(vert_wsNormal);
-	// Colors (Albedo) 
-	Color.rgb = texture(ColorTex, vert_UV).rgb;
+	// Colors (Albedo) & Alpha blending
+	float alpha = texture(ColorTex, vert_UV).a;
+	if(alpha < 0.2)
+		discard;
+	vec3 OutputColor = texture(ColorTex, vert_UV).rgb * alpha;
+	Color.a = alpha;
+	Color.rgb = OutputColor;
 	// Linear Depth
 	LinearDepth = vec3(vert_LinearDepth);
 	// Reflectance
-	Reflectance.a = texture(ColorTex, vert_UV).a;
+	Reflectance.a = 0.0;
+	Reflectance.a = texture(NormalTex, vert_UV).a;
 	// Materials
 	Color.a = Material.id;
 	if(Material.id == 0.99)
@@ -195,7 +243,6 @@ void main(void)
 	vec3 wsEyeVec = normalize(vert_wsEyeVector); 
 	vec3 vsEyeVec = normalize(vert_vsEyeVector);
 	
-
 	//*** Normal mapping ***
 	vec3 normalmap = texture(NormalTex, vert_UV).rgb;
 	if(useNormalMapping)
@@ -238,46 +285,7 @@ void main(void)
 	vec4 reflectedColor = vec4(0.0);
 	if(toggleBB)
 	{
-
-		// Every Billboard
-		for(int i = 0; i < 1; i++)
-		{
-			//Reflectance.a = 0.0;
-			// Inital Billboard
-			vec3 vert0 = vec3( 0.5, 0.0, -0.5);
-			vec3 vert1 = vec3( 0.5, 0.0,  0.5);
-			vec3 vert2 = vec3(-0.5, 0.0, -0.5);
-			vec3 vert3 = vec3(-0.5, 0.0,  0.5);
-
-			// Build ray
-			vec3 rayOrigin = wsPosition;
-			vec3 rayDirect = wsReflectVec;
-
-			// Transform billboard to world space
-			vert0 = ( Impostor[i].ModelMatrix * vec4(vert0, 1.0) ).xyz;
-			vert1 = ( Impostor[i].ModelMatrix * vec4(vert1, 1.0) ).xyz;
-			vert2 = ( Impostor[i].ModelMatrix * vec4(vert2, 1.0) ).xyz;
-			vert3 = ( Impostor[i].ModelMatrix * vec4(vert3, 1.0) ).xyz;
-
-			// Intersect the billboard and get texture coordinates
-			vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert3, vert1, vert2);
-
-			if(uv.z <= 0.001)
-				break;
-
-			// Check if texture coordinates are valid between 0.0 and 1.0
-			if(uv.x > 0.0 && uv.x < 1.0 &&
-			   uv.y > 0.0 && uv.y < 1.0)
-			{
-				// Check alpha channel of billboard texture
-				if(texture(ImpostorTex[i], uv.xy).a != 0.0)
-				{
-					// Get texture for billboard
-					reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb;
-				}
-			}
-		}
-
+		reflectedColor = BillboardReflections(wsPosition, wsReflectVec);
 		// Write to texture
 		Reflectance += Reflectance.a * reflectedColor;
 	}

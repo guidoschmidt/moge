@@ -52,9 +52,12 @@ namespace scene {
 				}
 				//! Billboard TODO: simply add them
 				if(m_scenegraph_ptr->GetNode(i)->GetType() == "Billboard")
-					m_renderQ.push_back(m_scenegraph_ptr->GetNode(i));
+					m_renderQ_Billboards.push_back(m_scenegraph_ptr->GetNode(i));
 			}
 		}
+
+		//! Adding Billboards
+		m_renderQ.insert(m_renderQ.end(), m_renderQ_Billboards.begin(), m_renderQ_Billboards.end());
 
 		//! Put organized node-list onto console
 		std::cout << "Organized RenderQ (by material): ";

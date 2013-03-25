@@ -3,7 +3,6 @@
 *.swp
 *.blend1
 *.blend2
-/Debug
 /.cproject
 /.project
 /.settings
