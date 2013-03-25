@@ -154,12 +154,13 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 		// Intersect the billboard and get texture coordinates
 		vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert2, vert0, vert1);
 
-		if(uv.z <= 0.001)
-			break;
+		//if(uv.z <= 0.001)
+		//	break;
 
 		// Check if texture coordinates are valid between 0.0 and 1.0
 		if(uv.x > 0.0 && uv.x < 1.0 &&
-		   uv.y > 0.0 && uv.y < 1.0)
+		   uv.y > 0.0 && uv.y < 1.0 &&
+		   uv.z >= 0.001)
 		{
 			// Check alpha channel of billboard texture
 			float alpha = texture(ImpostorTex[i], uv.xy).a;

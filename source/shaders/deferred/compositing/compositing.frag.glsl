@@ -57,6 +57,27 @@ float linearizeDepth(float depth)
 }
 
 
+vec4 FastGaussianBlur(in sampler2D texture)
+{
+	const float blurSize = 1.0/256.0;
+	vec4 sum = vec4(0.0);
+ 
+   // blur in y (vertical)
+   // take nine samples, with the distance blurSize between them
+   sum += texture2D(texture, vec2(vert_UV.x - 4.0*blurSize, vert_UV.y)) * 0.05;
+   sum += texture2D(texture, vec2(vert_UV.x - 3.0*blurSize, vert_UV.y)) * 0.09;
+   sum += texture2D(texture, vec2(vert_UV.x - 2.0*blurSize, vert_UV.y)) * 0.12;
+   sum += texture2D(texture, vec2(vert_UV.x - blurSize, vert_UV.y)) * 0.15;
+   sum += texture2D(texture, vec2(vert_UV.x, vert_UV.y)) * 0.16;
+   sum += texture2D(texture, vec2(vert_UV.x + blurSize, vert_UV.y)) * 0.15;
+   sum += texture2D(texture, vec2(vert_UV.x + 2.0*blurSize, vert_UV.y)) * 0.12;
+   sum += texture2D(texture, vec2(vert_UV.x + 3.0*blurSize, vert_UV.y)) * 0.09;
+   sum += texture2D(texture, vec2(vert_UV.x + 4.0*blurSize, vert_UV.y)) * 0.05;
+ 
+   return sum;
+}
+
+
 // Gaussian coefficient
 float GaussianCoef(float x, float y)
 {
@@ -103,8 +124,8 @@ void main(void)
 	{
 		if(blurSwitch)
 		{
-			vec4 blurredReflections = vec4(blur(vert_UV, SSRTex), 1.0f);
-			vec4 blurredEnvMapColor = vec4(blur(vert_UV, ReflectanceTex), 1.0f);
+			vec4 blurredReflections = FastGaussianBlur(SSRTex);
+			vec4 blurredEnvMapColor = FastGaussianBlur(ReflectanceTex);
 			FragColor = diffuse + ((reflections.a * blurredReflections) + Reflectance * blurredEnvMapColor);
 		}
 		else
