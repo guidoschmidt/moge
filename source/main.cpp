@@ -9,8 +9,22 @@ Renderer* renderer;
 
 int main(int argc, char* argv[])
 {
+
 	//! Create a renderer instance
-	renderer = new Renderer(1000, 800);
+	int width, height;
+	if(*argv[0] != 0 && *argv[1] != 0)
+	{
+		width = 800;
+		height = 800;
+	}
+	else
+	{
+		width = 800;
+		height = 800;
+	}
+
+
+	renderer = new Renderer(width, height);
 	//! Start the render loop
 	renderer->RenderLoop();
 
