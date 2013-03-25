@@ -4,6 +4,58 @@
 		"selected_items":
 		[
 			[
+				"re",
+				"reflectedColorY"
+			],
+			[
+				"ref",
+				"reflectedColorY"
+			],
+			[
+				"Im",
+				"ImpostorTex"
+			],
+			[
+				"Fa",
+				"FastGaussianBlurX"
+			],
+			[
+				"ra",
+				"rayDirect"
+			],
+			[
+				"vs",
+				"vsReflectionVector"
+			],
+			[
+				"blu",
+				"blurredEnvMapColor"
+			],
+			[
+				"bl",
+				"blurredSSR"
+			],
+			[
+				"b",
+				"blurredReflections"
+			],
+			[
+				"ker",
+				"kernelY"
+			],
+			[
+				"blurr",
+				"blurredEnvMapColorY"
+			],
+			[
+				"blur",
+				"blurredEnvMapColorX"
+			],
+			[
+				"sa",
+				"sampler2D"
+			],
+			[
 				"sm",
 				"sampledDepthRefine"
 			],
@@ -12,16 +64,8 @@
 				"currentDepthRefine"
 			],
 			[
-				"sa",
-				"sampledDepthRefine"
-			],
-			[
 				"cur",
 				"currentDepthRefine"
-			],
-			[
-				"ref",
-				"refinementCount"
 			],
 			[
 				"in",
@@ -42,10 +86,6 @@
 			[
 				"Ref",
 				"Reflectance"
-			],
-			[
-				"vs",
-				"vsNormal"
 			],
 			[
 				"vsN",
@@ -104,10 +144,6 @@
 				"vec3"
 			],
 			[
-				"ra",
-				"rayOrigin"
-			],
-			[
 				"Gau",
 				"GaussianCoef"
 			],
@@ -122,10 +158,6 @@
 			[
 				"im",
 				"ImpostorTex"
-			],
-			[
-				"Im",
-				"Impostor"
 			],
 			[
 				"ve",
@@ -392,10 +424,6 @@
 				"refineStep"
 			],
 			[
-				"re",
-				"refine"
-			],
-			[
 				"vsp",
 				"vspReflectionVector"
 			],
@@ -486,34 +514,6 @@
 			[
 				"toggleC",
 				"toggleCM"
-			],
-			[
-				"r",
-				"rgb"
-			],
-			[
-				"title",
-				"titlePattern"
-			],
-			[
-				"pa",
-				"pathAndFilename"
-			],
-			[
-				"I",
-				"ImpostorNormal"
-			],
-			[
-				"Re",
-				"ReflectanceTex"
-			],
-			[
-				"En",
-				"EnvMapColor"
-			],
-			[
-				"reflec",
-				"Reflectance"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 7808,
+				"buffer_size": 10486,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 4663,
+				"buffer_size": 4662,
 				"line_ending": "Windows"
 			}
 		},
@@ -547,7 +547,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 4843,
+				"buffer_size": 6267,
 				"line_ending": "Windows"
 			}
 		}
@@ -636,6 +636,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Downloads/GaussianBlur/GaussianBlur/GaussianBlur.fx",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/tex/cgBA_Latex/cgBA.cls",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/assets/texture/scene-testscene/tga/Billboard_WallE.tga",
@@ -762,8 +763,7 @@
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
-		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag"
+		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo"
 	],
 	"find":
 	{
@@ -782,6 +782,20 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"in vec2 ",
+			"vert_UV",
+			"3",
+			"texture2D",
+			"texture2DLod",
+			"blurSize",
+			"texture2D",
+			"blurredReflections",
+			"FastGaussianBlurX2",
+			"FastGaussianBlurY",
+			"FastGaussianBlurX",
+			"vTexCoord",
+			"FastGaussianBlur",
+			"vTexCoord",
 			"BillboardRefections",
 			"vert3",
 			"vert2",
@@ -895,21 +909,7 @@
 			"defer",
 			"def",
 			"deferr",
-			"defe",
-			"def",
-			"defe",
-			"defer",
-			"deferredSSRTex",
-			"deferredDiffuseTex",
-			"deferred",
-			"deferredDiffuseTex",
-			"deferredDepthTex",
-			"deferredEyeVecTex",
-			"deferredReflecVecTex",
-			"deferredReflectanceTex",
-			"deferredMaterialIDTex",
-			"deferredNormalTex",
-			"deferredColorTex"
+			"defe"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -937,15 +937,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 7808,
+						"buffer_size": 10486,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2816,
-								2139
+								5722,
+								5722
 							]
 						],
 						"settings":
@@ -1044,7 +1044,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 893.0,
+						"translation.y": 2138.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1061,8 +1061,8 @@
 						"selection":
 						[
 							[
-								3068,
-								3068
+								2501,
+								2501
 							]
 						],
 						"settings":
@@ -1171,15 +1171,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 4663,
+						"buffer_size": 4662,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2451,
-								2451
+								3555,
+								3555
 							]
 						],
 						"settings":
@@ -1278,7 +1278,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1023.0,
+						"translation.y": 1383.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1288,15 +1288,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 4843,
+						"buffer_size": 6267,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2439,
-								2439
+								1593,
+								1593
 							]
 						],
 						"settings":
@@ -1395,7 +1395,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 962.0,
+						"translation.y": 616.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

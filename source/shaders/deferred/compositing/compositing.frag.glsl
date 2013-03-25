@@ -44,10 +44,10 @@ uniform sampler2D DiffuseTex;
 uniform sampler2D SSRTex;
 //uniform sampler2D BBTex;
 
-uniform int kernelX;
-uniform int kernelY;
+uniform float kernelX;
+uniform float kernelY;
 
-ivec2 kernelSize = ivec2(0, 0);
+vec2 kernelSize = vec2(0.0, 0.0);
 
 //*** Functions ****************************************************************
 // Linearizes a depth value
@@ -56,60 +56,47 @@ float linearizeDepth(float depth)
 	return (2.0f * Camera.NearPlane) / (Camera.FarPlane + Camera.NearPlane - depth * (Camera.FarPlane - Camera.NearPlane));
 }
 
-
-vec4 FastGaussianBlur(in sampler2D texture)
+// Fast Gaussian blur in y-axis
+vec4 FastGaussianBlurY(in sampler2D texture)
 {
-	const float blurSize = 1.0/256.0;
+	float blurSize = 1.0/(Screen.Height * 1.0/kernelY);
 	vec4 sum = vec4(0.0);
- 
-   // blur in y (vertical)
-   // take nine samples, with the distance blurSize between them
-   sum += texture2D(texture, vec2(vert_UV.x - 4.0*blurSize, vert_UV.y)) * 0.05;
-   sum += texture2D(texture, vec2(vert_UV.x - 3.0*blurSize, vert_UV.y)) * 0.09;
-   sum += texture2D(texture, vec2(vert_UV.x - 2.0*blurSize, vert_UV.y)) * 0.12;
-   sum += texture2D(texture, vec2(vert_UV.x - blurSize, vert_UV.y)) * 0.15;
-   sum += texture2D(texture, vec2(vert_UV.x, vert_UV.y)) * 0.16;
-   sum += texture2D(texture, vec2(vert_UV.x + blurSize, vert_UV.y)) * 0.15;
-   sum += texture2D(texture, vec2(vert_UV.x + 2.0*blurSize, vert_UV.y)) * 0.12;
-   sum += texture2D(texture, vec2(vert_UV.x + 3.0*blurSize, vert_UV.y)) * 0.09;
-   sum += texture2D(texture, vec2(vert_UV.x + 4.0*blurSize, vert_UV.y)) * 0.05;
+ 	
+ 	int lod = 4;
+
+   sum += textureLod(texture, vec2(vert_UV.x - 4.0 * blurSize, vert_UV.y), lod) * 0.05;
+   sum += textureLod(texture, vec2(vert_UV.x - 3.0 * blurSize, vert_UV.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(vert_UV.x - 2.0 * blurSize, vert_UV.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(vert_UV.x - blurSize, vert_UV.y), lod) * 0.15;
+   sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y), lod) * 0.16;
+   sum += textureLod(texture, vec2(vert_UV.x + blurSize, vert_UV.y), lod) * 0.15;
+   sum += textureLod(texture, vec2(vert_UV.x + 2.0 * blurSize, vert_UV.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(vert_UV.x + 3.0 * blurSize, vert_UV.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(vert_UV.x + 4.0 * blurSize, vert_UV.y), lod) * 0.05;
  
    return sum;
 }
 
-
-// Gaussian coefficient
-float GaussianCoef(float x, float y)
+// Fast Gaussian blur in x-axis
+vec4 FastGaussianBlurX(in sampler2D texture)
 {
-	float sigma = 2.0;
-	return  ( 1 / ( sqrt(2*3.14f) * sigma ) ) * exp( -(x*x+y*y) / (2 * sigma * sigma) );
-}
+	float blurSize = 1.0/(Screen.Width * 1.0/kernelX);
 
-// Simple Gaussian blur
-vec3 blur(in vec2 uv, in sampler2D blurTex)
-{
-	kernelSize.x = kernelX;
-	kernelSize.y = kernelY;
+	vec4 sum = vec4(0.0);
 
-	vec2 pixelSize = 1.0f/vec2(Screen.Width, Screen.Height);
-	vec3 color = vec3(0.0f);
-	float count = 0;
-	vec2 pos = uv;
+ 	int lod = 4;
 
-	color = vec3(0.0);
-	for(int x = -kernelSize.x; x <= kernelSize.x; x++)
-	{
-		for(int y = -kernelSize.y; y <= kernelSize.y; y++)
-		{
-			pos = uv + ( vec2(x, y) * pixelSize );
-			color += texture(blurTex, pos).rgb * GaussianCoef(x, y);
-			count += GaussianCoef(x, y);
-		}
-	}
-
-	color /= count;
-
-	return color;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y - 4.0*blurSize), lod) * 0.05;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y - 3.0*blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y - 2.0*blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y - blurSize), lod) * 0.15;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y), lod) * 0.16;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y + blurSize), lod) * 0.15;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y + 2.0*blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y + 3.0*blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(vert_UV.x, vert_UV.y + 4.0*blurSize), lod) * 0.05;
+ 
+   return sum;
 }
 
 //*** Main *********************************************************************
@@ -124,9 +111,16 @@ void main(void)
 	{
 		if(blurSwitch)
 		{
-			vec4 blurredReflections = FastGaussianBlur(SSRTex);
-			vec4 blurredEnvMapColor = FastGaussianBlur(ReflectanceTex);
-			FragColor = diffuse + ((reflections.a * blurredReflections) + Reflectance * blurredEnvMapColor);
+			vec4 blurredSSRX = FastGaussianBlurX(SSRTex);
+			vec4 blurredSSRY = FastGaussianBlurY(SSRTex);
+			vec4 blurredSSR = mix(blurredSSRX, blurredSSRY, 0.5);
+			
+			vec4 blurredEnvMapColorX = FastGaussianBlurX(ReflectanceTex);
+			vec4 blurredEnvMapColorY = FastGaussianBlurY(ReflectanceTex);
+			vec4 blurredEnvMapColor = mix(blurredEnvMapColorX, blurredEnvMapColorY, 0.5);
+			
+			vec4 blurredReflections = blurredSSR + Reflectance * blurredEnvMapColor;
+			FragColor = diffuse + blurredReflections;
 		}
 		else
 		{

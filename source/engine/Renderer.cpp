@@ -157,8 +157,8 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
 	TwAddVarRW(context_ptr->GetBar(), "stepsize", TW_TYPE_INT16, &tw_rayStepSize, "min='1' value='5' step='1' group='SSR' label='Step size (pixels)'");
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
-	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_INT16, &tw_blurX, "group='SSR' min='0' max='20' label='Kernel X'");
-	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_INT16, &tw_blurY, "group='SSR' min='0' max='20' label='Kernel Y'");
+	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_FLOAT, &tw_blurX, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel X'");
+	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_FLOAT, &tw_blurY, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel Y'");
 	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "fadetoscreenedge", TW_TYPE_BOOLCPP, &tw_fadeToEdges, "group='SSR' label='Fade to screen edges'");
 	//! Parallax corrected cube mapping
@@ -264,9 +264,20 @@ void Renderer::InitializeMatrices(void)
  */
 void Renderer::InitializeLight(void)
 {
-	LightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
-	LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
-	LightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
+	if(tw_currentScene == CHURCH)
+	{
+		LightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+		LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
+		LightSpecular = glm::vec3(0.85f, 0.55f, 0.45f);
+		m_shininess = 35.0f;
+	}
+	else
+	{
+		LightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+		LightDiffuse = glm::vec3(0.95f, 0.85f, 0.75f);
+		LightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
+		m_shininess = 12.0f;
+	}
 }
 
 //! Initializes the DevIL image loader utility
@@ -390,7 +401,7 @@ void Renderer::KeyboardFunction(void)
 	}
 	if(glfwGetKey('4'))
 	{
-		deferredProgram_Pass4_ptr->ReloadAllShaders();
+		//deferredProgram_Pass4_ptr->ReloadAllShaders();
 	}
 	if(glfwGetKey('5'))
 	{
@@ -600,7 +611,7 @@ void Renderer::RenderLoop(void){
 			glCullFace(GL_FRONT);
 			*/
 			//! Multisampling
-			glEnable(GL_MULTISAMPLE);
+			//glEnable(GL_MULTISAMPLE);
 
 			//! Normal mapping uniform
 			m_gBufferProgram_ptr->SetUniform("useNormalMapping", tw_useNormalMapping);
@@ -616,19 +627,32 @@ void Renderer::RenderLoop(void){
 			//! Scene approximation AAB for parallax corrected cubemaps
 			m_gBufferProgram_ptr->SetUniform("AABB.max", scenegraph_ptr->GetSceneApproximation()->max);
 			m_gBufferProgram_ptr->SetUniform("AABB.min", scenegraph_ptr->GetSceneApproximation()->min);
-			//! Testscene
-			m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 8.256, 0));
-			//! Museum
-			//m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 12.0, 0));
+			switch(tw_currentScene)
+			{
+				case TESTSCENE:
+					//! Testscene
+					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 8.256, 0));
+					break;
+				case MUSEUM:
+					//! Museum
+					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 12.0, 0));
+					break;
+				case CHURCH:
+					//! Museum
+					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(10.0, 7.0, 0));
+					break;
+			}
 
-			//! Billboards
-			m_gBufferProgram_ptr->SetUniform("Impostor[0].ModelMatrix", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
-			m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
-			//! Billboard texture
-			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
-			m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
-
-			m_billboardTexCounter = 2;
+			if(scenegraph_ptr->GetImpostorCount() > 0)
+			{
+				//! Billboards
+				m_gBufferProgram_ptr->SetUniform("Impostor[0].ModelMatrix", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
+				m_gBufferProgram_ptr->SetUniform("Impostor[1].ModelMatrix", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
+				//! Billboard texture
+				m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
+				m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
+			}
+			m_billboardTexCounter = scenegraph_ptr->GetImpostorCount();
 			m_gBufferProgram_ptr->SetUniform("billboardCount", m_billboardTexCounter);
 
 			for(unsigned int n=0; n < renderQ_ptr->size(); n++)
@@ -708,8 +732,8 @@ void Renderer::RenderLoop(void){
 			}
 
 			//! Disable front face culling
-			glDisable(GL_CULL_FACE);
-			glEnable(GL_DEPTH_TEST);
+			//glDisable(GL_CULL_FACE);
+			//glEnable(GL_DEPTH_TEST);
 
 			gBuffer_ptr->Unuse();
 			m_gBufferProgram_ptr->Unuse();

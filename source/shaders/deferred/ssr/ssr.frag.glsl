@@ -147,7 +147,7 @@ void main(void)
 	// View space calculations
 	vec3 vsEyeVector        = normalize(vsPosition);
 	vec3 vsReflectionVector = normalize(reflect(vsEyeVector, vsNormal));
-	
+
 	//*** Screen space reflections ***
 	if(toggleSSR)
 	{

@@ -191,7 +191,7 @@ namespace scene {
 		}
 
 		/* CUBEMAPS ****************************************************************/
-		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/testscene/testscene_teapot");
+		m_materialman_ptr->AddCubeMap("./assets/texture/cubemaps/" + m_scene_name + "/" + m_scene_name);
 
 		/* MESHES ****************************************************************/
 		//! Meshes

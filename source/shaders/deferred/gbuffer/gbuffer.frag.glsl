@@ -129,6 +129,61 @@ vec3 IntersectTriangle(in vec3 rayOrigin, in vec3 rayDirect, in vec3 vert0, in v
 	return vec3(u, v, t);
 }
 
+// Fresnel function
+float fresnel(vec3 reflection, vec3 normal, float R0) {
+    // float const R0 =  pow(1.0 - refractionIndexRatio, 2.0) /
+    //                   pow(1.0 + refractionIndexRatio, 2.0);
+    // reflection and normal are assumed to be normalized
+    return R0 + (1.0 - R0) * pow(1.0 - dot(reflection, normal), 5.0);
+}
+
+
+vec4 FastGaussianBlurY(in sampler2D texture, in vec2 texCoord)
+{
+	float blurSize = 1.0/(20.0);
+	vec4 sum = vec4(0.0);
+ 	
+ 	int lod = 4;
+
+   // blur in y (vertical)
+   // take nine samples, with the distance blurSize between them
+   sum += textureLod(texture, vec2(texCoord.x - 4.0 * blurSize, texCoord.y), lod) * 0.05;
+   sum += textureLod(texture, vec2(texCoord.x - 3.0 * blurSize, texCoord.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(texCoord.x - 2.0 * blurSize, texCoord.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(texCoord.x - blurSize, texCoord.y), lod) * 0.15;
+   sum += textureLod(texture, vec2(texCoord.x, texCoord.y), lod) * 0.16;
+   sum += textureLod(texture, vec2(texCoord.x + blurSize, texCoord.y), lod) * 0.15;
+   sum += textureLod(texture, vec2(texCoord.x + 2.0 * blurSize, texCoord.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(texCoord.x + 3.0 * blurSize, texCoord.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(texCoord.x + 4.0 * blurSize, texCoord.y), lod) * 0.05;
+ 
+   return sum;
+}
+
+
+vec4 FastGaussianBlurX(in sampler2D texture, in vec2 texCoord)
+{
+	float blurSize = 1.0/(20.0);
+
+	vec4 sum = vec4(0.0);
+
+ 	int lod = 4;
+	
+	// blur in y (vertical)
+	// take nine samples, with the distance blurSize between them
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 4.0*blurSize), lod) * 0.05;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 3.0*blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 2.0*blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - blurSize), lod) * 0.15;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y), lod) * 0.16;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + blurSize), lod) * 0.15;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 2.0*blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 3.0*blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 4.0*blurSize), lod) * 0.05;
+ 
+   return sum;
+}
+
 // Billboard reflections
 vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 {
@@ -154,9 +209,6 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 		// Intersect the billboard and get texture coordinates
 		vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert2, vert0, vert1);
 
-		//if(uv.z <= 0.001)
-		//	break;
-
 		// Check if texture coordinates are valid between 0.0 and 1.0
 		if(uv.x > 0.0 && uv.x < 1.0 &&
 		   uv.y > 0.0 && uv.y < 1.0 &&
@@ -165,9 +217,14 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 			// Check alpha channel of billboard texture
 			float alpha = texture(ImpostorTex[i], uv.xy).a;
 			// Get texture for billboard
-			reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb * alpha;
+			vec4 reflectedColorX = FastGaussianBlurX(ImpostorTex[i], uv.xy); 
+			vec4 reflectedColorY = FastGaussianBlurY(ImpostorTex[i], uv.xy);
+			alpha = mix(reflectedColorX.a, reflectedColorY.a, 0.5);
+			//reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb * alpha;
+			reflectedColor = mix(reflectedColorX, reflectedColorY, 0.5) * alpha;
 		}
 	}
+
 
 	return reflectedColor;
 }
@@ -281,12 +338,16 @@ void main(void)
 		Reflectance.rgb = CubeMapColor;
 	}
 
+	float f = fresnel(wsReflectVec, wsNormal, 0.15); 
+
 
 	//*** Billboard reflections ***
 	vec4 reflectedColor = vec4(0.0);
 	if(toggleBB)
 	{
 		reflectedColor = BillboardReflections(wsPosition, wsReflectVec);
+
+
 		// Write to texture
 		Reflectance += Reflectance.a * reflectedColor;
 	}

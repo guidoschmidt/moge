@@ -105,8 +105,8 @@ class Renderer
 		bool tw_BB;
 		bool tw_PCCM;
 		bool tw_blur;
-		int tw_blurX;
-		int tw_blurY;
+		float tw_blurX;
+		float tw_blurY;
 		bool tw_compareDepth;
 		bool tw_reflvec;
 		bool tw_jittering;
