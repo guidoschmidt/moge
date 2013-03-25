@@ -155,7 +155,7 @@ class Renderer
 
 	public:
 
-		Renderer(int width=500, int height=500);
+		Renderer(int width=500, int height=500, int scene=1);
 		~Renderer(void);
 		void CalculateFPS(double timeInterval, bool toWindowTitle);
 		void Initialize(int width, int height);

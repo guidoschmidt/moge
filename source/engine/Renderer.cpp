@@ -25,7 +25,7 @@ static void TW_CALL SwitchOrtho(void* clientData){ tw_ortho = !tw_ortho;}
  * @param width
  * @param height
  */
-Renderer::Renderer(int width, int height)
+Renderer::Renderer(int width, int height, int scene)
 {
 	tw_rotSpeed = 0.2f;
 	m_fieldOfView = 45.0f;
@@ -35,7 +35,21 @@ Renderer::Renderer(int width, int height)
 
 	loaded = false;
 
-	tw_currentScene = MUSEUM;
+	switch(scene)
+	{
+		case 0:
+			tw_currentScene = TESTSCENE;
+			break;
+		case 1:
+			tw_currentScene = MUSEUM;
+			break;
+		case 2:
+			tw_currentScene = CHURCH;
+			break;
+		default:
+			tw_currentScene = TESTSCENE;
+			break;
+	}
 	tw_currentDeferredTex = TEX_COMPOSIT;
 	tw_rotation = false;
 	tw_mouseLight = false;
