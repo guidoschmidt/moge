@@ -94,7 +94,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 		glfwTerminate();
 	}
 
-	glfwSetWindowPos(1600.0f/2.0f - width/2.0f, 900.0/2.0f - height/2.0f);
+	//glfwSetWindowPos(1600.0f/2.0f - width/2.0f, 900.0/2.0f - height/2.0f);
 	glfwSetWindowTitle(m_title.c_str());
 	glfwSetWindowSizeCallback(ResizeFunction);
 	glfwSetKeyCallback(KeyboardFunction);

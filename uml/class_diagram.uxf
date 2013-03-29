@@ -4,111 +4,55 @@
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>144</x>
-      <y>80</y>
-      <w>352</w>
-      <h>248</h>
+      <x>544</x>
+      <y>336</y>
+      <w>80</w>
+      <h>32</h>
     </coordinates>
-    <panel_attributes>Renderer
---
-- scenegraph_ptr: SceneGraph*
-- renderQ_ptr: vector&lt;Node*&gt;
-- fsq_ptr: FSQ*
-- forwardProgram_ptr: ShaderProgram*
-- deferredProgram_Pass1_ptr: ShaderProgram*
-- deferredProgram_Pass2_ptr: ShaderProgram*
---
-# InitGLEW():void
-+ Renderer(widt:int, height:int)
-+ ~Renderer()
-+ CalculateFPS(timeInterval: double, toWindowTitle: bool):void
-+ Initialize(width:int, height:int):void
-+ RenderLoop():void
-+ WriteLog(log logLocation):void
-+ KeyboardFunction():void
-+ CameraMovement():void</panel_attributes>
+    <panel_attributes>Renderer</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>768</x>
-      <y>72</y>
-      <w>272</w>
-      <h>240</h>
+      <x>776</x>
+      <y>336</y>
+      <w>64</w>
+      <h>32</h>
     </coordinates>
-    <panel_attributes>Context
---
-- m_title:string
-- bar_ptr: TwBar*
-- m_width:int
-- m_height:int
---
-# SetSize(width:int, height:int):void
-# SetTitle(title:sting):void
-+ Context(width:int, height:int)
-+ ~Context()
-+ OpenWindow(width:int, height:int, title:string):void
-+ SwapBuffers():void
-+ AddAntTweakBar():void
-+ GetTitle():string
-+ GetBar():TwBar*
-+ GetWidth():int
-+ GetHeight():int
-</panel_attributes>
+    <panel_attributes>Context</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
     <coordinates>
-      <x>472</x>
-      <y>96</y>
-      <w>312</w>
+      <x>600</x>
+      <y>304</y>
+      <w>192</w>
       <h>56</h>
     </coordinates>
     <panel_attributes>renders to &gt;
 m1=1
 m2=1
 </panel_attributes>
-    <additional_attributes>296;40;24;40</additional_attributes>
+    <additional_attributes>176;40;24;40</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>136</x>
-      <y>352</y>
-      <w>360</w>
-      <h>248</h>
+      <x>200</x>
+      <y>560</y>
+      <w>104</w>
+      <h>32</h>
     </coordinates>
-    <panel_attributes>ShaderProgram
---
-- m_shaderProgram_ID:GLint
-- m_shader_IDs:vector&lt;GLint&gt;
-- m_islinked:bool
-- m_activeUniformsWritten:bool
-- m_activeAttributesWritten:bool
-- m_errorCheckValue:GLenum
-- m_log:string
---
-- GetUniformLocation(name:string):int
-- CheckFileExists(filename:string):bool
-+ ShaderProgram()
-+ ShaderProgram(shaderType0:GLSLShaderType, filename0:string,
-shaderType1:GLSLShaderType, filename1:string)
-+ ~ShaderProgram()
-+ AddShader(shaderType:GLSLShaderType, filename:string)
-+ Link():void
-+ IsLinked():bool
-+ Use():void
-+ Unuse():void
-</panel_attributes>
+    <panel_attributes>ShaderProgram</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <type>com.umlet.element.Class</type>
     <coordinates>
-      <x>0</x>
-      <y>352</y>
+      <x>168</x>
+      <y>304</y>
       <w>120</w>
       <h>104</h>
     </coordinates>

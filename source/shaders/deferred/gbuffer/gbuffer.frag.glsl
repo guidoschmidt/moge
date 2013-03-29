@@ -28,7 +28,7 @@ struct AABBInfo
 //
 struct ImpostorInfo
 {
-	mat4 ModelMatrix;
+	mat4 ModelMatrix[3];
 };
 
 //*** Input ********************************************************************
@@ -40,7 +40,6 @@ in vec2 vert_UV;
 in vec3 vert_vsEyeVector;
 in vec3 vert_wsEyePosition;
 in vec3 vert_wsEyeVector;
-in float vert_LinearDepth;
 
 //*** Output *******************************************************************
 layout (location = 0) out vec3 wsPosition;
@@ -49,13 +48,13 @@ layout (location = 2) out vec4 Color;
 layout (location = 3) out vec3 wsNormal;
 layout (location = 4) out vec3 vsNormal;
 layout (location = 5) out vec4 Reflectance;
-layout (location = 6) out vec3 vsReflectVec;
-layout (location = 7) out vec3 LinearDepth;
+layout (location = 6) out vec4 Billboards;
+layout (location = 7) out vec4 Free;
 // Location 8 is DepthBuffer
 
 //*** Uniforms *****************************************************************
 uniform CameraInfo Camera;
-uniform ImpostorInfo Impostor[2];
+uniform ImpostorInfo Impostor;
 uniform AABBInfo AABB;
 uniform MaterialInfo Material;
 
@@ -74,7 +73,7 @@ uniform mat4 ProjectionMatrix;
 uniform mat4 MVPMatrix;
 
 uniform sampler2D ColorTex;
-uniform sampler2D ImpostorTex[2];
+uniform sampler2D ImpostorTex[3];
 uniform sampler2D NormalTex;
 uniform samplerCube CubeMapTex;
 
@@ -140,22 +139,22 @@ float fresnel(vec3 reflection, vec3 normal, float R0) {
 
 vec4 FastGaussianBlurY(in sampler2D texture, in vec2 texCoord)
 {
-	float blurSize = 1.0/(20.0);
+	float blurSize = 1.0/(800.0);
 	vec4 sum = vec4(0.0);
  	
  	int lod = 4;
 
    // blur in y (vertical)
    // take nine samples, with the distance blurSize between them
-   sum += textureLod(texture, vec2(texCoord.x - 4.0 * blurSize, texCoord.y), lod) * 0.05;
-   sum += textureLod(texture, vec2(texCoord.x - 3.0 * blurSize, texCoord.y), lod) * 0.09;
-   sum += textureLod(texture, vec2(texCoord.x - 2.0 * blurSize, texCoord.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(texCoord.x - blurSize, texCoord.y), lod) * 0.05;
+   sum += textureLod(texture, vec2(texCoord.x - blurSize, texCoord.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(texCoord.x - blurSize, texCoord.y), lod) * 0.12;
    sum += textureLod(texture, vec2(texCoord.x - blurSize, texCoord.y), lod) * 0.15;
    sum += textureLod(texture, vec2(texCoord.x, texCoord.y), lod) * 0.16;
    sum += textureLod(texture, vec2(texCoord.x + blurSize, texCoord.y), lod) * 0.15;
-   sum += textureLod(texture, vec2(texCoord.x + 2.0 * blurSize, texCoord.y), lod) * 0.12;
-   sum += textureLod(texture, vec2(texCoord.x + 3.0 * blurSize, texCoord.y), lod) * 0.09;
-   sum += textureLod(texture, vec2(texCoord.x + 4.0 * blurSize, texCoord.y), lod) * 0.05;
+   sum += textureLod(texture, vec2(texCoord.x + blurSize, texCoord.y), lod) * 0.12;
+   sum += textureLod(texture, vec2(texCoord.x + blurSize, texCoord.y), lod) * 0.09;
+   sum += textureLod(texture, vec2(texCoord.x + blurSize, texCoord.y), lod) * 0.05;
  
    return sum;
 }
@@ -163,7 +162,7 @@ vec4 FastGaussianBlurY(in sampler2D texture, in vec2 texCoord)
 
 vec4 FastGaussianBlurX(in sampler2D texture, in vec2 texCoord)
 {
-	float blurSize = 1.0/(20.0);
+	float blurSize = 1.0/(800.0);
 
 	vec4 sum = vec4(0.0);
 
@@ -171,15 +170,15 @@ vec4 FastGaussianBlurX(in sampler2D texture, in vec2 texCoord)
 	
 	// blur in y (vertical)
 	// take nine samples, with the distance blurSize between them
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 4.0*blurSize), lod) * 0.05;
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 3.0*blurSize), lod) * 0.09;
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - 2.0*blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - blurSize), lod) * 0.05;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - blurSize), lod) * 0.12;
 	sum += textureLod(texture, vec2(texCoord.x, texCoord.y - blurSize), lod) * 0.15;
 	sum += textureLod(texture, vec2(texCoord.x, texCoord.y), lod) * 0.16;
 	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + blurSize), lod) * 0.15;
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 2.0*blurSize), lod) * 0.12;
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 3.0*blurSize), lod) * 0.09;
-	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + 4.0*blurSize), lod) * 0.05;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + blurSize), lod) * 0.12;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + blurSize), lod) * 0.09;
+	sum += textureLod(texture, vec2(texCoord.x, texCoord.y + blurSize), lod) * 0.05;
  
    return sum;
 }
@@ -202,9 +201,9 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 		vec3 rayDirect = wsReflectVec;
 
 		// Transform billboard to world space
-		vert0 = ( Impostor[i].ModelMatrix * vec4(vert0, 1.0) ).xyz;
-		vert1 = ( Impostor[i].ModelMatrix * vec4(vert1, 1.0) ).xyz;
-		vert2 = ( Impostor[i].ModelMatrix * vec4(vert2, 1.0) ).xyz;
+		vert0 = ( Impostor.ModelMatrix[i] * vec4(vert0, 1.0) ).xyz;
+		vert1 = ( Impostor.ModelMatrix[i] * vec4(vert1, 1.0) ).xyz;
+		vert2 = ( Impostor.ModelMatrix[i] * vec4(vert2, 1.0) ).xyz;
 
 		// Intersect the billboard and get texture coordinates
 		vec3 uv = IntersectTriangle(rayOrigin, rayDirect, vert2, vert0, vert1);
@@ -274,13 +273,11 @@ void main(void)
 	wsNormal = normalize(vert_wsNormal);
 	// Colors (Albedo) & Alpha blending
 	float alpha = texture(ColorTex, vert_UV).a;
-	if(alpha < 0.2)
+	if(alpha < 0.25)
 		discard;
 	vec3 OutputColor = texture(ColorTex, vert_UV).rgb * alpha;
 	Color.a = alpha;
 	Color.rgb = OutputColor;
-	// Linear Depth
-	LinearDepth = vec3(vert_LinearDepth);
 	// Reflectance
 	Reflectance.a = 0.0;
 	Reflectance.a = texture(NormalTex, vert_UV).a;
@@ -320,7 +317,7 @@ void main(void)
 
 	// Reflection vectors
 	vec3 wsReflectVec = normalize( reflect(wsEyeVec, wsNormal) );
-	vsReflectVec      = normalize( reflect(vsEyeVec, vsNormal) ); 
+	vec3 vsReflectVec      = normalize( reflect(vsEyeVec, vsNormal) ); 
 
 	//*** Environment mapping using cube maps ***
 	if(toggleCM)
@@ -334,7 +331,6 @@ void main(void)
 			CubeMapColor = ParallaxCorrecteCubeMapping(wsPosition, wsReflectVec);
 		}
 		
-		CubeMapColor *= lightColor;
 		Reflectance.rgb = CubeMapColor;
 	}
 
@@ -347,8 +343,7 @@ void main(void)
 	{
 		reflectedColor = BillboardReflections(wsPosition, wsReflectVec);
 
-
 		// Write to texture
-		Reflectance += Reflectance.a * reflectedColor;
+		Billboards = Reflectance.a * reflectedColor;
 	}
 }

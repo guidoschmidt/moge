@@ -28,6 +28,28 @@ FrameBufferObject::FrameBufferObject(bool gBuffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+//! Constructor
+/*!
+ * @param width
+ * @param height
+ */
+FrameBufferObject::FrameBufferObject(int width, int height, bool gBuffer)
+{
+	m_width = width;
+	m_height = height;
+	m_attachmentCounter = 0;
+	glGenFramebuffers(1, &m_FBO_ID);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
+
+	if(gBuffer){
+		CreateGBuffer();
+	}
+	else
+		CreateBuffers(2);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 //! Destructor
 FrameBufferObject::~FrameBufferObject()
@@ -52,13 +74,13 @@ void FrameBufferObject::CreateGBuffer(void)
 	AddColorAttachment(4);
 	//! Reflectance
 	AddColorAttachment(5);
-	//! Reflection vector
+	//! Billboards
 	AddColorAttachment(6);
-	//! Linear Depth
+	//! Billboards
 	AddColorAttachment(7);
 	//! Depth
 	AddDepthAttachment_Texture(8);
-	AddDepthAttachment_MultisampleTexture(9);
+	//AddDepthAttachment_MultisampleTexture(9);
 
 	std::cout << "FrameBuffer: Attachment count: " << m_attachmentCounter << std::endl;
 	m_isGBuffer = true;
@@ -169,7 +191,7 @@ void FrameBufferObject::Use(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-		glDrawBuffers(8, &m_drawBuffers[0]);
+		glDrawBuffers(7, &m_drawBuffers[0]);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 	}
@@ -181,8 +203,6 @@ void FrameBufferObject::Use(void)
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 	}
-
-
 }
 
 //! Unbinds the framebuffer object

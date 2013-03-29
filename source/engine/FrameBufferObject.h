@@ -35,6 +35,7 @@ class FrameBufferObject
 
 	public:
 		FrameBufferObject(bool gBuffer);
+		FrameBufferObject(int width, int height, bool gBuffer);
 		~FrameBufferObject();
 
 		void AddColorAttachment(int textureUnit);

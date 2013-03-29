@@ -56,11 +56,11 @@ class Renderer
 		FSQ* fsq_ptr;
 		ShaderProgram 	*forwardProgram_ptr,
 						*m_gBufferProgram_ptr,
-						*deferredProgram_Pass2_ptr,
-						*deferredProgram_Pass3_ptr,
-						*deferredProgram_Pass4_ptr,
-						*deferredProgram_Pass5_ptr;
-		FrameBufferObject* gBuffer_ptr, *lighting_fbo_ptr, *reflection_fbo_ptr, *bb_fbo_ptr;
+						*m_lightingProgram_ptr,
+						*m_ssrProgram_ptr,
+						*m_blurProgram_ptr,
+						*m_compositingProgram_ptr;
+		FrameBufferObject* gBuffer_ptr, *lighting_fbo_ptr, *reflection_fbo_ptr, *pass4_fbo_ptr;
 		float m_angle;
 		float m_fieldOfView;
 
@@ -77,15 +77,13 @@ class Renderer
 						TEX_MATERIALID		=	 3,
 						TEX_WSNORMAL		=	 4,
 						TEX_VSNORMAL		=	 5,
-						TEX_ENVMAP			=	 6,
+						TEX_DEPTH			=	 6,
 						TEX_REFLECTANCE		=	 7,
-						TEX_REFLVEC			=	 8,
-						TEX_DEPTH			=	 9,
-						TEX_LINDEPTH		=	 10,
-						TEX_SSR				=	 11,
-						TEX_BB				=	 12
+						TEX_ENVMAP			=	 8,
+						TEX_SSR				=	 9,
+						TEX_BB				=	 10
 		} DeferredTexture;
-		#define NUM_TEXS 14
+		#define NUM_TEXS 12
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2, STREET=3} Scenes;
@@ -101,6 +99,7 @@ class Renderer
 		bool tw_mouseSlider;
 		int tw_rayStepSize;
 		bool tw_SSR;
+		bool tw_optimizedSSR;
 		bool tw_CM;
 		bool tw_BB;
 		bool tw_PCCM;
@@ -142,8 +141,8 @@ class Renderer
 		glm::vec3 CameraTargetPosition;
 		glm::vec3 CameraUp;
 		//! Billboards
-		glm::mat4 BillboardMatrices[5];
-		GLuint BillboardTextures[5];
+		glm::mat4 BillboardMatrices[20];
+		GLuint BillboardTextures[20];
 
 		//! Material
 		float m_shininess;

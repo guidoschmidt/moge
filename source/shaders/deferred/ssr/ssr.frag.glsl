@@ -31,21 +31,18 @@ uniform CameraInfo Camera;
 
 uniform int user_pixelStepSize;
 uniform bool toggleSSR;
+uniform bool optimizedSSR;
 uniform bool fadeToEdges;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 
-uniform sampler2D vsPositionTex;
 uniform sampler2D wsPositionTex;
-uniform sampler2D ColorTex;
-uniform sampler2D vsNormalTex;
+uniform sampler2D vsPositionTex;
 uniform sampler2D wsNormalTex;
-uniform sampler2D MaterialIDTex;
+uniform sampler2D vsNormalTex;
 uniform sampler2D ReflectanceTex;
-uniform sampler2D DiffuseTex;
 uniform sampler2D DepthTex;
-uniform sampler2DMS DepthMSTex;
-uniform sampler2D LinearDepthTex;
+uniform sampler2D DiffuseTex;
 
 const float pi = 3.14159265f;
 
@@ -81,7 +78,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 	ssReflectionVector = normalize(ssReflectionVector - ssPosition);
 
 	// Ray trace
-	float initalStep = min(pixelsize.x, pixelsize.y);
+	float initalStep = max(pixelsize.x, pixelsize.y);
 	float pixelStepSize = user_pixelStepSize;
 	ssReflectionVector *= initalStep * pixelStepSize;
 
@@ -90,36 +87,88 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 
 	int sampleCount = max(int(Screen.Width), int(Screen.Height));
 	int count = 0;
+	float refinementStep = pixelStepSize/100.0;
 	int refinementCount = 0;
 	int maxRefinements = 3;
-	while(count < sampleCount)
-	{
-		// Out of screen space --> break
-		if(currentSamplePosition.x < 0.0 || currentSamplePosition.x > 1.0 ||
-		   currentSamplePosition.y < 0.0 || currentSamplePosition.y > 1.0)
-		{
-			break;
-		}
-		
-		vec2 samplingPosition = currentSamplePosition.xy;
-		float currentDepth = linearizeDepth(currentSamplePosition.z);
-		float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
 
-		if(currentDepth > sampledDepth)
-		{	
-			float delta = abs(currentDepth - sampledDepth);
-			if(delta < 0.001f)
-			{	
-				reflectedColor = texture(DiffuseTex, samplingPosition); 
+	if(optimizedSSR)
+	{
+		while(count < sampleCount)
+		{
+			// Out of screen space --> break
+			if(currentSamplePosition.x < 0.0 || currentSamplePosition.x > 1.0 ||
+			   currentSamplePosition.y < 0.0 || currentSamplePosition.y > 1.0 ||
+			   currentSamplePosition.z < 0.0 || currentSamplePosition.z > 1.0)
+			{
 				break;
 			}
+			
+			vec2 samplingPosition = currentSamplePosition.xy;
+			float currentDepth = linearizeDepth(currentSamplePosition.z);
+			float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
+
+			if(currentDepth > sampledDepth)
+			{	
+				
+				
+				ssReflectionVector *= refinementStep;
+				currentSamplePosition = lastSamplePosition;
+				refinementCount++;
+				if(refinementCount > maxRefinements)
+				{
+					break;
+				}
+
+				float delta = abs(currentDepth - sampledDepth);
+				if(delta < 0.001f)
+				{
+					reflectedColor.rgb = texture(DiffuseTex, samplingPosition).rgb; 
+				}
+				//break;	
+			}
+
+			// Step ray
+			lastSamplePosition = currentSamplePosition;
+			currentSamplePosition = lastSamplePosition + ssReflectionVector;	
+			
+			
+			count++;
 		}
-		
-		// Step ray
-		lastSamplePosition = currentSamplePosition;
-		currentSamplePosition = lastSamplePosition + ssReflectionVector;
-		
-		count++;
+	}
+	//*** Unoptimized approach ***
+	else
+	{
+		while(count < sampleCount)
+		{
+			// Out of screen space --> break
+			if(currentSamplePosition.x < 0.0 || currentSamplePosition.x > 1.0 ||
+			   currentSamplePosition.y < 0.0 || currentSamplePosition.y > 1.0 ||
+			   currentSamplePosition.z < 0.0 || currentSamplePosition.z > 1.0)
+			{
+				break;
+			}
+			
+			vec2 samplingPosition = currentSamplePosition.xy;
+			float currentDepth = linearizeDepth(currentSamplePosition.z);
+			float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
+
+			if(currentDepth > sampledDepth)
+			{	
+				
+				float delta = abs(currentDepth - sampledDepth);
+				if(delta <= 0.001f)
+				{
+					reflectedColor = texture(DiffuseTex, samplingPosition); 
+					break;	
+				}
+			}
+
+			// Step ray
+			lastSamplePosition = currentSamplePosition;
+			currentSamplePosition = lastSamplePosition + ssReflectionVector;	
+			
+			count++;
+		}
 	}
 
 	// Fading to screen edges
@@ -146,12 +195,13 @@ void main(void)
 	//*** Reflection vector calculation ***
 	// View space calculations
 	vec3 vsEyeVector        = normalize(vsPosition);
-	vec3 vsReflectionVector = normalize(reflect(vsEyeVector, vsNormal));
+	vec3 vsReflectionVector = normalize(reflect(vsEyeVector, vsNormal));			
 
 	//*** Screen space reflections ***
 	if(toggleSSR)
 	{
 		vec4 color = ScreenSpaceReflections(vsPosition, vsNormal, vsReflectionVector);
+		//color = mix(color, texture(ReflectanceTex, vert_UV), 0.5);
 		FragColor = reflectance * color;
 	}
 }

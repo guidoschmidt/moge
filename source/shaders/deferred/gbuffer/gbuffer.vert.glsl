@@ -24,7 +24,6 @@ out vec2 vert_UV;
 out vec3 vert_vsEyeVector;
 out vec3 vert_wsEyePosition;
 out vec3 vert_wsEyeVector;
-out float vert_LinearDepth;
 
 //*** Uniforms *****************************************************************
 uniform CameraInfo Camera;
@@ -56,9 +55,6 @@ void main(void)
 	vert_vsEyeVector = vert_vsPosition;
 	vert_wsEyePosition = Camera.Position;
 	vert_wsEyeVector = vert_wsPosition - Camera.Position;
-
-	//*** Linear depth ***
-	vert_LinearDepth = (-vsPosition.z - Camera.NearPlane)/(Camera.FarPlane - Camera.NearPlane);
 
 	//*** Transform vertex with Model-View-Projection-Matrix ***
 	gl_Position = ProjectionMatrix * ViewMatrix * ModelMatrix * vec4(vertex, 1.0f);

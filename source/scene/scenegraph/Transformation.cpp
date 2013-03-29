@@ -40,7 +40,7 @@ namespace scene {
 		m_rotationMatrix = glm::mat4_cast(m_rotation);
 		m_scaleMatrix = glm::scale(m_scale);
 
-		m_modelMatrix = glm::mat4(1.0f) * m_translationMatrix * m_scaleMatrix * m_rotationMatrix;
+		m_modelMatrix = glm::mat4(1.0f) * m_translationMatrix * m_rotationMatrix * m_scaleMatrix;
 	}
 
 	//! Accumulates and returns the model matrix
