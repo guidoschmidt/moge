@@ -101,9 +101,26 @@ namespace scene {
 		glm::vec3 lookAt(0.0f, 0.0f, 0.0f);
 		glm::vec3 up(0.0f, 1.0f, 0.0f);
 		*/
-		glm::vec3 position(-0.190, 1.184f, -0.112f);
-		glm::vec3 lookAt(-1.190f, 1.847f, -0.112f);
-		glm::vec3 up(0.0f, 1.0f, 0.0f);
+
+		glm::vec3 position, lookAt, up;
+		if(m_scene_name == "testscene")
+		{
+			position = glm::vec3(30.0f, 15.0f, 30.0f);
+			lookAt = glm::vec3(0.0f, 5.0f, 0.0f);
+			up = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
+		if(m_scene_name == "church")
+		{
+			position = glm::vec3(-10.335f, 3.519f, 0.476f);
+			lookAt = glm::vec3(4.572f, 2.234f, -5.037f);
+			up = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
+		if(m_scene_name == "museum")
+		{
+			position = glm::vec3(-15.0f, 15.0f, 4.0f);
+			lookAt = glm::vec3(10.0f, 3.0f, -2.0f);
+			up = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
 
 		Camera* camera = new Camera(position, lookAt, up);
 		m_activeCamera_ptr = camera;
@@ -427,10 +444,7 @@ namespace scene {
 	 */
 	Camera* SceneGraph::GetActiveCamera(void)
 	{
-		if(m_activeCamera_ptr != 0)
 			return m_activeCamera_ptr;
-		else
-			return new Camera();
 	}
 
 

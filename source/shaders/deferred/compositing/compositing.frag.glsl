@@ -42,6 +42,7 @@ uniform sampler2D ReflecVecTex;
 uniform sampler2D EyeVecTex;
 uniform sampler2D DepthTex;
 uniform sampler2D DiffuseTex;
+uniform sampler2D BlurredDiffuseTex;
 uniform sampler2D SSRTex;
 uniform sampler2D BBTex;
 
@@ -107,25 +108,16 @@ void main(void)
 	//*** Reflections ***
 	float Reflectance = texture(ReflectanceTex, vert_UV).a;
 
-	vec4 SSR          = texture(SSRTex, vert_UV);
+	vec4 SSR          = vec4(texture(SSRTex, vert_UV).rgb, 1.0);
 	vec4 EnvMap       = Reflectance * texture(ReflectanceTex, vert_UV);
-	vec4 BB           = texture(BBTex, vert_UV);
+	vec4 BB           = Reflectance * texture(BBTex, vert_UV);
 
 	// Compositing
 	if(textureID == -1)
 	{
 		if(blurSwitch)
 		{
-			vec4 blurredSSRX = FastGaussianBlurX(SSRTex);
-			vec4 blurredSSRY = FastGaussianBlurY(SSRTex);
-			vec4 blurredSSR = mix(blurredSSRX, blurredSSRY, 0.5);
-			
-			vec4 blurredEnvMapColorX = FastGaussianBlurX(ReflectanceTex);
-			vec4 blurredEnvMapColorY = FastGaussianBlurY(ReflectanceTex);
-			vec4 blurredEnvMapColor = mix(blurredEnvMapColorX, blurredEnvMapColorY, 0.5);
-			
-			vec4 blurredReflections = blurredSSR + Reflectance * blurredEnvMapColor;
-			FragColor = diffuse + blurredReflections;
+			FragColor = diffuse + SSR + BB + EnvMap;
 		}
 		else
 		{
@@ -195,7 +187,7 @@ void main(void)
 	else if(textureID == 9)
 	{
 		vec3 color = texture(SSRTex, vert_UV).rgb;
-		FragColor = Reflectance * vec4(color, 1.0);
+		FragColor = vec4(color, 1.0);
 	}
 	// Screen space reflections
 	else if(textureID == 10)

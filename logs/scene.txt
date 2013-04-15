@@ -1,4 +1,4 @@
 LOGFILE
 SCENE & SCENEGRAPH
-#Meshes: 28
+#Meshes: 78
 Scene Processing was successfull:

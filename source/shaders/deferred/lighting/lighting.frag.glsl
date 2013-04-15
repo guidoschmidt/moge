@@ -122,7 +122,7 @@ void main(void)
 	// Perform shading for every light source
 	for(int i=0; i < Light.Count; i++)
 	{	
-		if(materialColorD.a == 0.00 || materialColorD.a == 0.77)
+		if(materialColorD.a == 0.00 || materialColorD.a == 0.99)
 		{
 			shaded = vec4(materialColorD.rgb, 1.0);
 		}

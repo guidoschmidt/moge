@@ -4,16 +4,92 @@
 		"selected_items":
 		[
 			[
+				"c",
+				"count"
+			],
+			[
+				"Im",
+				"Impostor"
+			],
+			[
+				"Ref",
+				"ReflectanceTex"
+			],
+			[
+				"tex",
+				"texture2D"
+			],
+			[
+				"de",
+				"delta"
+			],
+			[
+				"sam",
+				"samplingPosition"
+			],
+			[
+				"pix",
+				"pixelsize"
+			],
+			[
+				"cur",
+				"currentDepth"
+			],
+			[
+				"sa",
+				"sampledDepth"
+			],
+			[
+				"curr",
+				"currentDepth"
+			],
+			[
+				"te",
+				"texture2D"
+			],
+			[
+				"re",
+				"reflectedColor"
+			],
+			[
+				"pi",
+				"pixelsize"
+			],
+			[
+				"ref",
+				"reflectedColor"
+			],
+			[
+				"un",
+				"Uniform"
+			],
+			[
+				"fa",
+				"fadeY"
+			],
+			[
+				"ray",
+				"rayLength"
+			],
+			[
+				"vs",
+				"vsPosition"
+			],
+			[
+				"s",
+				"samplingPosition"
+			],
+			[
+				"f",
+				"fadeParameter"
+			],
+			[
 				"Env",
 				"EnvMap"
 			],
 			[
 				"R",
 				"reflections"
-			],
-			[
-				"Ref",
-				"Reflectance"
 			],
 			[
 				"E",
@@ -28,38 +104,6 @@
 				"color"
 			],
 			[
-				"ref",
-				"reflectedColor"
-			],
-			[
-				"cur",
-				"currentDepth"
-			],
-			[
-				"curr",
-				"currentDepth"
-			],
-			[
-				"pi",
-				"pixelStepSize"
-			],
-			[
-				"sa",
-				"sampledDepth"
-			],
-			[
-				"de",
-				"delta"
-			],
-			[
-				"sam",
-				"samplingPosition"
-			],
-			[
-				"re",
-				"refinementCount"
-			],
-			[
 				"kern",
 				"kernelX"
 			],
@@ -68,20 +112,12 @@
 				"Billboards"
 			],
 			[
-				"Im",
-				"ImpostorTex"
-			],
-			[
 				"Fa",
 				"FastGaussianBlurX"
 			],
 			[
 				"ra",
 				"rayDirect"
-			],
-			[
-				"vs",
-				"vsReflectionVector"
 			],
 			[
 				"blu",
@@ -204,10 +240,6 @@
 				"vert0"
 			],
 			[
-				"ray",
-				"rayDirect"
-			],
-			[
 				"In",
 				"IntersectTriangle"
 			],
@@ -232,10 +264,6 @@
 				"normal"
 			],
 			[
-				"pix",
-				"pixelsize"
-			],
-			[
 				"n",
 				"normalAtPos"
 			],
@@ -254,10 +282,6 @@
 			[
 				"D",
 				"DepthTex"
-			],
-			[
-				"fa",
-				"fadeToScreenEdge"
 			],
 			[
 				"sc",
@@ -294,10 +318,6 @@
 			[
 				"refl",
 				"reflectedColor"
-			],
-			[
-				"c",
-				"color"
 			],
 			[
 				"P",
@@ -338,10 +358,6 @@
 			[
 				"cubeMa",
 				"cubeMapTex"
-			],
-			[
-				"tex",
-				"texture"
 			],
 			[
 				"to",
@@ -498,40 +514,16 @@
 			[
 				"sampe",
 				"sampleVector"
-			],
-			[
-				"Sa",
-				"sampleVector"
-			],
-			[
-				"vsNormalT",
-				"vsNormalTex"
-			],
-			[
-				"vr",
-				"vert_UV"
-			],
-			[
-				"f",
-				"float"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
-			"settings":
-			{
-				"buffer_size": 1778,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 10309,
+				"buffer_size": 10038,
 				"line_ending": "Windows"
 			}
 		},
@@ -547,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 5916,
+				"buffer_size": 7382,
 				"line_ending": "Windows"
 			}
 		},
@@ -555,16 +547,8 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 6244,
+				"buffer_size": 5845,
 				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
-			"settings":
-			{
-				"buffer_size": 4299,
-				"line_ending": "Unix"
 			}
 		}
 	],
@@ -652,12 +636,16 @@
 	},
 	"file_history":
 	[
-		"/C/Users/guidoschmidt/Downloads/GaussianBlur/GaussianBlur/GaussianBlur.fx",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.vert.glsl",
+		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/edited/Kunstgeschichte 04.MD",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/blur.frag.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/blur.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
+		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
+		"/C/Users/guidoschmidt/Downloads/GaussianBlur/GaussianBlur/GaussianBlur.fx",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/tex/cgBA_Latex/cgBA.cls",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/assets/texture/scene-testscene/tga/Billboard_WallE.tga",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/BillboardImpostors/BillboardImpostors/Content/Shaders/EMReflection.fx",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/glsl/ssr/gamedev.net-ssr.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.vert.glsl",
@@ -680,7 +668,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FSQ.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/empty/shader.frag.glsl",
@@ -776,10 +763,7 @@
 		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
 		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
-		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-IanLilley/src/OpenGL/GLView.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/KoRE/mystuff/protokoll-240113.md",
-		"/C/Users/guidoschmidt/Downloads/Whole.Tomato.Visual.Assist.X.for.Visual.Studio.2010.v10.6.1823.0.WinALL.Cracked-BRD/brd.nfo"
+		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl"
 	],
 	"find":
 	{
@@ -798,6 +782,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"y)",
+			", lod",
+			"var",
 			"ImpostorTextures",
 			"ImpostorTex",
 			"EnvMapColor",
@@ -922,10 +909,7 @@
 			"deferredReflectVecTex",
 			"deferredReflectanceTex",
 			"deferredViewPositionTex",
-			"deferredNormalTex",
-			"deferredSSRTex",
-			"deferredDiffuseTex",
-			"deferredDepthTex"
+			"deferredNormalTex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -945,23 +929,23 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.vert.glsl",
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 1778,
+						"buffer_size": 10038,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								667,
-								667
+								1226,
+								1226
 							]
 						],
 						"settings":
@@ -1060,130 +1044,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 84.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/gbuffer/gbuffer.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 10309,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5253,
-								5253
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2205.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
@@ -1194,8 +1061,8 @@
 						"selection":
 						[
 							[
-								2501,
-								2501
+								3021,
+								3021
 							]
 						],
 						"settings":
@@ -1294,142 +1161,142 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1295.0,
+						"translation.y": 1050.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
+					"settings":
+					{
+						"buffer_size": 7382,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2663,
+								2663
+							]
+						],
+						"settings":
+						{
+							"annotations":
+							[
+								"TODO",
+								"README",
+								"FIXME"
+							],
+							"csslint_options":
+							{
+								"adjoining-classes": "warning",
+								"box-model": true,
+								"box-sizing": "warning",
+								"compatible-vendor-prefixes": "warning",
+								"display-property-grouping": true,
+								"duplicate-background-images": "warning",
+								"duplicate-properties": true,
+								"empty-rules": true,
+								"errors": true,
+								"fallback-colors": "warning",
+								"floats": "warning",
+								"font-faces": "warning",
+								"font-sizes": "warning",
+								"gradients": "warning",
+								"ids": "warning",
+								"import": "warning",
+								"important": "warning",
+								"known-properties": true,
+								"outline-none": "warning",
+								"overqualified-elements": "warning",
+								"qualified-headings": "warning",
+								"regex-selectors": "warning",
+								"rules-count": "warning",
+								"shorthand": "warning",
+								"star-property-hack": "warning",
+								"text-indent": "warning",
+								"underscore-property-hack": "warning",
+								"unique-headings": "warning",
+								"universal-selector": "warning",
+								"vendor-prefix": true,
+								"zero-units": "warning"
+							},
+							"gjslint_ignore":
+							[
+								110
+							],
+							"gjslint_options":
+							[
+							],
+							"javascript_linter": "jshint",
+							"jshint_options":
+							{
+								"browser": true,
+								"evil": true,
+								"regexdash": true,
+								"sub": true,
+								"trailing": true,
+								"wsh": true
+							},
+							"pep8": true,
+							"pep8_ignore":
+							[
+								"E501"
+							],
+							"perl_linter": "perlcritic",
+							"pyflakes_ignore":
+							[
+							],
+							"pyflakes_ignore_import_*": true,
+							"sublimelinter": true,
+							"sublimelinter_delay": 2,
+							"sublimelinter_disable":
+							[
+							],
+							"sublimelinter_executable_map":
+							{
+								"css": "C:/Program Files/nodejs/node.exe",
+								"javascript": "C:/Program Files/nodejs/node.exe"
+							},
+							"sublimelinter_fill_outlines": false,
+							"sublimelinter_gutter_marks": false,
+							"sublimelinter_mark_style": "outline",
+							"sublimelinter_notes": false,
+							"sublimelinter_objj_check_ascii": false,
+							"sublimelinter_popup_errors_on_save": false,
+							"sublimelinter_syntax_map":
+							{
+								"C++": "c",
+								"Python Django": "python",
+								"Ruby on Rails": "ruby"
+							},
+							"sublimelinter_wrap_find": true,
+							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1164.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 5916,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1480,
-								1480
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2124.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 6244,
+						"buffer_size": 5845,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3292,
-								3292
+								3551,
+								3551
 							]
 						],
 						"settings":
@@ -1528,130 +1395,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1044.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 5,
-					"file": "/C/Users/guidoschmidt/Development/code/c++/code-examples/Real-Time-Reflections-OpenGL-master/data/shaders/ReflectionFrag.frag.glsl",
-					"settings":
-					{
-						"buffer_size": 4299,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3172,
-								3172
-							]
-						],
-						"settings":
-						{
-							"annotations":
-							[
-								"TODO",
-								"README",
-								"FIXME"
-							],
-							"csslint_options":
-							{
-								"adjoining-classes": "warning",
-								"box-model": true,
-								"box-sizing": "warning",
-								"compatible-vendor-prefixes": "warning",
-								"display-property-grouping": true,
-								"duplicate-background-images": "warning",
-								"duplicate-properties": true,
-								"empty-rules": true,
-								"errors": true,
-								"fallback-colors": "warning",
-								"floats": "warning",
-								"font-faces": "warning",
-								"font-sizes": "warning",
-								"gradients": "warning",
-								"ids": "warning",
-								"import": "warning",
-								"important": "warning",
-								"known-properties": true,
-								"outline-none": "warning",
-								"overqualified-elements": "warning",
-								"qualified-headings": "warning",
-								"regex-selectors": "warning",
-								"rules-count": "warning",
-								"shorthand": "warning",
-								"star-property-hack": "warning",
-								"text-indent": "warning",
-								"underscore-property-hack": "warning",
-								"unique-headings": "warning",
-								"universal-selector": "warning",
-								"vendor-prefix": true,
-								"zero-units": "warning"
-							},
-							"gjslint_ignore":
-							[
-								110
-							],
-							"gjslint_options":
-							[
-							],
-							"javascript_linter": "jshint",
-							"jshint_options":
-							{
-								"browser": true,
-								"evil": true,
-								"regexdash": true,
-								"sub": true,
-								"trailing": true,
-								"wsh": true
-							},
-							"pep8": true,
-							"pep8_ignore":
-							[
-								"E501"
-							],
-							"perl_linter": "perlcritic",
-							"pyflakes_ignore":
-							[
-							],
-							"pyflakes_ignore_import_*": true,
-							"sublimelinter": true,
-							"sublimelinter_delay": 2,
-							"sublimelinter_disable":
-							[
-							],
-							"sublimelinter_executable_map":
-							{
-								"css": "C:/Program Files/nodejs/node.exe",
-								"javascript": "C:/Program Files/nodejs/node.exe"
-							},
-							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
-							"sublimelinter_notes": false,
-							"sublimelinter_objj_check_ascii": false,
-							"sublimelinter_popup_errors_on_save": false,
-							"sublimelinter_syntax_map":
-							{
-								"C++": "c",
-								"Python Django": "python",
-								"Ruby on Rails": "ruby"
-							},
-							"sublimelinter_wrap_find": true,
-							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 855.0,
+						"translation.y": 1848.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1676,18 +1420,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.5,
 			1.0
 		],
 		"rows":

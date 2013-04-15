@@ -191,6 +191,8 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 	// Every Billboard
 	for(int i = 0; i < billboardCount; i++)
 	{
+		float pixelSize = 1.0/250.0;
+
 		//Reflectance.a = 0.0;
 		vec3 vert0 = vec3( 0.5, 0.0,  0.5);
 		vec3 vert1 = vec3(-0.5, 0.0, -0.5);
@@ -210,17 +212,14 @@ vec4 BillboardReflections(in vec3 wsPosition, in vec3 wsReflectVec)
 
 		// Check if texture coordinates are valid between 0.0 and 1.0
 		if(uv.x > 0.0 && uv.x < 1.0 &&
-		   uv.y > 0.0 && uv.y < 1.0 &&
-		   uv.z >= 0.001)
+		   uv.y > 0.0 && uv.y < 1.0)
 		{
 			// Check alpha channel of billboard texture
 			float alpha = texture(ImpostorTex[i], uv.xy).a;
-			// Get texture for billboard
-			vec4 reflectedColorX = FastGaussianBlurX(ImpostorTex[i], uv.xy); 
-			vec4 reflectedColorY = FastGaussianBlurY(ImpostorTex[i], uv.xy);
-			alpha = mix(reflectedColorX.a, reflectedColorY.a, 0.5);
-			//reflectedColor.rgb = texture(ImpostorTex[i], uv.xy).rgb * alpha;
-			reflectedColor = mix(reflectedColorX, reflectedColorY, 0.5) * alpha;
+			
+			vec3 color;
+			color = texture(ImpostorTex[i], uv.xy).rgb;
+			reflectedColor.rgb = color * alpha;
 		}
 	}
 
@@ -273,7 +272,7 @@ void main(void)
 	wsNormal = normalize(vert_wsNormal);
 	// Colors (Albedo) & Alpha blending
 	float alpha = texture(ColorTex, vert_UV).a;
-	if(alpha < 0.25)
+	if(alpha < 0.75)
 		discard;
 	vec3 OutputColor = texture(ColorTex, vert_UV).rgb * alpha;
 	Color.a = alpha;
@@ -344,6 +343,6 @@ void main(void)
 		reflectedColor = BillboardReflections(wsPosition, wsReflectVec);
 
 		// Write to texture
-		Billboards = Reflectance.a * reflectedColor;
+		Billboards = reflectedColor;
 	}
 }

@@ -110,6 +110,7 @@ class Renderer
 		bool tw_reflvec;
 		bool tw_jittering;
 		bool tw_fadeToEdges;
+		float tw_fadeY;
 		bool tw_drawSkyBox;
 		bool tw_boundingbox;
 		bool tw_blockCamera;
