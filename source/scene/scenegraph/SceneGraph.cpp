@@ -111,8 +111,8 @@ namespace scene {
 		}
 		if(m_scene_name == "church")
 		{
-			position = glm::vec3(-10.335f, 3.519f, 0.476f);
-			lookAt = glm::vec3(4.572f, 2.234f, -5.037f);
+			position = glm::vec3(-15.830f, 11.921f, 2.367f);
+			lookAt = glm::vec3(21.529f, -1.912f, -1.679f);
 			up = glm::vec3(0.0f, 1.0f, 0.0f);
 		}
 		if(m_scene_name == "museum")

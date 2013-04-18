@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 7382,
+				"buffer_size": 7406,
 				"line_ending": "Windows"
 			}
 		},
@@ -555,9 +555,13 @@
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 60.0,
+		"height": 285.0,
 		"selected_items":
 		[
+			[
+				"disa",
+				"SublimeLinter: Disable Linting"
+			],
 			[
 				"Remoe",
 				"Package Control: Remove Package"
@@ -636,6 +640,13 @@
 	},
 	"file_history":
 	[
+		"/C/Temp/charts/BBR.svg",
+		"/C/Users/guidoschmidt/Development/code/python/BA_SSR_worldspaceAnsatz/Input.py",
+		"/C/Users/guidoschmidt/Development/code/python/BA_SSR_worldspaceAnsatz/Shader/postShaderWorldSpace.shader",
+		"/C/Users/guidoschmidt/Development/code/python/BA_SSR_worldspaceAnsatz/main.py",
+		"/F/BA/Python Workspace/BA_SSR_worldspaceAnsatz/Shader/postShaderWorldSpace.shader",
+		"/F/BA/Python Workspace/BA_SSR_worldspaceAnsatz/Camera.py",
+		"/F/BA/Python Workspace/BA_SSR_worldspaceAnsatz/Input.py",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.vert.glsl",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Kunstgeschichte/edited/Kunstgeschichte 04.MD",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/blur.frag.glsl",
@@ -756,14 +767,7 @@
 		"/C/Temp/ssr.hlsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/Mesh.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/KoRE/demos/MainGLFW/CMakeLists.txt",
-		"/C/Temp/test.html",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/cm_forward.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/Mesh.cpp",
-		"/C/Games/KentuckyRouteZero_ActI_WIN_v3/README.txt",
-		"/C/Users/guidoschmidt/Development/code/c++/code-examples/OrderIndependentTranslucency/OrderIndependentTranslucency/App.cpp",
-		"/C/Users/guidoschmidt/Downloads/ABufferGL4LinkedList/ABufferLinkedList/ABufferGL4.cpp",
-		"/C/Users/guidoschmidt/Development/code/glsl/ssr/SSR-new.frag.glsl"
+		"/C/Temp/test.html"
 	],
 	"find":
 	{
@@ -929,7 +933,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -944,8 +948,8 @@
 						"selection":
 						[
 							[
-								1226,
-								1226
+								455,
+								455
 							]
 						],
 						"settings":
@@ -1044,7 +1048,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 84.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1061,8 +1065,8 @@
 						"selection":
 						[
 							[
-								3021,
-								3021
+								994,
+								994
 							]
 						],
 						"settings":
@@ -1161,7 +1165,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1050.0,
+						"translation.y": 432.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1171,15 +1175,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 7382,
+						"buffer_size": 7406,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2663,
-								2663
+								3703,
+								3703
 							]
 						],
 						"settings":
@@ -1278,7 +1282,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1164.0,
+						"translation.y": 2052.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

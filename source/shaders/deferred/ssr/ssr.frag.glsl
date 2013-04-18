@@ -99,12 +99,12 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 		// Ray trace
 		initalStep = 1.0/Screen.Height;
 		pixelStepSize = user_pixelStepSize;
-		ssReflectionVector *= initalStep;
+		ssReflectionVector = normalize(ssReflectionVector) * initalStep;
 
 		lastSamplePosition = ssPosition + ssReflectionVector;
 		currentSamplePosition = lastSamplePosition + ssReflectionVector;
 
-		int sampleCount = max(int(Screen.Width), int(Screen.Height))/10;
+		int sampleCount = max(int(Screen.Width), int(Screen.Height));
 		int count = 0;
 		float refinementStep = pixelStepSize/100.0;
 		int refinementCount = 0;
@@ -128,7 +128,6 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 			float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
 			float currentDepth = linearizeDepth(currentSamplePosition.z);
 
-			
 			// Step ray
 			if(currentDepth > sampledDepth)
 			{

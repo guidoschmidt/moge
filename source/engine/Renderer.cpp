@@ -62,18 +62,25 @@ Renderer::Renderer(int width, int height, int scene)
 	tw_blockCamera = true;
 	tw_cameraMouseButton = true;
 
+	m_fpsLogStarts = false;
+
+	//! Default Settings
+	tw_SSR = false;
+	tw_optimizedSSR = false;
+	tw_BB = true;
+
 	//! Passes
 	tw_pass1 = true;
 	tw_pass2 = true;
 	tw_pass3 = true;
-	tw_pass4 = false;
-	tw_pass5 = true;
+	tw_pass4 = true;
 
 	context_ptr = Singleton<Context>::Instance();
 	fsq_ptr = new FSQ();
 	m_shininess = 12.0f;
 
 	m_backgroundColor = glm::vec3(0.0f, 0.0f, 0.05f);
+
 
 	Initialize(width, height);
 }
@@ -84,7 +91,7 @@ Renderer::Renderer(int width, int height, int scene)
  */
 Renderer::~Renderer(void)
 {
-
+	m_fpsLog.close();
 }
 
 //! Initialize GLEW
@@ -107,6 +114,12 @@ void Renderer::Initialize(int width, int height)
 	context_ptr->AddAntTweakBar();
 
 	WriteLog(CONSOLE);
+
+	//! Logging fps
+	m_fpsLog.open("logs/fps.txt");
+	m_fpsLog << "FPS LOGFILE" << std::endl;
+
+
 	InitGLEW();
 	//! Initialize image loader utility
 	InitializeILUT();
@@ -158,7 +171,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
 	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_FLOAT, &tw_blurX, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel X'");
 	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_FLOAT, &tw_blurY, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel Y'");
-	TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
+	//TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
 	TwAddVarRW(context_ptr->GetBar(), "fadetoscreenedge", TW_TYPE_BOOLCPP, &tw_fadeToEdges, "group='SSR' label='Fade to screen edges'");
 	//! Parallax corrected cube mapping
 	TwAddVarRW(context_ptr->GetBar(), "cm", TW_TYPE_BOOLCPP, &tw_CM, "group='PCCM' label='Switch Environment Mapping'");
@@ -175,11 +188,10 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "lightdpecular", TW_TYPE_COLOR3F, &LightSpecular, "label='Specular' group='Light' colormode='hls'");
 	TwAddVarRW(context_ptr->GetBar(), "drawlights", TW_TYPE_BOOLCPP, &tw_drawLights, "group='Light' label='Draw lights'");
 	//! Shader Programs
-	TwAddVarRW(context_ptr->GetBar(), "pass1", TW_TYPE_BOOLCPP, &tw_pass1, "group='Renderer' label='Pass 01'");
-	TwAddVarRW(context_ptr->GetBar(), "pass2", TW_TYPE_BOOLCPP, &tw_pass2, "group='Renderer' label='Pass 02'");
-	TwAddVarRW(context_ptr->GetBar(), "pass3", TW_TYPE_BOOLCPP, &tw_pass3, "group='Renderer' label='Pass 03'");
-	TwAddVarRW(context_ptr->GetBar(), "pass4", TW_TYPE_BOOLCPP, &tw_pass4, "group='Renderer' label='Pass 04'");
-	TwAddVarRW(context_ptr->GetBar(), "pass5", TW_TYPE_BOOLCPP, &tw_pass5, "group='Renderer' label='Pass 05'");
+	TwAddVarRW(context_ptr->GetBar(), "pass1", TW_TYPE_BOOLCPP, &tw_pass1, "group='Renderer' label='Pass 01 (G-Buffer)'");
+	TwAddVarRW(context_ptr->GetBar(), "pass2", TW_TYPE_BOOLCPP, &tw_pass2, "group='Renderer' label='Pass 02 (Lighting)'");
+	TwAddVarRW(context_ptr->GetBar(), "pass3", TW_TYPE_BOOLCPP, &tw_pass3, "group='Renderer' label='Pass 03 (SSR)'");
+	TwAddVarRW(context_ptr->GetBar(), "pass4", TW_TYPE_BOOLCPP, &tw_pass4, "group='Renderer' label='Pass 04 (Compositing)'");
 
 	//! Initialize singleton instances
 	scenegraph_ptr = Singleton<scene::SceneGraph>::Instance();
@@ -215,22 +227,13 @@ void Renderer::Initialize(int width, int height)
 		);
 		reflection_fbo_ptr = new FrameBufferObject(false);
 
-		/*! Initialization of 4th pass
-		 */
-		m_blurProgram_ptr = new ShaderProgram(
-				GLSL::VERTEX, "./source/shaders/deferred/4-deferred_bb.vert.glsl",
-				GLSL::FRAGMENT, "./source/shaders/deferred/4-deferred_bb.frag.glsl"
-		);
-		pass4_fbo_ptr = new FrameBufferObject(256, 256, false);
-
 		//! Initialization of 5th pass
 		m_compositingProgram_ptr = new ShaderProgram(
 				GLSL::VERTEX, "./source/shaders/deferred/compositing/compositing.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/compositing/compositing.frag.glsl"
 		);
-		//! Fullscreen quad initialization
 
-		//! Create a fullscreen quad to display deferred rendered textures
+		//! Fullscreen quad initialization
 		fsq_ptr->CreateFSQ();
 
 	InitializeMatrices();
@@ -353,6 +356,20 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 		//! Calculate the FPS as the number of frames divided by the interval in seconds
 		fps = (double)frameCount / (currentTime - initTime);
 
+		//! Get current time step
+		int timeStep = static_cast<int>(currentTime);
+		if(!m_fpsLogStarts)
+		{
+			//! Time when metering starts
+			m_fpsLog << "Metering started @ Time step "<< timeStep << " seconds" << std::endl;
+			m_fpsLogStarts = true;
+		}
+		m_fpsLog << fps << std::endl;
+
+		std::cout << "Time passed: " << timeStep << " seconds" << std::endl;
+		//if(timeStep >= 80.0)
+			//glfwTerminate();
+
 		//! Reset the FPS frame counter and set the initial time to be now
 		frameCount = 0;
 		initTime = glfwGetTime();
@@ -396,10 +413,6 @@ void Renderer::KeyboardFunction(void)
 		m_ssrProgram_ptr->ReloadAllShaders();
 	}
 	if(glfwGetKey('4'))
-	{
-		//deferredProgram_Pass4_ptr->ReloadAllShaders();
-	}
-	if(glfwGetKey('5'))
 	{
 		m_compositingProgram_ptr->ReloadAllShaders();
 	}
@@ -508,23 +521,25 @@ void Renderer::RenderLoop(void){
 	while(m_running){
 		//! Time calculations
 		timedif = time2 - time1;
+
 		m_speed = 5.0f * timedif;
 		time1 = glfwGetTime();
 
 		//! Scene loading and organizing
 		if(!loaded){
+			m_fpsLog << "Resolution: " << context_ptr->GetWidth() << " x " << context_ptr->GetHeight() << std::endl;
 			switch (tw_currentScene) {
 				case TESTSCENE:
 					m_sceneName = "testscene";
+					m_fpsLog << "Scene: Street" << std::endl;
 					break;
 				case MUSEUM:
 					m_sceneName = "museum";
+					m_fpsLog << "Scene: Museum" << std::endl;
 					break;
 				case CHURCH:
 					m_sceneName = "church";
-					break;
-				case STREET:
-					m_sceneName = "street";
+					m_fpsLog << "Scene: Church" << std::endl;
 					break;
 			}
 			scenegraph_ptr->LoadScene(m_sceneName);
@@ -562,15 +577,9 @@ void Renderer::RenderLoop(void){
 		glClearColor(m_backgroundColor.x, m_backgroundColor.y, m_backgroundColor.z, 1.0f);
 
 		//! Input handling
-		CalculateFPS(0.5, true);
+		CalculateFPS(1.0, true);
 		KeyboardFunction();
 
-		/***************************************/
-		//! Manipulating the model matrix
-		if(tw_rotation)
-			m_angle += tw_rotSpeed;
-		glm::vec3 RotationAxis(0, 1, 0);
-		//glm::mat4 RotationMatrix = glm::rotate(m_angle, RotationAxis);
 
 		/***************************************/
 		//! Camera
@@ -606,15 +615,6 @@ void Renderer::RenderLoop(void){
 			//! Shader program setup & uniform bindings
 			m_gBufferProgram_ptr->Use();
 
-			//! Front face culling
-			/*
-			glEnable(GL_CULL_FACE);
-			glDisable(GL_DEPTH_TEST);
-			glCullFace(GL_FRONT);
-			*/
-			//! Multisampling
-			//glEnable(GL_MULTISAMPLE);
-
 			//! Normal mapping uniform
 			m_gBufferProgram_ptr->SetUniform("useNormalMapping", tw_useNormalMapping);
 			//! Parallax-corrected cube mapping uniform
@@ -633,7 +633,7 @@ void Renderer::RenderLoop(void){
 			{
 				case TESTSCENE:
 					//! Testscene
-					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 8.256, 0));
+					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 8.131, 0));
 					break;
 				case MUSEUM:
 					//! Museum
@@ -641,7 +641,7 @@ void Renderer::RenderLoop(void){
 					break;
 				case CHURCH:
 					//! Museum
-					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(10.0, 7.0, 0));
+					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(-10.0, 7.0, 0));
 					break;
 			}
 
@@ -651,10 +651,14 @@ void Renderer::RenderLoop(void){
 				m_gBufferProgram_ptr->SetUniform("Impostor.ModelMatrix[0]", scenegraph_ptr->GetImpostor(0)->GetModelMatrix());
 				m_gBufferProgram_ptr->SetUniform("Impostor.ModelMatrix[1]", scenegraph_ptr->GetImpostor(1)->GetModelMatrix());
 				m_gBufferProgram_ptr->SetUniform("Impostor.ModelMatrix[2]", scenegraph_ptr->GetImpostor(2)->GetModelMatrix());
+				//m_gBufferProgram_ptr->SetUniform("Impostor.ModelMatrix[3]", scenegraph_ptr->GetImpostor(3)->GetModelMatrix());
+				//m_gBufferProgram_ptr->SetUniform("Impostor.ModelMatrix[4]", scenegraph_ptr->GetImpostor(4)->GetModelMatrix());
 				//! Billboard texture
 				m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[0]", *(scenegraph_ptr->GetImpostor(0)->GetTextureHandle(scene::DIFFUSE)), 1);
 				m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[1]", *(scenegraph_ptr->GetImpostor(1)->GetTextureHandle(scene::DIFFUSE)), 2);
 				m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[2]", *(scenegraph_ptr->GetImpostor(2)->GetTextureHandle(scene::DIFFUSE)), 3);
+				//m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[3]", *(scenegraph_ptr->GetImpostor(3)->GetTextureHandle(scene::DIFFUSE)), 4);
+				//m_gBufferProgram_ptr->SetUniformSampler("ImpostorTex[4]", *(scenegraph_ptr->GetImpostor(4)->GetTextureHandle(scene::DIFFUSE)), 5);
 			}
 
 			m_billboardTexCounter = scenegraph_ptr->GetImpostorCount();
@@ -736,10 +740,6 @@ void Renderer::RenderLoop(void){
 				}
 			}
 
-			//! Disable front face culling
-			//glDisable(GL_CULL_FACE);
-			//glEnable(GL_DEPTH_TEST);
-
 			gBuffer_ptr->Unuse();
 			m_gBufferProgram_ptr->Unuse();
 		}
@@ -787,22 +787,6 @@ void Renderer::RenderLoop(void){
 
 			lighting_fbo_ptr->Unuse();
 			m_lightingProgram_ptr->Unuse();
-		}
-
-		/*!* * * * * * * * * * * * * * *
-		 *		DEFERRED RENDERING	   *
-		 *		4TH RENDER PASS		   *
-		 * * * * * * * * * * * * * * * */
-		if(tw_pass4)
-		{
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			m_blurProgram_ptr->Use();
-			pass4_fbo_ptr->Use();
-
-			m_blurProgram_ptr->SetUniformSampler("DiffuseTexture", lighting_fbo_ptr->GetTexture(0), 0);
-
-			pass4_fbo_ptr->Unuse();
-			m_blurProgram_ptr->Unuse();
 		}
 		/*!* * * * * * * * * * * * * * *
 		 *		DEFERRED RENDERING	   *
@@ -855,10 +839,10 @@ void Renderer::RenderLoop(void){
 		}
 		/*!* * * * * * * * * * * * * * *
 		 *		DEFERRED RENDERING	   *
-		 *		5TH RENDER PASS		   *
+		 *		4TH RENDER PASS		   *
 		 *		COMPOSITING			   *
 		 * * * * * * * * * * * * * * * */
-		if(tw_pass5)
+		if(tw_pass4)
 		{
 			m_compositingProgram_ptr->Use();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

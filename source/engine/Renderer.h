@@ -50,6 +50,9 @@ class Renderer
 		const GLubyte* glinfo_glslVersion_ptr;
 		GLint glinfo_major, glinfo_minor;
 
+		std::ofstream m_fpsLog;
+		bool m_fpsLogStarts;
+
 		typedef enum{FILE = 0, CONSOLE = 1} log;
 		GLboolean m_running;
 		Context* context_ptr;
@@ -86,7 +89,7 @@ class Renderer
 		#define NUM_TEXS 12
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2, STREET=3} Scenes;
+		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2} Scenes;
 		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 
