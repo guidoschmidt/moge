@@ -50,6 +50,7 @@ class Renderer
 		const GLubyte* glinfo_glslVersion_ptr;
 		GLint glinfo_major, glinfo_minor;
 
+		bool m_logging;
 		std::ofstream m_fpsLog;
 		bool m_fpsLogStarts;
 
@@ -74,19 +75,17 @@ class Renderer
 
 		//! AnttWeakBar texture choose
 		typedef enum {	TEX_COMPOSIT		=	-1,
-						TEX_WORLDPOSITION	=	 0,
-						TEX_VIEWPOSITION	=	 1,
-						TEX_COLOR			=	 2,
-						TEX_MATERIALID		=	 3,
-						TEX_WSNORMAL		=	 4,
-						TEX_VSNORMAL		=	 5,
-						TEX_DEPTH			=	 6,
-						TEX_REFLECTANCE		=	 7,
-						TEX_ENVMAP			=	 8,
-						TEX_SSR				=	 9,
-						TEX_BB				=	 10
+						TEX_VIEWPOSITION	=	 0,
+						TEX_COLOR			=	 1,
+						TEX_MATERIALID		=	 2,
+						TEX_VSNORMAL		=	 3,
+						TEX_DEPTH			=	 4,
+						TEX_REFLECTANCE		=	 5,
+						TEX_ENVMAP			=	 6,
+						TEX_SSR				=	 7,
+						TEX_BB				=	 8
 		} DeferredTexture;
-		#define NUM_TEXS 12
+		#define NUM_TEXS 10
 		DeferredTexture tw_currentDeferredTex;
 
 		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2} Scenes;

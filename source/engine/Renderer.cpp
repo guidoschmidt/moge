@@ -30,6 +30,8 @@ Renderer::Renderer(int width, int height, int scene)
 	tw_rotSpeed = 0.2f;
 	m_fieldOfView = 45.0f;
 
+	m_logging = false;
+
 	time1 = 0.0f;
 	time2 = 0.0f;
 
@@ -113,11 +115,15 @@ void Renderer::Initialize(int width, int height)
 	context_ptr->OpenWindow(width, height, "moge", 4, 2);
 	context_ptr->AddAntTweakBar();
 
-	WriteLog(CONSOLE);
+	//! If logging is true, initialize logs
+	if(m_logging)
+	{
+		WriteLog(CONSOLE);
 
-	//! Logging fps
-	m_fpsLog.open("logs/fps.txt");
-	m_fpsLog << "FPS LOGFILE" << std::endl;
+		//! Logging fps
+		m_fpsLog.open("logs/fps.txt");
+		m_fpsLog << "FPS LOGFILE" << std::endl;
+	}
 
 
 	InitGLEW();
@@ -358,17 +364,13 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 
 		//! Get current time step
 		int timeStep = static_cast<int>(currentTime);
-		if(!m_fpsLogStarts)
+		if(!m_fpsLogStarts && m_logging)
 		{
 			//! Time when metering starts
 			m_fpsLog << "Metering started @ Time step "<< timeStep << " seconds" << std::endl;
 			m_fpsLogStarts = true;
 		}
 		m_fpsLog << fps << std::endl;
-
-		std::cout << "Time passed: " << timeStep << " seconds" << std::endl;
-		//if(timeStep >= 80.0)
-			//glfwTerminate();
 
 		//! Reset the FPS frame counter and set the initial time to be now
 		frameCount = 0;

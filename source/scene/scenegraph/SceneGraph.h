@@ -40,7 +40,7 @@ namespace scene {
 		private:
 			bool m_setupComplete;
 			Camera* m_activeCamera_ptr;
-			int m_activeLight_ptr;
+			unsigned int m_activeLight_ptr;
 			std::string m_scene_name;
 
 			//! Assimp

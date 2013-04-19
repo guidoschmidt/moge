@@ -10,16 +10,22 @@
 #ifndef MATERIALMANAGER_H_
 #define MATERIALMANAGER_H_
 
+//! C includes
+#include <stdio.h>
 //! C++ includes
 #include <vector>
 #include <string>
 //! OpenGL includes
 #include <GL/glew.h>
 #include <GL/glfw.h>
+/*
 //! DevIL includes
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
+*/
+//! SOIL includes
+#include <SOIL/SOIL.h>
 //! Local includes
 #include "../utilities/Singleton.h"
 #include "scenegraph/Material.h"

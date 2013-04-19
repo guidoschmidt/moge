@@ -63,23 +63,23 @@ FrameBufferObject::~FrameBufferObject()
 void FrameBufferObject::CreateGBuffer(void)
 {
 	//! World Space Positions
-	AddColorAttachment(0);
+	//AddColorAttachment(0);
 	//! View Positions
-	AddColorAttachment(1);
+	AddColorAttachment(0);
 	//! Colors
-	AddColorAttachment(2);
+	AddColorAttachment(1);
 	//! World Space Normals
-	AddColorAttachment(3);
+	//AddColorAttachment(2);
 	//! View Space Normals
-	AddColorAttachment(4);
+	AddColorAttachment(3);
 	//! Reflectance
+	AddColorAttachment(4);
+	//! Billboards
 	AddColorAttachment(5);
 	//! Billboards
 	AddColorAttachment(6);
-	//! Billboards
-	AddColorAttachment(7);
 	//! Depth
-	AddDepthAttachment_Texture(8);
+	AddDepthAttachment_Texture(7);
 	//AddDepthAttachment_MultisampleTexture(9);
 
 	std::cout << "FrameBuffer: Attachment count: " << m_attachmentCounter << std::endl;
@@ -191,7 +191,7 @@ void FrameBufferObject::Use(void)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO_ID);
 
-		glDrawBuffers(7, &m_drawBuffers[0]);
+		glDrawBuffers(6, &m_drawBuffers[0]);
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 	}

@@ -42,7 +42,7 @@ in vec3 vert_wsEyePosition;
 in vec3 vert_wsEyeVector;
 
 //*** Output *******************************************************************
-layout (location = 0) out vec3 wsPosition;
+//layout (location = 0) out vec3 wsPosition;
 layout (location = 1) out vec3 vsPosition;
 layout (location = 2) out vec4 Color;
 layout (location = 3) out vec3 wsNormal;
@@ -265,7 +265,7 @@ void main(void)
 {
 	//*** Filling the G-Buffer ***
 	// Positions
-	wsPosition = vert_wsPosition;
+	vec3 wsPosition = vert_wsPosition;
 	vsPosition = vert_vsPosition;
 	// Normals
 	vsNormal = normalize(vert_vsNormal);

@@ -102,8 +102,8 @@ vec4 getLighted(in vec3 lightVector, vec4 color, vec3 normal)
 void main(void)
 {	
 	//*** Texture information from G-Buffer ***
-	vec4 wsPosition = texture(wsPositionTex, vert_UV);
-	vec3 wsNormal = texture(wsNormalTex, vert_UV).xyz;
+	vec4 wsPosition = texture(vsPositionTex, vert_UV);
+	vec3 wsNormal = texture(vsNormalTex, vert_UV).xyz;
 	vec4 materialColorD = texture(ColorTex, vert_UV);
 
 	//*** Shading ***
@@ -128,7 +128,7 @@ void main(void)
 		}
 		else
 		{
-			lightVector = normalize( vec4(Light.Position[i], 1.0f) - wsPosition ).xyz;
+			lightVector = normalize( (ViewMatrix *  vec4(Light.Position[i], 1.0f)) - wsPosition ).xyz;
 			vec3 lightDiffuse = Light.Diffuse[i].rgb;
 			vec3 lightSpecular = Light.Specular.rgb;
 			shaded += 1.0/Light.Count * vec4( phongShading(lightVector, wsNormal, materialColorD.rgb, lightDiffuse, lightSpecular , Shininess), 1.0f );

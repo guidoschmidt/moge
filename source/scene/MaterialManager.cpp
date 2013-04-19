@@ -70,7 +70,7 @@ namespace scene {
 		std::cout << "	ID:	" << m_materialCounter << std::endl;
 		std::cout << "	Diffuse Color:	" << diffuse.r << ", " << diffuse.g << ", " << diffuse.b << std::endl;
 		std::cout << "	Reflectance:	" << reflectivity << std::endl;
-		for(int i=0; i < textures.size(); i++)
+		for(unsigned int i=0; i < textures.size(); i++)
 		{
 			std::cout << "	Texture:	" << textures[i].m_type << ": " << textures[i].m_filename << std::endl;
 		}
@@ -100,6 +100,15 @@ namespace scene {
 		glGenTextures(1, &(m_textures[m_textureCounter]->m_handle));
 		glBindTexture(GL_TEXTURE_2D, m_textures[m_textureCounter]->m_handle);
 
+		//! Loading textures with SOIL
+		m_textures[m_textureCounter]->m_handle = SOIL_load_OGL_texture(
+				filename.c_str(),
+				SOIL_LOAD_AUTO,
+				m_textures[m_textureCounter]->m_handle,
+				SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_COMPRESS_TO_DXT);
+
+		//! Loading textures with GLFW
+		/*
 		glfwLoadTexture2D(&filename[0], GLFW_BUILD_MIPMAPS_BIT);
 		//! Set texture's clamping
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -107,6 +116,7 @@ namespace scene {
 		//! Set texture's filtering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		*/
 	}
 
 	//! Loads a cube map
@@ -118,7 +128,18 @@ namespace scene {
 	 */
 	void MaterialManager::LoadCubeMap(std::string filename)
 	{
-		ILboolean loadSuccess;
+		std::string suffixes[] = {"posx", "negx", "posy", "negy", "posz", "negz"};
+		std::string filenames[6];
+		std::string fileext = ".tga";
+		filenames[0] = filename + "_" + suffixes[0] + fileext;
+		filenames[1] = filename + "_" + suffixes[1] + fileext;
+		filenames[2] = filename + "_" + suffixes[2] + fileext;
+		filenames[3] = filename + "_" + suffixes[3] + fileext;
+		filenames[4] = filename + "_" + suffixes[4] + fileext;
+		filenames[5] = filename + "_" + suffixes[5] + fileext;
+
+		std::cout << filenames[0] << std::endl;
+
 		GLuint cubemap_id;
 		m_cubemaps.push_back(cubemap_id);
 
@@ -126,8 +147,22 @@ namespace scene {
 		glGenTextures(1, &m_cubemaps[m_cubemapCounter]);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_cubemaps[m_cubemapCounter]);
 
-		std::string suffixes[] = {"posx", "negx", "posy", "negy", "posz", "negz"};
+		//! Loading cube maps with SOIL
+		m_cubemaps[m_cubemapCounter] = SOIL_load_OGL_cubemap(
+				filenames[0].c_str(),
+				filenames[1].c_str(),
+				filenames[2].c_str(),
+				filenames[3].c_str(),
+				filenames[4].c_str(),
+				filenames[5].c_str(),
+				SOIL_LOAD_RGB,
+				SOIL_CREATE_NEW_ID,
+				SOIL_FLAG_COMPRESS_TO_DXT
+		);
 
+		//! Loading cube maps with DevIL
+		/*
+		ILboolean loadSuccess;
 		GLuint cubemap_targets[] = {
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X,
 			GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
@@ -165,6 +200,8 @@ namespace scene {
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		*/
+
 
 		m_cubemapCounter++;
 	}

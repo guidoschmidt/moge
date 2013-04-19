@@ -325,7 +325,7 @@ namespace scene {
 					m_approx = new BoundingBox();
 					m_approx->max = glm::vec3(0, 0, 0);
 					m_approx->min = glm::vec3(0, 0, 0);
-					for(int v=0; v < scene->mMeshes[meshID]->mNumVertices; v++)
+					for(unsigned int v=0; v < scene->mMeshes[meshID]->mNumVertices; v++)
 					{
 						glm::vec3 vertex = glm::vec3(scene->mMeshes[meshID]->mVertices[v].x,
 													 scene->mMeshes[meshID]->mVertices[v].y,
