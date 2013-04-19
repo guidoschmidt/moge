@@ -32,11 +32,9 @@ uniform bool SSR;
 uniform bool BB;
 uniform bool PCCM;
 
-uniform sampler2D wsPositionTex;
 uniform sampler2D vsPositionTex;
-uniform sampler2D ColorTex;
-uniform sampler2D wsNormalTex;
 uniform sampler2D vsNormalTex;
+uniform sampler2D ColorTex;
 uniform sampler2D ReflectanceTex;
 uniform sampler2D ReflecVecTex;
 uniform sampler2D EyeVecTex;
@@ -124,12 +122,12 @@ void main(void)
 			FragColor = diffuse + SSR + BB + EnvMap;
 		}
 	}
-	// World space positions
-	else if(textureID == 0)
-		FragColor = texture(wsPositionTex, vert_UV);
 	// View space positions
-	else if(textureID == 1)
+	else if(textureID == 0)
 		FragColor = texture(vsPositionTex, vert_UV);
+	// View space normals
+	else if(textureID == 1)
+		FragColor = texture(vsNormalTex, vert_UV);
 	// Albedo (color)
 	else if(textureID == 2)
 		FragColor = texture(ColorTex, vert_UV);
@@ -160,37 +158,31 @@ void main(void)
 		else if(id <= 0.10)
 			FragColor = vec4(0.25, 0.5, 0.25, 1.0);
 	}
-	// World space normals
-	else if(textureID == 4)
-		FragColor = texture(wsNormalTex, vert_UV);
-	// View space normals
-	else if(textureID == 5)
-		FragColor = texture(vsNormalTex, vert_UV);
 	// Depth
-	else if(textureID == 6)
+	else if(textureID == 4)
 	{
 		float linearDepth = linearizeDepth(texture(DepthTex, vert_UV).z);
 		FragColor = vec4(vec3(linearDepth), 1.0);
 	}
 	// Reflectance
-	else if(textureID == 7)
+	else if(textureID == 5)
 	{
 		FragColor = vec4( texture(ReflectanceTex, vert_UV).a );
 	}
 	// Environment mapping
-	else if(textureID == 8)
+	else if(textureID == 6)
 	{
 		vec3 color = texture(ReflectanceTex, vert_UV).rgb;
 		FragColor = Reflectance * vec4(color, 1.0);
 	}
 	// Screen space reflections
-	else if(textureID == 9)
+	else if(textureID == 7)
 	{
 		vec3 color = texture(SSRTex, vert_UV).rgb;
 		FragColor = vec4(color, 1.0);
 	}
 	// Screen space reflections
-	else if(textureID == 10)
+	else if(textureID == 8)
 	{
 		vec3 color = texture(BBTex, vert_UV).rgb;
 		FragColor = vec4(color, 1.0);

@@ -76,9 +76,9 @@ class Renderer
 		//! AnttWeakBar texture choose
 		typedef enum {	TEX_COMPOSIT		=	-1,
 						TEX_VIEWPOSITION	=	 0,
-						TEX_COLOR			=	 1,
-						TEX_MATERIALID		=	 2,
-						TEX_VSNORMAL		=	 3,
+						TEX_VSNORMAL		=	 1,
+						TEX_COLOR			=	 2,
+						TEX_MATERIALID		=	 3,
 						TEX_DEPTH			=	 4,
 						TEX_REFLECTANCE		=	 5,
 						TEX_ENVMAP			=	 6,

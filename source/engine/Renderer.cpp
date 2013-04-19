@@ -137,11 +137,11 @@ void Renderer::Initialize(int width, int height)
 	 */
 	//! Deferred: render targets choice
 	TwEnumVal texEV[NUM_TEXS] = {	{TEX_COMPOSIT, 		"Composited"},
-									{TEX_WORLDPOSITION, "World space positions"},
+									//{TEX_WORLDPOSITION, "World space positions"},
 									{TEX_VIEWPOSITION, 	"View space positions"},
 									{TEX_COLOR, 		"Colormap"},
 									{TEX_MATERIALID, 	"Material ID"},
-									{TEX_WSNORMAL, 		"World space normals"},
+									//{TEX_WSNORMAL, 		"World space normals"},
 									{TEX_VSNORMAL, 		"View space normals"},
 									{TEX_DEPTH, 		"Depthmap"},
 									{TEX_REFLECTANCE, 	"Reflectance"},
@@ -778,11 +778,11 @@ void Renderer::RenderLoop(void){
 			m_lightingProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			m_lightingProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Color attachments
-			m_lightingProgram_ptr->SetUniformSampler("wsPositionTex", gBuffer_ptr->GetTexture(0), 0);
-			m_lightingProgram_ptr->SetUniformSampler("vsPositionTex", gBuffer_ptr->GetTexture(1), 1);
+			//m_lightingProgram_ptr->SetUniformSampler("wsPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			//m_lightingProgram_ptr->SetUniformSampler("wsNormalTex", gBuffer_ptr->GetTexture(3), 3);
+			m_lightingProgram_ptr->SetUniformSampler("vsPositionTex", gBuffer_ptr->GetTexture(0), 0);
+			m_lightingProgram_ptr->SetUniformSampler("vsNormalTex", gBuffer_ptr->GetTexture(1), 1);
 			m_lightingProgram_ptr->SetUniformSampler("ColorTex", gBuffer_ptr->GetTexture(2), 2);
-			m_lightingProgram_ptr->SetUniformSampler("wsNormalTex", gBuffer_ptr->GetTexture(3), 3);
-			m_lightingProgram_ptr->SetUniformSampler("vsNormalTex", gBuffer_ptr->GetTexture(4), 4);
 
 			//! Drawing
 			fsq_ptr->Draw();
@@ -824,14 +824,14 @@ void Renderer::RenderLoop(void){
 			m_ssrProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			m_ssrProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Texture uniforms from G-Buffer
-			m_ssrProgram_ptr->SetUniformSampler("wsPositionTex", 	gBuffer_ptr->GetTexture(0), 0);
-			m_ssrProgram_ptr->SetUniformSampler("vsPositionTex", 	gBuffer_ptr->GetTexture(1), 1);
-			m_ssrProgram_ptr->SetUniformSampler("wsNormalTex", 		gBuffer_ptr->GetTexture(3), 2);
-			m_ssrProgram_ptr->SetUniformSampler("vsNormalTex", 		gBuffer_ptr->GetTexture(4), 3);
-			m_ssrProgram_ptr->SetUniformSampler("ReflectanceTex", 	gBuffer_ptr->GetTexture(5), 4);
-			m_ssrProgram_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 6);
+			//m_ssrProgram_ptr->SetUniformSampler("wsPositionTex", 	gBuffer_ptr->GetTexture(0), 0);
+			//m_ssrProgram_ptr->SetUniformSampler("wsNormalTex", 		gBuffer_ptr->GetTexture(3), 2);
+			m_ssrProgram_ptr->SetUniformSampler("vsPositionTex", 	gBuffer_ptr->GetTexture(0), 0);
+			m_ssrProgram_ptr->SetUniformSampler("vsNormalTex", 		gBuffer_ptr->GetTexture(1), 1);
+			m_ssrProgram_ptr->SetUniformSampler("ReflectanceTex", 	gBuffer_ptr->GetTexture(3), 2);
+			m_ssrProgram_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 3);
 			//! Texture uniforms from lighting pass
-			m_ssrProgram_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 7);
+			m_ssrProgram_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 4);
 
 			//! Drawing
 			fsq_ptr->Draw();
@@ -868,19 +868,19 @@ void Renderer::RenderLoop(void){
 			m_compositingProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			m_compositingProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Texture uniforms from G-Buffer
-			m_compositingProgram_ptr->SetUniformSampler("wsPositionTex",	gBuffer_ptr->GetTexture(0), 0);
-			m_compositingProgram_ptr->SetUniformSampler("vsPositionTex",	gBuffer_ptr->GetTexture(1), 1);
+			//m_compositingProgram_ptr->SetUniformSampler("wsPositionTex",	gBuffer_ptr->GetTexture(0), 0);
+			//m_compositingProgram_ptr->SetUniformSampler("wsNormalTex",		gBuffer_ptr->GetTexture(3), 3);
+			m_compositingProgram_ptr->SetUniformSampler("vsPositionTex",	gBuffer_ptr->GetTexture(0), 0);
+			m_compositingProgram_ptr->SetUniformSampler("vsNormalTex",		gBuffer_ptr->GetTexture(1), 1);
 			m_compositingProgram_ptr->SetUniformSampler("ColorTex",			gBuffer_ptr->GetTexture(2), 2);
-			m_compositingProgram_ptr->SetUniformSampler("wsNormalTex",		gBuffer_ptr->GetTexture(3), 3);
-			m_compositingProgram_ptr->SetUniformSampler("vsNormalTex",		gBuffer_ptr->GetTexture(4), 4);
-			m_compositingProgram_ptr->SetUniformSampler("ReflectanceTex",	gBuffer_ptr->GetTexture(5), 5);
-			m_compositingProgram_ptr->SetUniformSampler("ReflecVecTex", 	gBuffer_ptr->GetTexture(6), 6);
-			m_compositingProgram_ptr->SetUniformSampler("BBTex", 			gBuffer_ptr->GetTexture(6), 7);
-			m_compositingProgram_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 8);
+			m_compositingProgram_ptr->SetUniformSampler("ReflectanceTex",	gBuffer_ptr->GetTexture(3), 3);
+			//m_compositingProgram_ptr->SetUniformSampler("ReflecVecTex", 	gBuffer_ptr->GetTexture(6), 6);
+			m_compositingProgram_ptr->SetUniformSampler("BBTex", 			gBuffer_ptr->GetTexture(4), 4);
+			m_compositingProgram_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 5);
 			//! Texture uniforms from lighting pass
-			m_compositingProgram_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 9);
+			m_compositingProgram_ptr->SetUniformSampler("DiffuseTex", lighting_fbo_ptr->GetTexture(0), 6);
 			//! Texture uniform from SSR pass
-			m_compositingProgram_ptr->SetUniformSampler("SSRTex", reflection_fbo_ptr->GetTexture(0), 10);
+			m_compositingProgram_ptr->SetUniformSampler("SSRTex", reflection_fbo_ptr->GetTexture(0), 7);
 			//! Texture uniform from BB pass
 
 			//! Drawing

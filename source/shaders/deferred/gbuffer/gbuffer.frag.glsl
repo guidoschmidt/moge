@@ -43,13 +43,13 @@ in vec3 vert_wsEyeVector;
 
 //*** Output *******************************************************************
 //layout (location = 0) out vec3 wsPosition;
-layout (location = 1) out vec3 vsPosition;
+layout (location = 0) out vec3 vsPosition;
+layout (location = 1) out vec3 vsNormal;
 layout (location = 2) out vec4 Color;
-layout (location = 3) out vec3 wsNormal;
-layout (location = 4) out vec3 vsNormal;
-layout (location = 5) out vec4 Reflectance;
-layout (location = 6) out vec4 Billboards;
-layout (location = 7) out vec4 Free;
+//layout (location = 3) out vec3 wsNormal;
+layout (location = 3) out vec4 Reflectance;
+layout (location = 4) out vec4 Billboards;
+//layout (location = 5) out vec4 Free;
 // Location 8 is DepthBuffer
 
 //*** Uniforms *****************************************************************
@@ -269,7 +269,7 @@ void main(void)
 	vsPosition = vert_vsPosition;
 	// Normals
 	vsNormal = normalize(vert_vsNormal);
-	wsNormal = normalize(vert_wsNormal);
+	vec3 wsNormal = normalize(vert_wsNormal);
 	// Colors (Albedo) & Alpha blending
 	float alpha = texture(ColorTex, vert_UV).a;
 	if(alpha < 0.75)

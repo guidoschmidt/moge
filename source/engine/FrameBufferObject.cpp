@@ -64,22 +64,22 @@ void FrameBufferObject::CreateGBuffer(void)
 {
 	//! World Space Positions
 	//AddColorAttachment(0);
-	//! View Positions
+	//! View space positions
 	AddColorAttachment(0);
-	//! Colors
+	//! View space normals
 	AddColorAttachment(1);
-	//! World Space Normals
+	//! World space normals
 	//AddColorAttachment(2);
-	//! View Space Normals
-	AddColorAttachment(3);
+	//! Color
+	AddColorAttachment(2);
 	//! Reflectance
+	AddColorAttachment(3);
+	//! Billboards
 	AddColorAttachment(4);
-	//! Billboards
-	AddColorAttachment(5);
-	//! Billboards
-	AddColorAttachment(6);
+	//! Free color attachment
+	//AddColorAttachment(5);
 	//! Depth
-	AddDepthAttachment_Texture(7);
+	AddDepthAttachment_Texture(5);
 	//AddDepthAttachment_MultisampleTexture(9);
 
 	std::cout << "FrameBuffer: Attachment count: " << m_attachmentCounter << std::endl;
