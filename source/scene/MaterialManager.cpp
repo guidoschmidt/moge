@@ -85,7 +85,8 @@ namespace scene {
 	 */
 	void MaterialManager::AddCubeMap(std::string filename)
 	{
-		LoadCubeMap(filename);
+		std::string file = filename + ".tga";
+		LoadCubeMap(file);
 	}
 
 	//! Loads a texture
@@ -105,7 +106,7 @@ namespace scene {
 				filename.c_str(),
 				SOIL_LOAD_AUTO,
 				m_textures[m_textureCounter]->m_handle,
-				SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_COMPRESS_TO_DXT);
+				SOIL_FLAG_DDS_LOAD_DIRECT | SOIL_FLAG_INVERT_Y | SOIL_FLAG_TEXTURE_REPEATS | SOIL_FLAG_COMPRESS_TO_DXT);
 
 		//! Loading textures with GLFW
 		/*
@@ -201,7 +202,6 @@ namespace scene {
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameterf(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		*/
-
 
 		m_cubemapCounter++;
 	}

@@ -80,8 +80,6 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 	vec3 ssReflectionVector = 0.5 * ndcsReflectionVector + 0.5;
 	ssReflectionVector = normalize(ssReflectionVector - ssPosition);
 
-
-
 	vec3 lastSamplePosition;
 	vec3 currentSamplePosition;
 
@@ -95,6 +93,13 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 	int maxRefinements = 3;
 
 	if(optimizedSSR)
+	{
+
+		
+		
+	}
+	//Old Approach
+	/*if(optimizedSSR)
 	{
 		// Ray trace
 		initalStep = 1.0/Screen.Height;
@@ -147,7 +152,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 				{
 					float f = currentDepth;
 					float blurSize = 15 * f; 
-					reflectedColor = textureLod(DiffuseTex, vec2(samplingPosition.x, samplingPosition.y), 7);
+					reflectedColor = texture2D(DiffuseTex, vec2(samplingPosition.x, samplingPosition.y));
 
 					int counter = 0;
 					for(float i= - blurSize/2.0; i < blurSize/2.0; i+= 1.5)
@@ -160,13 +165,14 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 				}
 				else
 				{
-					reflectedColor = texture2D(DiffuseTex, vec2(samplingPosition.x, samplingPosition.y));
+					reflectedColor = texture(DiffuseTex, vec2(samplingPosition.x, samplingPosition.y));
 				}
 			}
 			count++;
 		}
 		
 	}
+	*/
 	//*** Unoptimized approach ***
 	else
 	{

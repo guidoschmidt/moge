@@ -87,6 +87,7 @@ void Context::OpenWindow(int width, int height, std::string title, int openglVer
 
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, openglVersionMajor);
 	//glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, openglVersionMinor);
+	glfwOpenWindowHint(GLFW_OPENGL_CORE_PROFILE, GL_TRUE);
 	glfwOpenWindowHint(GLFW_FSAA_SAMPLES, 2);
 
 	if(!glfwOpenWindow(m_width, m_height, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)){

@@ -30,8 +30,6 @@
 #include "../utilities/Singleton.h"
 #include "scenegraph/Material.h"
 
-//! TODO Helper class for tupel 'texture' (string filename, GLuint handler)
-
 namespace scene {
 
 	struct texture{

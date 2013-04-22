@@ -51,7 +51,7 @@ class Renderer
 		GLint glinfo_major, glinfo_minor;
 
 		bool m_logging;
-		std::ofstream m_fpsLog;
+		std::ofstream m_fpsLog, m_hardwareLog;
 		bool m_fpsLogStarts;
 
 		typedef enum{FILE = 0, CONSOLE = 1} log;
@@ -88,7 +88,7 @@ class Renderer
 		#define NUM_TEXS 10
 		DeferredTexture tw_currentDeferredTex;
 
-		typedef enum {TESTSCENE=0, MUSEUM=1, CHURCH=2} Scenes;
+		typedef enum {STREET=0, MUSEUM=1, CHURCH=2} Scenes;
 		#define NUM_SCENES 1
 		Scenes tw_currentScene;
 

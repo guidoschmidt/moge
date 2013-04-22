@@ -1,5 +1,5 @@
 //FRAGMENT SHADER
-#version 400
+#version 400 core
 
 //*** Uniform block definitions ************************************************
 struct LightInfo

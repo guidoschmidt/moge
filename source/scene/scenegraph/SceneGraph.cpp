@@ -42,7 +42,7 @@ namespace scene {
 		{
 			m_logfile.open("logs/scene.txt");
 
-			m_logfile << "LOGFILE" << std::endl;
+			m_logfile << "SCENE LOGFILE" << "*******************************************" << std::endl;
 			m_logfile << "SCENE & SCENEGRAPH" << std::endl;
 		}
 	}
@@ -103,7 +103,7 @@ namespace scene {
 		*/
 
 		glm::vec3 position, lookAt, up;
-		if(m_scene_name == "testscene")
+		if(m_scene_name == "street")
 		{
 			position = glm::vec3(30.0f, 15.0f, 30.0f);
 			lookAt = glm::vec3(0.0f, 5.0f, 0.0f);

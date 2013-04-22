@@ -30,7 +30,7 @@ Renderer::Renderer(int width, int height, int scene)
 	tw_rotSpeed = 0.2f;
 	m_fieldOfView = 45.0f;
 
-	m_logging = false;
+	m_logging = true;
 
 	time1 = 0.0f;
 	time2 = 0.0f;
@@ -40,7 +40,7 @@ Renderer::Renderer(int width, int height, int scene)
 	switch(scene)
 	{
 		case 0:
-			tw_currentScene = TESTSCENE;
+			tw_currentScene = STREET;
 			break;
 		case 1:
 			tw_currentScene = MUSEUM;
@@ -49,7 +49,7 @@ Renderer::Renderer(int width, int height, int scene)
 			tw_currentScene = CHURCH;
 			break;
 		default:
-			tw_currentScene = TESTSCENE;
+			tw_currentScene = STREET;
 			break;
 	}
 	tw_currentDeferredTex = TEX_COMPOSIT;
@@ -94,6 +94,7 @@ Renderer::Renderer(int width, int height, int scene)
 Renderer::~Renderer(void)
 {
 	m_fpsLog.close();
+	m_hardwareLog.close();
 }
 
 //! Initialize GLEW
@@ -118,11 +119,12 @@ void Renderer::Initialize(int width, int height)
 	//! If logging is true, initialize logs
 	if(m_logging)
 	{
-		WriteLog(CONSOLE);
+		//! Logging hardware info
+		m_hardwareLog.open("logs/hardware-info.txt");
+		//! Logging performance
+		m_fpsLog.open("logs/performancet.txt");
 
-		//! Logging fps
-		m_fpsLog.open("logs/fps.txt");
-		m_fpsLog << "FPS LOGFILE" << std::endl;
+		WriteLog(FILE);
 	}
 
 
@@ -336,6 +338,27 @@ void Renderer::WriteLog(log logLocation)
 		std::cout << "------------------------------------------------------------" << std::endl;
 	}
 	else if(logLocation == FILE){
+		//! Hardware info log
+		m_hardwareLog << "HARDWARE INFO" << std::endl << "*******************************************" << std::endl;
+		m_hardwareLog.width(25);
+		m_hardwareLog << std::left <<"OpenGL Vendor:";
+		m_hardwareLog.width(10);
+		m_hardwareLog << std::left << glinfo_vendor_ptr << std::endl;
+		m_hardwareLog.width(25);
+		m_hardwareLog << std::left << "OpenGL Renderer:";
+		m_hardwareLog.width(10);
+		m_hardwareLog << std::left << glinfo_renderer_ptr << std::endl;
+		m_hardwareLog.width(25);
+		m_hardwareLog << "OpenGL Version:";
+		m_hardwareLog.width(10);
+		m_hardwareLog << std::left << glindo_openglVersion_ptr << std::endl;
+		m_hardwareLog.width(25);
+		m_hardwareLog << "GLSL Version:";
+		m_hardwareLog.width(10);
+		m_hardwareLog << std::left << glinfo_glslVersion_ptr << std::endl;
+
+		//! Performance log
+		m_fpsLog << "PERFORMANCE LOGFILE" << std::endl << "*******************************************" << std::endl;
 	}
 }
 
@@ -367,7 +390,8 @@ void Renderer::CalculateFPS(double timeInterval, bool toWindowTitle)
 		if(!m_fpsLogStarts && m_logging)
 		{
 			//! Time when metering starts
-			m_fpsLog << "Metering started @ Time step "<< timeStep << " seconds" << std::endl;
+			m_fpsLog << "1. Scene loading time: "<< timeStep << " seconds" << std::endl;
+			m_fpsLog << "2. frames/second: " << std::endl;
 			m_fpsLogStarts = true;
 		}
 		m_fpsLog << fps << std::endl;
@@ -531,8 +555,8 @@ void Renderer::RenderLoop(void){
 		if(!loaded){
 			m_fpsLog << "Resolution: " << context_ptr->GetWidth() << " x " << context_ptr->GetHeight() << std::endl;
 			switch (tw_currentScene) {
-				case TESTSCENE:
-					m_sceneName = "testscene";
+				case STREET:
+					m_sceneName = "street";
 					m_fpsLog << "Scene: Street" << std::endl;
 					break;
 				case MUSEUM:
@@ -633,7 +657,7 @@ void Renderer::RenderLoop(void){
 			m_gBufferProgram_ptr->SetUniform("AABB.min", scenegraph_ptr->GetSceneApproximation()->min);
 			switch(tw_currentScene)
 			{
-				case TESTSCENE:
+				case STREET:
 					//! Testscene
 					m_gBufferProgram_ptr->SetUniform("wsCubeMapPosition", glm::vec3(0, 8.131, 0));
 					break;
