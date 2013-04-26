@@ -102,7 +102,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
         lastSamplePosition = ssPosition + ssReflectionVector;
         currentSamplePosition = lastSamplePosition + ssReflectionVector;
 
-        int bigStep = 10;
+        int bigStep = 12;
         int sampleCount = max(int(Screen.Height), int(Screen.Width))/bigStep;
         int count = 0;
 
@@ -135,7 +135,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
                     for(int i=0; i < bigStep; i++)
                     {
                         lastSamplePosition = currentSamplePosition;
-                        currentSamplePosition = lastSamplePosition - ssReflectionVector;
+                        currentSamplePosition = lastSamplePosition - ssReflectionVector * 0.05 * i;
                     }
 
                 }

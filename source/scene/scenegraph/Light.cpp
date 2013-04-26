@@ -71,7 +71,7 @@ namespace scene {
 
 	GLuint* Light::GetTextureHandle()
 	{
-		return (Singleton<MaterialManager>::Instance()->GetTextureByID(m_material_ptr->GetTextureID(LIGHT)));
+		return (Singleton<MaterialManager>::Instance()->GetTextureByID(0));
 	}
 
 //! Setter

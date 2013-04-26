@@ -4,8 +4,60 @@
 		"selected_items":
 		[
 			[
+				"ver",
+				"vert_UV"
+			],
+			[
+				"color",
+				"ColorTex"
+			],
+			[
+				"mat",
+				"materialColorD"
+			],
+			[
+				"Fa",
+				"FarPlane"
+			],
+			[
+				"cur",
+				"currentDepth"
+			],
+			[
+				"tex",
+				"texture2D"
+			],
+			[
+				"trac",
+				"tracedRay"
+			],
+			[
+				"sam",
+				"samplingPosition"
+			],
+			[
+				"sa",
+				"sampledDepth"
+			],
+			[
+				"curr",
+				"currentDepth"
+			],
+			[
+				"sampl",
+				"samplingPosition"
+			],
+			[
+				"tra",
+				"tracedRay"
+			],
+			[
 				"ss",
-				"ssReflectionVector"
+				"ssPosition"
+			],
+			[
+				"int",
+				"initalStep"
 			],
 			[
 				"ray",
@@ -28,32 +80,12 @@
 				"ReflectanceTex"
 			],
 			[
-				"tex",
-				"texture2D"
-			],
-			[
 				"de",
 				"delta"
 			],
 			[
-				"sam",
-				"samplingPosition"
-			],
-			[
 				"pix",
 				"pixelsize"
-			],
-			[
-				"cur",
-				"currentDepth"
-			],
-			[
-				"sa",
-				"sampledDepth"
-			],
-			[
-				"curr",
-				"currentDepth"
 			],
 			[
 				"te",
@@ -118,10 +150,6 @@
 			[
 				"Bill",
 				"Billboards"
-			],
-			[
-				"Fa",
-				"FastGaussianBlurX"
 			],
 			[
 				"ra",
@@ -214,10 +242,6 @@
 			[
 				"No",
 				"NormalTex"
-			],
-			[
-				"ver",
-				"vert_UV"
 			],
 			[
 				"colo",
@@ -456,10 +480,6 @@
 				"depths"
 			],
 			[
-				"sampl",
-				"sampledDepth"
-			],
-			[
 				"refin",
 				"refineStep"
 			],
@@ -494,26 +514,6 @@
 			[
 				"DE",
 				"DepthTex"
-			],
-			[
-				"wsN",
-				"wsNormal"
-			],
-			[
-				"refe",
-				"reflectance"
-			],
-			[
-				"vCu",
-				"vCurrOffset"
-			],
-			[
-				"vCUr",
-				"vCurrSample"
-			],
-			[
-				"W",
-				"Width"
 			]
 		]
 	},
@@ -531,7 +531,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 3444,
+				"buffer_size": 3449,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 7406,
+				"buffer_size": 8057,
 				"line_ending": "Windows"
 			}
 		},
@@ -640,6 +640,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Desktop/backup.frag.glsl",
+		"/D/Development/libraries-frameworks/c++/glfw/README.md",
+		"/C/Users/guidoschmidt/Projects/Adobe CS/AGASS Grillflyer 2013/src/infos.md",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/compositing/compositing.frag.glsl",
+		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/project/bachelorarbeit.sublime-project",
 		"/C/Users/guidoschmidt/Dropbox/Studium/Bachelorarbeit/tex/bachelorarbeit.tex",
 		"/c/Users/guidoschmidt/Development/code/c++/moge/README.md",
@@ -701,7 +706,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.vert.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/5-deferred_compositing.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/forward/forward.frag.glsl",
-		"/C/Users/guidoschmidt/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.frag.glsl",
 		"/C/Users/guidoschmidt/.profile",
 		"/C/Temp/SSR.frag.glsl",
@@ -763,11 +767,7 @@
 		"/C/Program Files (x86)/Console2/console.xml",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW.frag.glsl",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW2.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-gBufferProgram.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.frag.glsl",
-		"/C/Temp/ssr.hlsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/scenegraph/Mesh.cpp"
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl"
 	],
 	"find":
 	{
@@ -786,6 +786,9 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Billboards",
+			"COlor",
+			"MSDepthTex",
 			"currentSamplePosition",
 			"wsNormal",
 			"wsPosition",
@@ -910,10 +913,7 @@
 			"position",
 			"vsReflecVecTex",
 			"deferredDepthTex",
-			"deferredDiffuseTex",
-			"deferredReflecVecTex",
-			"deferredReflectanceTex",
-			"deferredMaterialIDTex"
+			"deferredDiffuseTex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -933,7 +933,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -948,8 +948,8 @@
 						"selection":
 						[
 							[
-								851,
-								851
+								9768,
+								9768
 							]
 						],
 						"settings":
@@ -1092,7 +1092,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 632.0,
+						"translation.y": 4595.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1102,19 +1102,20 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 3444,
+						"buffer_size": 3449,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2442,
-								2442
+								3263,
+								3263
 							]
 						],
 						"settings":
 						{
+							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -1252,7 +1253,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1528.0,
+						"translation.y": 1890.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1262,19 +1263,20 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 7406,
+						"buffer_size": 8057,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3629,
-								3629
+								4555,
+								4555
 							]
 						],
 						"settings":
 						{
+							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -1412,7 +1414,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1924.0,
+						"translation.y": 2037.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1429,12 +1431,13 @@
 						"selection":
 						[
 							[
-								185,
-								185
+								3469,
+								3469
 							]
 						],
 						"settings":
 						{
+							"BracketHighlighterBusy": false,
 							"annotations":
 							[
 								"TODO",
@@ -1572,7 +1575,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1468.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"

@@ -45,7 +45,7 @@ FrameBufferObject::FrameBufferObject(int width, int height, bool gBuffer)
 		CreateGBuffer();
 	}
 	else
-		CreateBuffers(2);
+		CreateBuffers(1);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

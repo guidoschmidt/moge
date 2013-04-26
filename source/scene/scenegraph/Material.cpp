@@ -113,18 +113,4 @@ namespace scene {
 		m_texture_ids.push_back(tex);
 	}
 
-	//! Returns the id of the texture in the material manager
-	int Material::GetTextureID(texturetype type)
-	{
-		int result = 0;
-		for(unsigned int i=0; i < m_texture_ids.size(); i++)
-		{
-			if(m_texture_ids[i].m_type == type)
-			{
-				result = m_texture_ids[i].m_id;
-			}
-		}
-		return result;
-	}
-
 } //! namespace scene

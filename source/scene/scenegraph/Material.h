@@ -78,7 +78,6 @@ namespace scene {
 			//! Functions
 			void AddTexture(textureRef tex);
 			bool HasTexture(void);
-			int GetTextureID(texturetype type);
 	};
 
 } //! namespace scene

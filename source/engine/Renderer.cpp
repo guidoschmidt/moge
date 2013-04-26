@@ -233,7 +233,7 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/ssr/ssr.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/ssr/ssr.frag.glsl"
 		);
-		reflection_fbo_ptr = new FrameBufferObject(false);
+		reflection_fbo_ptr = new FrameBufferObject(false, context_ptr->GetWidth()/4.0, context_ptr->GetHeight()/4.0);
 
 		//! Initialization of 5th pass
 		m_compositingProgram_ptr = new ShaderProgram(
@@ -845,8 +845,8 @@ void Renderer::RenderLoop(void){
 			m_ssrProgram_ptr->SetUniform("Mouse.X", static_cast<float>(x_pos));
 			m_ssrProgram_ptr->SetUniform("Mouse.Y", static_cast<float>(y_pos));
 			//! Window uniforms
-			m_ssrProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
-			m_ssrProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
+			m_ssrProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()/4.0));
+			m_ssrProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()/4.0));
 			//! Texture uniforms from G-Buffer
 			//m_ssrProgram_ptr->SetUniformSampler("wsPositionTex", 	gBuffer_ptr->GetTexture(0), 0);
 			//m_ssrProgram_ptr->SetUniformSampler("wsNormalTex", 		gBuffer_ptr->GetTexture(3), 2);
