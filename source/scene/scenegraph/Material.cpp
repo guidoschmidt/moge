@@ -64,17 +64,22 @@ namespace scene {
 	void Material::SetSpecularColor(glm::vec3 specular){ m_specularColor = specular; }
 	void Material::SetReflectance(float reflection){ m_reflectance= reflection; }
 
-
-	//! Returns the texture handle
+	//!
 	/*!
 	 *
+	 * @param type
 	 * @return
 	 */
-	/*GLuint* Material::GetTexture(void)
+	int Material::GetTextureID(texturetype type)
 	{
-		return Singleton<scene::MaterialManager>::Instance()->GetTexture(0);
-	}*/
-
+		int id = 0;
+		for(unsigned int i=0; i < this->m_texture_ids.size(); i++)
+		{
+			if(this->m_texture_ids[i].m_type == type)
+				id = m_texture_ids[i].m_id;
+		}
+		return id;
+	}
 
 	//!
 	/*!

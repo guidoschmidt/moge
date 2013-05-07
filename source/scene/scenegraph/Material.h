@@ -65,6 +65,7 @@ namespace scene {
 			//! Material
 			//! Getter
 			int GetMaterialID(void);
+			int GetTextureID(texturetype type);
 			std::string GetName(void);
 			glm::vec3 GetDiffuseColor(void);
 			glm::vec3 GetSpecularColor(void);

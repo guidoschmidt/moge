@@ -233,7 +233,7 @@ void Renderer::Initialize(int width, int height)
 				GLSL::VERTEX, "./source/shaders/deferred/ssr/ssr.vert.glsl",
 				GLSL::FRAGMENT, "./source/shaders/deferred/ssr/ssr.frag.glsl"
 		);
-		reflection_fbo_ptr = new FrameBufferObject(false, context_ptr->GetWidth()/4.0, context_ptr->GetHeight()/4.0);
+		reflection_fbo_ptr = new FrameBufferObject(false);
 
 		//! Initialization of 5th pass
 		m_compositingProgram_ptr = new ShaderProgram(
@@ -892,13 +892,10 @@ void Renderer::RenderLoop(void){
 			m_compositingProgram_ptr->SetUniform("Screen.Width", static_cast<float>(context_ptr->GetWidth()));
 			m_compositingProgram_ptr->SetUniform("Screen.Height", static_cast<float>(context_ptr->GetHeight()));
 			//! Texture uniforms from G-Buffer
-			//m_compositingProgram_ptr->SetUniformSampler("wsPositionTex",	gBuffer_ptr->GetTexture(0), 0);
-			//m_compositingProgram_ptr->SetUniformSampler("wsNormalTex",		gBuffer_ptr->GetTexture(3), 3);
 			m_compositingProgram_ptr->SetUniformSampler("vsPositionTex",	gBuffer_ptr->GetTexture(0), 0);
 			m_compositingProgram_ptr->SetUniformSampler("vsNormalTex",		gBuffer_ptr->GetTexture(1), 1);
 			m_compositingProgram_ptr->SetUniformSampler("ColorTex",			gBuffer_ptr->GetTexture(2), 2);
 			m_compositingProgram_ptr->SetUniformSampler("ReflectanceTex",	gBuffer_ptr->GetTexture(3), 3);
-			//m_compositingProgram_ptr->SetUniformSampler("ReflecVecTex", 	gBuffer_ptr->GetTexture(6), 6);
 			m_compositingProgram_ptr->SetUniformSampler("BBTex", 			gBuffer_ptr->GetTexture(4), 4);
 			m_compositingProgram_ptr->SetUniformSampler("DepthTex",			gBuffer_ptr->GetDepthTexture(), 5);
 			//! Texture uniforms from lighting pass

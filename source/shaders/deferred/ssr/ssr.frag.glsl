@@ -65,6 +65,8 @@ float linearizeDepth(float depth)
 //  Screen space reflections
 vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsReflectionVector)
 {
+    float factor = dot(vsReflectionVector, vsNormal);
+
     // Variables
     vec4 reflectedColor = vec4(0.0);
     vec2 pixelsize = 1.0/vec2(Screen.Width, Screen.Height);
@@ -102,8 +104,8 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
         lastSamplePosition = ssPosition + ssReflectionVector;
         currentSamplePosition = lastSamplePosition + ssReflectionVector;
 
-        int bigStep = 12;
-        int sampleCount = max(int(Screen.Height), int(Screen.Width))/bigStep;
+        float bigStep = 12 * factor;
+        int sampleCount = max(int(Screen.Height), int(Screen.Width))/int(bigStep);
         int count = 0;
 
         //reflectedColor = texture2D(ReflectanceTex, vert_UV);
@@ -132,10 +134,10 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
             else{
                 if(currentDepth > sampledDepth)
                 {
-                    for(int i=0; i < bigStep; i++)
+                    for(float i=0; i < bigStep; i += 1.0 * factor)
                     {
                         lastSamplePosition = currentSamplePosition;
-                        currentSamplePosition = lastSamplePosition - ssReflectionVector * 0.05 * i;
+                        currentSamplePosition = lastSamplePosition - ssReflectionVector * 0.05 * i * factor;
                     }
 
                 }

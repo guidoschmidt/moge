@@ -113,6 +113,7 @@ void main(void)
 	// Lights are shaded only with light color
 	// Everything else is shaded with diffuse shading	
 	vec3 lightVector;
+	vec3 halfVector;
 	
 	//*** Lighting Jan Sobotta*** 
 	//lightVector = normalize( vec4(Light.Position[0], 1.0f) - vsPosition ).xyz;

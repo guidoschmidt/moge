@@ -424,7 +424,7 @@ namespace scene {
 	 */
 	Mesh* SceneGraph::GetLightMesh(lighttype type)
 	{
-		Mesh* mesh;
+		Mesh* mesh = new Mesh();
 		switch(type)
 		{
 			case POINT:
