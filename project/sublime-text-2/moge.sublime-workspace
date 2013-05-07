@@ -4,6 +4,46 @@
 		"selected_items":
 		[
 			[
+				"sh",
+				"shaded"
+			],
+			[
+				"vs",
+				"vsPosition"
+			],
+			[
+				"li",
+				"lightVector"
+			],
+			[
+				"ligh",
+				"lightColorS"
+			],
+			[
+				"att",
+				"cAttenuation"
+			],
+			[
+				"ve",
+				"vec4"
+			],
+			[
+				"lig",
+				"lightVector"
+			],
+			[
+				"light",
+				"lightVector"
+			],
+			[
+				"nor",
+				"normal"
+			],
+			[
+				"De",
+				"Depth"
+			],
+			[
 				"ver",
 				"vert_UV"
 			],
@@ -112,10 +152,6 @@
 				"fadeY"
 			],
 			[
-				"vs",
-				"vsPosition"
-			],
-			[
 				"s",
 				"samplingPosition"
 			],
@@ -134,10 +170,6 @@
 			[
 				"E",
 				"EnvMapColor"
-			],
-			[
-				"De",
-				"DepthTex"
 			],
 			[
 				"co",
@@ -192,16 +224,8 @@
 				"intensity"
 			],
 			[
-				"li",
-				"lightSpecular"
-			],
-			[
 				"C",
 				"Count"
-			],
-			[
-				"ligh",
-				"lightDiffuse"
 			],
 			[
 				"vsN",
@@ -266,10 +290,6 @@
 			[
 				"im",
 				"ImpostorTex"
-			],
-			[
-				"ve",
-				"vert0"
 			],
 			[
 				"In",
@@ -400,10 +420,6 @@
 				"Position"
 			],
 			[
-				"nor",
-				"normalize"
-			],
-			[
 				"ste",
 				"stepSize"
 			],
@@ -498,22 +514,6 @@
 			[
 				"F",
 				"FOV"
-			],
-			[
-				"wsP",
-				"wsPosition"
-			],
-			[
-				"fr",
-				"fragDepth"
-			],
-			[
-				"x",
-				"xRand"
-			],
-			[
-				"DE",
-				"DepthTex"
 			]
 		]
 	},
@@ -531,7 +531,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 3449,
+				"buffer_size": 5381,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 8057,
+				"buffer_size": 8153,
 				"line_ending": "Windows"
 			}
 		},
@@ -640,6 +640,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/main.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
 		"/C/Users/guidoschmidt/Desktop/backup.frag.glsl",
 		"/D/Development/libraries-frameworks/c++/glfw/README.md",
 		"/C/Users/guidoschmidt/Projects/Adobe CS/AGASS Grillflyer 2013/src/infos.md",
@@ -676,8 +679,6 @@
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/scene/MaterialManager.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/ShaderProgram.cpp",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.h",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Context.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.h",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/FrameBufferObject.cpp",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/engine/Renderer.h",
@@ -766,8 +767,7 @@
 		"/C/Users/guidoschmidt/Development/code/c++/code-examples/ogl-samples/samples/gl-330-primitive-front-face.cpp",
 		"/C/Program Files (x86)/Console2/console.xml",
 		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW2.frag.glsl",
-		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/1-pass_one.vert.glsl"
+		"/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/3-deferred_reflections.NEW2.frag.glsl"
 	],
 	"find":
 	{
@@ -786,6 +786,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"lAtt",
 			"Billboards",
 			"COlor",
 			"MSDepthTex",
@@ -912,8 +913,7 @@
 			"normal",
 			"position",
 			"vsReflecVecTex",
-			"deferredDepthTex",
-			"deferredDiffuseTex"
+			"deferredDepthTex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -933,7 +933,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -948,8 +948,8 @@
 						"selection":
 						[
 							[
-								9768,
-								9768
+								7677,
+								7677
 							]
 						],
 						"settings":
@@ -1092,7 +1092,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4595.0,
+						"translation.y": 3380.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1102,15 +1102,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 3449,
+						"buffer_size": 5381,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3263,
-								3263
+								2227,
+								2227
 							]
 						],
 						"settings":
@@ -1253,7 +1253,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1890.0,
+						"translation.y": 1179.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1263,15 +1263,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 8057,
+						"buffer_size": 8153,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4555,
-								4555
+								4377,
+								4377
 							]
 						],
 						"settings":
@@ -1411,10 +1411,11 @@
 							},
 							"sublimelinter_wrap_find": true,
 							"syntax": "Packages/ShaderLanguages/OpenGL SL.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2037.0,
+						"translation.y": 1504.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1431,8 +1432,8 @@
 						"selection":
 						[
 							[
-								3469,
-								3469
+								5393,
+								5393
 							]
 						],
 						"settings":
@@ -1575,7 +1576,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1468.0,
+						"translation.y": 1440.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1714,7 +1715,7 @@
 		[
 			[
 				"",
-				"/D/Studium/Master CV/SS2013/Projektive Geometrie/Skript/tex/project/SS2013 Projektive Geometrie.sublime-project"
+				"/D/Studium/CV Tag/2013/Web/wordpress-theme/cvtag2013-wp-theme.sublime-project"
 			],
 			[
 				"bach",

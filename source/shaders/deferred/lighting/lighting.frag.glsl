@@ -76,7 +76,7 @@ float specularCooef(in float dot, in float shininess)
 }
 
 // Phong shading
-vec3 phongShading(in vec3 lightVector, in vec3 normal, in vec3 materialColor, in vec3 lightColorD, in vec3 lightColorS, float shininess)
+vec3 phongShading(in vec3 lightVector, in vec3 normal, in vec3 materialColor, in vec3 lightColorD, in vec3 lightColorS, in float shininess)
 {	
 	vec3 shaded = vec3(0.0f);
 
@@ -91,11 +91,49 @@ vec3 phongShading(in vec3 lightVector, in vec3 normal, in vec3 materialColor, in
 	return shaded;
 }
 
-// Jan Sobottas lighting
-vec4 getLighted(in vec3 lightVector, vec4 color, vec3 normal)
+vec3 cooktorranceShading(in vec3 vsLightPosition, in vec3 vsPosition, in vec3 lightVector, in vec3 halfVector, in vec3 normal, in vec3 materialColorD, in vec3 lightColorD, in vec3 lightColorS, in float shininess)
 {
-	vec4 shadedColor = clamp( dot( lightVector, normal ) * color, 0.0, 1.0 ) * 0.8 + 0.3 * color;
-	return shadedColor;
+	vec3 shaded = vec3(0.0f);
+
+	// Variables
+	vec4 lightAttenuation = vec4(0.045f);
+	float roughness = 0.08f;
+    float refractionIndex = 1.45;
+
+	 // Calculate light lumosity with light attenuation
+    float sqDist = pow(vsLightPosition.x - vsPosition.x, 2.0) + pow(vsLightPosition.y - vsPosition.y, 2.0) + pow(vsLightPosition.z - vsPosition.z, 2.0);
+    float Attenuation = lightAttenuation.y + lightAttenuation.z * sqrt(sqDist) + lightAttenuation.w * sqDist;
+    float Luminosity = 1.0 / Attenuation;
+
+    // Beckman's distribution function D
+    float normalDotHalf = dot(normal, halfVector);
+    float normalDotHalfExp = normalDotHalf * normalDotHalf;
+    float roughnessExp = roughness * roughness;
+    float exponent = -(1.0 - normalDotHalfExp) / (normalDotHalfExp * roughnessExp);
+    float e = 2.71828182845904523536028747135;
+    float D = pow(e, exponent) / (roughnessExp * normalDotHalfExp * normalDotHalfExp);
+
+    // Compute Fresnel term F
+    float normalDotEye = dot(normal, vsPosition);
+    float F = mix(pow(1.0 - normalDotEye, 0.15), 0.5, refractionIndex);
+
+     // Compute self shadowing term G
+    float normalDotLight = dot(normal, lightVector);
+    float X = 2.0 * normalDotHalf / dot(vsPosition, halfVector);
+    float G = min(0.5, min(X * normalDotLight, X * normalDotEye));
+
+    // Compute final Cook-Torrance specular term, load textures, mix them
+    float pi = 3.1415926535897932384626433832;
+    float CookTorrance = (D * G) / (normalDotEye * pi);
+
+    vec4 color = texture2D(ColorTex, vert_UV);
+    vec4 diffuse = color * max(0.0, normalDotLight) * vec4(lightColorD, 1.0);
+    vec4 specular = color * max(0.0, CookTorrance) * vec4(lightColorS, 1.0);
+
+
+    shaded = vec3((diffuse + specular) * Luminosity);
+
+	return shaded;
 }
 
 //*** Main *********************************************************************
@@ -112,12 +150,9 @@ void main(void)
 
 	// Lights are shaded only with light color
 	// Everything else is shaded with diffuse shading	
+	vec3 vsLightPosition = vec3(0.0);
 	vec3 lightVector;
 	vec3 halfVector;
-	
-	//*** Lighting Jan Sobotta*** 
-	//lightVector = normalize( vec4(Light.Position[0], 1.0f) - vsPosition ).xyz;
-	//shaded = getLighted(lightVector, materialColorD, vsNormal);
 	
 	//*** Correct lighting ***
 	// Perform shading for every light source
@@ -130,9 +165,13 @@ void main(void)
 		else
 		{
 			lightVector = normalize( (ViewMatrix *  vec4(Light.Position[i], 1.0f)) - vsPosition ).xyz;
+			halfVector = normalize(lightVector);
+			vsLightPosition = vec3(ViewMatrix * vec4(Light.Position[i], 1.0f));
+
 			vec3 lightDiffuse = Light.Diffuse[i].rgb;
 			vec3 lightSpecular = Light.Specular.rgb;
-			shaded += 1.0/Light.Count * vec4( phongShading(lightVector, vsNormal, materialColorD.rgb, lightDiffuse, lightSpecular , Shininess), 1.0f );
+			//shaded += 1.0/Light.Count * vec4( phongShading(lightVector, vsNormal, materialColorD.rgb, lightDiffuse, lightSpecular , Shininess), 1.0f );
+			shaded += vec4( cooktorranceShading(vsLightPosition, vsPosition.xyz, lightVector, halfVector, vsNormal, materialColorD.rgb, lightDiffuse, lightSpecular , Shininess), 1.0f );
 		}
 	}
 	FragColor = shaded;
