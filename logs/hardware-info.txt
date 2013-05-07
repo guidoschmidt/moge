@@ -1,0 +1,6 @@
+HARDWARE INFO
+*******************************************
+OpenGL Vendor:           NVIDIA Corporation
+OpenGL Renderer:         GeForce GT 650M/PCIe/SSE2
+OpenGL Version:          4.3.0     
+GLSL Version:            4.30 NVIDIA via Cg compiler
