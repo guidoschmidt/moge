@@ -4,6 +4,66 @@
 		"selected_items":
 		[
 			[
+				"curr",
+				"currentSamplePosition"
+			],
+			[
+				"sa",
+				"samplingPosition"
+			],
+			[
+				"li",
+				"lightVector"
+			],
+			[
+				"s",
+				"sampledDepth"
+			],
+			[
+				"sam",
+				"sampleOffsets"
+			],
+			[
+				"cur",
+				"currentDepth"
+			],
+			[
+				"ss",
+				"ssReflectionVector"
+			],
+			[
+				"samp",
+				"sampleOffsets"
+			],
+			[
+				"L",
+				"Luminosity"
+			],
+			[
+				"vec",
+				"vec4"
+			],
+			[
+				"sha",
+				"shadingModelID"
+			],
+			[
+				"att",
+				"attenuation"
+			],
+			[
+				"pow",
+				"powers"
+			],
+			[
+				"lig",
+				"lightAttenuation"
+			],
+			[
+				"light",
+				"lightAttenuation"
+			],
+			[
 				"sh",
 				"shaded"
 			],
@@ -12,28 +72,12 @@
 				"vsPosition"
 			],
 			[
-				"li",
-				"lightVector"
-			],
-			[
 				"ligh",
 				"lightColorS"
 			],
 			[
-				"att",
-				"cAttenuation"
-			],
-			[
 				"ve",
 				"vec4"
-			],
-			[
-				"lig",
-				"lightVector"
-			],
-			[
-				"light",
-				"lightVector"
 			],
 			[
 				"nor",
@@ -60,10 +104,6 @@
 				"FarPlane"
 			],
 			[
-				"cur",
-				"currentDepth"
-			],
-			[
 				"tex",
 				"texture2D"
 			],
@@ -72,28 +112,12 @@
 				"tracedRay"
 			],
 			[
-				"sam",
-				"samplingPosition"
-			],
-			[
-				"sa",
-				"sampledDepth"
-			],
-			[
-				"curr",
-				"currentDepth"
-			],
-			[
 				"sampl",
 				"samplingPosition"
 			],
 			[
 				"tra",
 				"tracedRay"
-			],
-			[
-				"ss",
-				"ssPosition"
 			],
 			[
 				"int",
@@ -150,10 +174,6 @@
 			[
 				"fa",
 				"fadeY"
-			],
-			[
-				"s",
-				"samplingPosition"
 			],
 			[
 				"f",
@@ -274,10 +294,6 @@
 			[
 				"ma",
 				"materialColorD"
-			],
-			[
-				"vec",
-				"vec3"
 			],
 			[
 				"Gau",
@@ -498,22 +514,6 @@
 			[
 				"refin",
 				"refineStep"
-			],
-			[
-				"vsp",
-				"vspReflectionVector"
-			],
-			[
-				"vsP",
-				"vsPosition"
-			],
-			[
-				"pro",
-				"ProjectionMatrix"
-			],
-			[
-				"F",
-				"FOV"
 			]
 		]
 	},
@@ -531,7 +531,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 5381,
+				"buffer_size": 5583,
 				"line_ending": "Windows"
 			}
 		},
@@ -539,7 +539,7 @@
 			"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 			"settings":
 			{
-				"buffer_size": 8153,
+				"buffer_size": 12767,
 				"line_ending": "Windows"
 			}
 		},
@@ -786,6 +786,27 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"Attenuation",
+			"attenuation",
+			"Attenuation",
+			"attenuation",
+			"Attenuation",
+			"refine",
+			"005f",
+			"0.05",
+			"blurSwi",
+			"toggleBlur",
+			"0.1",
+			"0,",
+			"f,",
+			",",
+			"f,",
+			"),",
+			"0,",
+			",",
+			";",
+			")",
+			",",
 			"lAtt",
 			"Billboards",
 			"COlor",
@@ -892,28 +913,7 @@
 			"0.0)",
 			"wsFromEyeVec",
 			"vsEyeVec",
-			"deferredReflectanceTex",
-			"deferredMaterialIDTex",
-			"deferredNormalTex",
-			"eferredColorTex",
-			"deferredWoldPositionTex",
-			"deferredViewPositionTex",
-			"Impostors",
-			"Impostors[0]",
-			"deferredDepthTex",
-			"deferredDiffuseTex",
-			"deferredReflecVecTex",
-			"deferredReflectanceTex",
-			"deferredMaterialIDTex",
-			"deferredNormalTex",
-			"deferredColorTex",
-			"deferredPositionTex",
-			"sampledPosition",
-			"Normal",
-			"normal",
-			"position",
-			"vsReflecVecTex",
-			"deferredDepthTex"
+			"deferredReflectanceTex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -933,7 +933,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -948,8 +948,8 @@
 						"selection":
 						[
 							[
-								7677,
-								7677
+								7466,
+								7466
 							]
 						],
 						"settings":
@@ -1076,8 +1076,9 @@
 								"javascript": "C:/Program Files/nodejs/node.exe"
 							},
 							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
 							"sublimelinter_notes": false,
 							"sublimelinter_objj_check_ascii": false,
 							"sublimelinter_popup_errors_on_save": false,
@@ -1092,7 +1093,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3380.0,
+						"translation.y": 4349.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1102,15 +1103,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/lighting/lighting.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 5381,
+						"buffer_size": 5583,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2227,
-								2227
+								3544,
+								3544
 							]
 						],
 						"settings":
@@ -1237,8 +1238,9 @@
 								"javascript": "C:/Program Files/nodejs/node.exe"
 							},
 							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
 							"sublimelinter_notes": false,
 							"sublimelinter_objj_check_ascii": false,
 							"sublimelinter_popup_errors_on_save": false,
@@ -1253,7 +1255,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1179.0,
+						"translation.y": 2109.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1263,15 +1265,15 @@
 					"file": "/C/Users/guidoschmidt/Development/code/c++/moge/source/shaders/deferred/ssr/ssr.frag.glsl",
 					"settings":
 					{
-						"buffer_size": 8153,
+						"buffer_size": 12767,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4377,
-								4377
+								7234,
+								7234
 							]
 						],
 						"settings":
@@ -1398,8 +1400,9 @@
 								"javascript": "C:/Program Files/nodejs/node.exe"
 							},
 							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
 							"sublimelinter_notes": false,
 							"sublimelinter_objj_check_ascii": false,
 							"sublimelinter_popup_errors_on_save": false,
@@ -1415,7 +1418,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1504.0,
+						"translation.y": 3231.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1560,8 +1563,9 @@
 								"javascript": "C:/Program Files/nodejs/node.exe"
 							},
 							"sublimelinter_fill_outlines": false,
-							"sublimelinter_gutter_marks": false,
-							"sublimelinter_mark_style": "outline",
+							"sublimelinter_gutter_marks": true,
+							"sublimelinter_gutter_marks_theme": "simple",
+							"sublimelinter_mark_style": "none",
 							"sublimelinter_notes": false,
 							"sublimelinter_objj_check_ascii": false,
 							"sublimelinter_popup_errors_on_save": false,

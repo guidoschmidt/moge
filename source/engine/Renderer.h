@@ -73,7 +73,7 @@ class Renderer
 
 		float time1, time2, timedif;
 
-		//! AnttWeakBar texture choose
+		//! AntTweakBar texture choose
 		typedef enum {	TEX_COMPOSIT		=	-1,
 						TEX_VIEWPOSITION	=	 0,
 						TEX_VSNORMAL		=	 1,
@@ -87,6 +87,13 @@ class Renderer
 		} DeferredTexture;
 		#define NUM_TEXS 10
 		DeferredTexture tw_currentDeferredTex;
+
+		//! AntTweakBar shading models
+		typedef enum {	PHONG = 0,
+						COOKTORRANCE = 1
+		} ShadingModels;
+		#define NUM_SHAD_MODELS 2
+		ShadingModels tw_currentShadingModel;
 
 		typedef enum {STREET=0, MUSEUM=1, CHURCH=2} Scenes;
 		#define NUM_SCENES 1
@@ -105,7 +112,7 @@ class Renderer
 		bool tw_CM;
 		bool tw_BB;
 		bool tw_PCCM;
-		bool tw_blur;
+		bool tw_glossy;
 		float tw_blurX;
 		float tw_blurY;
 		bool tw_compareDepth;

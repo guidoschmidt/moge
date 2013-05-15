@@ -137,7 +137,7 @@ void Renderer::Initialize(int width, int height)
 	/*!
 	 * AntTweakBar
 	 */
-	//! Deferred: render targets choice
+	//! Render targets choice
 	TwEnumVal texEV[NUM_TEXS] = {	{TEX_COMPOSIT, 		"Composited"},
 									//{TEX_WORLDPOSITION, "World space positions"},
 									{TEX_VIEWPOSITION, 	"View space positions"},
@@ -152,6 +152,14 @@ void Renderer::Initialize(int width, int height)
 									{TEX_BB, 			"BB"}};
 	TwType texType = TwDefineEnum("TextureType", texEV, NUM_TEXS);
 	TwAddVarRW(context_ptr->GetBar(), "deferredTextureChoice", texType, &tw_currentDeferredTex, "label='Rendering' group='Rendering' keyIncr='<' keyDecr='>' help='View the maps rendered in first pass.' ");
+
+	//! Shading models choice
+	TwEnumVal shadingModels[NUM_SHAD_MODELS] = {	{PHONG, "Phong"},
+													{COOKTORRANCE, "Cook-Torrance"}
+	};
+	TwType shadingModelType = TwDefineEnum("ShadingModel", shadingModels, NUM_SHAD_MODELS);
+	TwAddVarRW(context_ptr->GetBar(), "ShaingModelType", shadingModelType, &tw_currentShadingModel, "label='Shading Model' group='Rendering' keyIncr='<' keyDecr='>' help='Change shading models.'");
+
 	//! Scene choice
 	//TwEnumVal sceneEV[NUM_SCENES] = { {HEAD, "Head"}, {GEOMETRY, "Geometry"}};
 	//TwType sceneType = TwDefineEnum("SceneType", sceneEV, NUM_SCENES);
@@ -176,10 +184,7 @@ void Renderer::Initialize(int width, int height)
 	TwAddVarRW(context_ptr->GetBar(), "ssr", TW_TYPE_BOOLCPP, &tw_SSR, "group='SSR' label='Switch SSR'");
 	TwAddVarRW(context_ptr->GetBar(), "optimized", TW_TYPE_BOOLCPP, &tw_optimizedSSR, "group='SSR' label='Optimized'");
 	TwAddVarRW(context_ptr->GetBar(), "stepsize", TW_TYPE_INT16, &tw_rayStepSize, "min='1' value='5' step='1' group='SSR' label='Step size (pixels)'");
-	TwAddVarRW(context_ptr->GetBar(), "blur", TW_TYPE_BOOLCPP, &tw_blur, "group='SSR' label='Blur'");
-	TwAddVarRW(context_ptr->GetBar(), "blurX", TW_TYPE_FLOAT, &tw_blurX, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel X'");
-	TwAddVarRW(context_ptr->GetBar(), "blurY", TW_TYPE_FLOAT, &tw_blurY, "group='SSR' min='0.0' step='0.1' max='20.0' label='Kernel Y'");
-	//TwAddVarRW(context_ptr->GetBar(), "jittering", TW_TYPE_BOOLCPP, &tw_jittering, "group='SSR' label='Jitter'");
+	TwAddVarRW(context_ptr->GetBar(), "glossy", TW_TYPE_BOOLCPP, &tw_glossy, "group='SSR' label='Toggle Glossy'");
 	TwAddVarRW(context_ptr->GetBar(), "fadetoscreenedge", TW_TYPE_BOOLCPP, &tw_fadeToEdges, "group='SSR' label='Fade to screen edges'");
 	//! Parallax corrected cube mapping
 	TwAddVarRW(context_ptr->GetBar(), "cm", TW_TYPE_BOOLCPP, &tw_CM, "group='PCCM' label='Switch Environment Mapping'");
@@ -785,10 +790,10 @@ void Renderer::RenderLoop(void){
 			m_lightingProgram_ptr->SetUniform("ambientColor", LightAmbient);
 			m_lightingProgram_ptr->SetUniformArray3f("Light.Position", 3, &LightPositions[0][0]);
 			m_lightingProgram_ptr->SetUniformArray3f("Light.Diffuse", 3, &LightDiffuses[0][0]);
-
 			m_lightingProgram_ptr->SetUniform("Light.Specular", LightSpecular);
 			m_lightingProgram_ptr->SetUniform("Light.Count", scenegraph_ptr->GetLightCount());
-
+			//! Shading model ID
+			m_lightingProgram_ptr->SetUniform("shadingModelID", tw_currentShadingModel);
 			//! Material uniforms
 			m_lightingProgram_ptr->SetUniform("Shininess", m_shininess);
 			//! Matrix uniforms
@@ -831,6 +836,7 @@ void Renderer::RenderLoop(void){
 			m_ssrProgram_ptr->SetUniform("optimizedSSR", tw_optimizedSSR);
 			m_ssrProgram_ptr->SetUniform("user_pixelStepSize", tw_rayStepSize);
 			m_ssrProgram_ptr->SetUniform("fadeToEdges", tw_fadeToEdges);
+			m_ssrProgram_ptr->SetUniform("toggleGlossy", tw_glossy);
 
 			//! Camera uniforms
 			m_ssrProgram_ptr->SetUniform("Camera.FOV", scenegraph_ptr->GetActiveCamera()->GetFOV());
@@ -881,9 +887,8 @@ void Renderer::RenderLoop(void){
 			m_compositingProgram_ptr->SetUniform("BB", tw_BB);
 			m_compositingProgram_ptr->SetUniform("PCCM", tw_PCCM);
 			//! Blurring uniforms
-			m_compositingProgram_ptr->SetUniform("blurSwitch", tw_blur);
-			m_compositingProgram_ptr->SetUniform("kernelX", tw_blurX);
-			m_compositingProgram_ptr->SetUniform("kernelY", tw_blurY);
+			m_compositingProgram_ptr->SetUniform("toggleGlossy", tw_glossy);
+
 			//! Camera uniforms
 			m_compositingProgram_ptr->SetUniform("Camera.Position", scenegraph_ptr->GetActiveCamera()->GetPosition());
 			m_compositingProgram_ptr->SetUniform("Camera.NearPlane", scenegraph_ptr->GetActiveCamera()->GetNearPlane());

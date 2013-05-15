@@ -40,8 +40,8 @@
 							<tool id="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug.36085165" name="MinGW C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.mingw.exe.debug">
 								<option id="gnu.cpp.link.option.libs.1104875725" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glew32"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glu32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glu32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SOIL"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="opengl32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="assimp"/>
@@ -98,7 +98,7 @@
 								<option id="gnu.cpp.link.option.libs.1042955514" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glew32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glu32"/>
-									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw"/>
+									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="glfw3"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="SOIL"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="opengl32"/>
 									<listOptionValue builtIn="false" srcPrefixMapping="" srcRootPath="" value="assimp"/>

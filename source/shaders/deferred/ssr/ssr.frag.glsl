@@ -32,7 +32,7 @@ uniform CameraInfo Camera;
 uniform int user_pixelStepSize;
 uniform float fadeYparameter;
 uniform bool toggleSSR;
-uniform bool toggleBlur;
+uniform bool toggleGlossy;
 uniform bool optimizedSSR;
 uniform bool experimentalSSR;
 uniform bool fadeToEdges;
@@ -49,6 +49,24 @@ uniform sampler2D DiffuseTex;
 
 const float pi = 3.14159265f;
 
+const vec2 sampleOffsets[16] = vec2[](
+    vec2(-0.3857104f, -0.8171502f),
+    vec2(0.03329741f, -0.9189221f),
+    vec2(-0.8200077f, -0.5234867f),
+    vec2(-0.07335605f, -0.2632172f),
+    vec2(0.6341613f, -0.7207248f),
+    vec2(-0.9161543f, -0.1177677f),
+    vec2(0.9068835f, -0.2405542f),
+    vec2(0.4021704f, -0.1239841f),
+    vec2(-0.4632118f, 0.058327f),
+    vec2(0.09567857f, 0.2931803f),
+    vec2(0.8622051f, 0.1983728f),
+    vec2(0.5084426f, 0.623606f),
+    vec2(0.2892076f, -0.5152128f),
+    vec2(-0.8960632f, 0.4230295f),
+    vec2(-0.4352404f, 0.8662457f),
+    vec2(-0.03035933f, 0.9384609f)
+);
 
 //*** Functions **************************************************************** 
 //  Linearizes a depth value
@@ -91,9 +109,7 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
 
     int sampleCount = max(int(Screen.Width), int(Screen.Height));
     int count = 0;
-    float refinementStep = pixelStepSize/100.0;
-    int refinementCount = 0;
-    int maxRefinements = 3;
+
 
     if(optimizedSSR)
     {
@@ -108,7 +124,6 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
         int sampleCount = max(int(Screen.Height), int(Screen.Width))/int(bigStep);
         int count = 0;
 
-        //reflectedColor = texture2D(ReflectanceTex, vert_UV);
         while(count < sampleCount)
         {
             // Out of screen space --> break
@@ -121,6 +136,24 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
             
             vec2 samplingPosition = currentSamplePosition.xy;
             float sampledDepth = linearizeDepth( texture(DepthTex, samplingPosition).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[0] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[1] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[2] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[3] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[4] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[5] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[6] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[7] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[8] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[9] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[10] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[11] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[12] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[13] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[14] * 0.001f).z );
+                  //sampledDepth += linearizeDepth (texture2D(DepthTex, samplingPosition + sampleOffsets[15] * 0.001f).z );
+                  //sampledDepth /= 16;
+
             float currentDepth = linearizeDepth(currentSamplePosition.z);
             
             float delta = abs(currentDepth - sampledDepth);
@@ -143,7 +176,35 @@ vec4 ScreenSpaceReflections(in vec3 vsPosition, in vec3 vsNormal, in vec3 vsRefl
                 }
                 if(delta < 0.015)
                 {
-                    reflectedColor = texture2D(DiffuseTex, samplingPosition);
+                    if(toggleGlossy)
+                    {
+                        float diskSize = 0.00001f;
+
+                        reflectedColor = texture2D(DiffuseTex, samplingPosition);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 0] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 1] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 2] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 3] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 4] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 5] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 6] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 7] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 8] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[ 9] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[10] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[11] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[12] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[13] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[14] * diskSize);
+                        reflectedColor += texture2D(DiffuseTex, samplingPosition + sampleOffsets[15] * diskSize);
+
+                        reflectedColor /= 17;
+                    }
+                    else
+                    {
+                        reflectedColor = texture2D(DiffuseTex, samplingPosition);
+                    }
+
                     break;
                 }
             }           
